@@ -63,7 +63,7 @@ O produto tem os seguintes diferenciais do ponto de vista do parceiro comercial:
 ## Modulos
 O produto é formado pelos módulos abaixo.
 
-### Delivery Tracker
+### Receiver
 É o principal módulo do produto. Tem uma versão mobile e outra WEB, sendo a versão mobile a principal.
 As principais para o funcionalidades deste módulo são:
 * sss
