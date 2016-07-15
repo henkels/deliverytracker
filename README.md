@@ -74,7 +74,7 @@ O produto é formado pelos modulos que seguem.
 
 ### Deliverer
 É o módulo que o entregador usa. Apresenta apenas uma versão mobile. As principais funcionalidades deste módulo são:
-* Vizualização do roteiro de entregas;
+* Visualização do roteiro de entregas;
 * Alteração do roteiro de entregas;
 * Localização GPS/Google Maps do endereço de entrega; 
 * Feedbeack em tempo real sobre a localização do recebedor;
@@ -88,24 +88,12 @@ O produto é formado pelos modulos que seguem.
 
 ### Backoffice
 É o modulo usado pele enviador, transportadora e parceiro comercial. Apresenta uma versão WEB e uma versão mobile, sendo a WEB a principal. As principais funcionalidades deste módulo são:
--- TODO
-* Feedback em tempo real sobre a localização GPS dos pacotes sobre seu controle;
+* Feedback em tempo real sobre a localização GPS/Google Maps dos pacotes sobre seu controle ou de seu interesse;
 * Atualização constante sobre a momento estimado da chegada do pacote(ETA - Estimated Time of Arrival);
+ * Quando o usuário for enviador ou parceiro comencial, o ETA dos pacotes é calculado em relação a entrega para o recebedor;
+ * Quando o usuário for transportadora, o ETA dos pacotes é calculado em relação ao treho de sua responsabilidade que podem ser até o recebedor ou outra transportadora;
 * Localização GPS/Google Maps do endereço de entrega; 
-* Feedbeack em tempo real sobre a localização do recebedor;
-* Economia para prestar feedback sobre a localização do pacote ao enviador;
-* Geração de estatísticas sobre as transportes realizados;
-* xxx
-* Feedback em tempo real sobre a localização GPS dos pacotes sobre seu controle;
-* Atualização constante sobre a momento estimado da chegada do pacote(ETA - Estimated Time of Arrival);
-* Localização GPS/Google Maps do endereço de entrega; 
-* Feedbeack em tempo real sobre a localização do recebedor;
-* Economia para prestar feedback sobre a localização do pacote ao enviador;
-* Geração de estatísticas sobre as transportes realizados;
-* xxxxxxx
-* Feedback em tempo real sobre a localização GPS dos pacotes de seu interrese;
-* Atualização constante sobre a momento estimado da chegada do pacote(ETA - Estimated Time of Arrival);
-* Localização GPS/Google Maps do endereço de entrega; 
-* Feedbeack em tempo real sobre a localização do recebedor;
-* Geração de estatísticas sobre as entregas;
-* 
+* Feedback em tempo real sobre a localização do recebedor;
+* Quando o usuário for a transportadora, feedback em tempo real sobre as alterações realizadas nos roteiros de entrega, pausa nas entregas, sinalização de imprevistos, etc...
+* Quando o usuário for a transportadora, geração e edição dos roteiros de entrega;
+* Chat com o entregador e o recebedor.
