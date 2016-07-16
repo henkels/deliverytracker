@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.deliverytracker.receivingmanager.R;
-import br.com.deliverytracker.receivingmanager.packageviewer.dummy.DummyContent;
-import br.com.deliverytracker.receivingmanager.packageviewer.dummy.DummyContent.DummyItem;
-
-import java.util.List;
+import br.com.deliverytracker.receivingmanager.packageviewer.incomming.PackageContent;
+import br.com.deliverytracker.receivingmanager.packageviewer.incomming.PackageContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -70,8 +68,8 @@ public class PackageFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            new MyPackageRecyclerViewAdapter(DummyContent.ITEMS, null);
-            recyclerView.setAdapter(new MyPackageRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            new PackageRecyclerViewAdapter(PackageContent.ITEMS, null);
+            recyclerView.setAdapter(new PackageRecyclerViewAdapter(PackageContent.ITEMS, mListener));
         }
         return view;
     }

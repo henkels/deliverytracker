@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import br.com.deliverytracker.receivingmanager.R;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
-import br.com.deliverytracker.receivingmanager.packageviewer.dummy.DummyContent.DummyItem;
+import br.com.deliverytracker.receivingmanager.packageviewer.incomming.PackageContent.DummyItem;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyPackageRecyclerViewAdapter extends RecyclerView.Adapter<MyPackageRecyclerViewAdapter.ViewHolder> {
+public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPackageRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public PackageRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -66,8 +66,8 @@ public class MyPackageRecyclerViewAdapter extends RecyclerView.Adapter<MyPackage
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = (TextView) view.findViewById(R.id.ipk_description);
+            mContentView = (TextView) view.findViewById(R.id.ipk_sender);
         }
 
         @Override

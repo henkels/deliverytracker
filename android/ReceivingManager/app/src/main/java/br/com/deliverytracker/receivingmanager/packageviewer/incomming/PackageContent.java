@@ -1,9 +1,11 @@
-package br.com.deliverytracker.receivingmanager.packageviewer.dummy;
+package br.com.deliverytracker.receivingmanager.packageviewer.incomming;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import br.com.deliverytracker.receivingmanager.packageinfo.IncommingPackage;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -11,17 +13,19 @@ import java.util.Map;
  * <p/>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class DummyContent {
+public class PackageContent {
 
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<IncommingPackage> ITEMS = new ArrayList<>();
+
+    //TODO adotar acesso a base no lugar da lista em memória
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+    public static final Map<String, DummyItem> ITEM_MAP = new HashMap<>();
 
     private static final int COUNT = 25;
 
@@ -53,7 +57,7 @@ public class DummyContent {
     /**
      * A dummy item representing a piece of content.
      */
-    public static class DummyItem {
+    public static class DummyItem implements IncommingPackage {
         public final String id;
         public final String content;
         public final String details;
