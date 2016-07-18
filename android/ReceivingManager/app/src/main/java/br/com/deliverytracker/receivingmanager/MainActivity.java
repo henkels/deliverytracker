@@ -19,9 +19,11 @@ import android.view.ViewGroup;
   
 import android.widget.TextView;
 
+import br.com.deliverytracker.receivingmanager.dao.DataLoader;
+import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
+import br.com.deliverytracker.receivingmanager.dao.SqlLite.DataLoaderImpl;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
-import br.com.deliverytracker.receivingmanager.packageviewer.incomming.PackageContent;
 
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
 
@@ -40,9 +42,11 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
      */
     private ViewPager mViewPager;
 
+    private DataLoader loader;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loader = new DataLoaderImpl(this);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         return super.onOptionsItemSelected(item);
     }
 
-    public void onListFragmentInteraction(PackageContent.DummyItem item){
+    public void onListFragmentInteraction(IncommingPackage item){
         //
     }
 
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return PackageFragment.newInstance(1);
+                return PackageFragment.newInstance(1,loader);
             }
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).

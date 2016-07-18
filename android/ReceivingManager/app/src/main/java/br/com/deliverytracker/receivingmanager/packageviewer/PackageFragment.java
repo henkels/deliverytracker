@@ -2,6 +2,7 @@ package br.com.deliverytracker.receivingmanager.packageviewer;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.deliverytracker.receivingmanager.R;
-import br.com.deliverytracker.receivingmanager.packageviewer.incomming.PackageContent;
-import br.com.deliverytracker.receivingmanager.packageviewer.incomming.PackageContent.DummyItem;
+import br.com.deliverytracker.receivingmanager.dao.DataLoader;
+import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 
 /**
  * A fragment representing a list of Items.
@@ -24,9 +25,11 @@ public class PackageFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_DATALOADER = "dataloader";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private DataLoader loader;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -37,11 +40,12 @@ public class PackageFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static PackageFragment newInstance(int columnCount) {
+    public static PackageFragment newInstance(int columnCount, DataLoader loader) {
         PackageFragment fragment = new PackageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+        fragment.loader = loader;
         return fragment;
     }
 
@@ -68,8 +72,7 @@ public class PackageFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            new PackageRecyclerViewAdapter(PackageContent.ITEMS, null);
-            recyclerView.setAdapter(new PackageRecyclerViewAdapter(PackageContent.ITEMS, mListener));
+            recyclerView.setAdapter(new PackageRecyclerViewAdapter(loader, mListener));
         }
         return view;
     }
@@ -105,6 +108,6 @@ public class PackageFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(IncommingPackage item);
     }
 }
