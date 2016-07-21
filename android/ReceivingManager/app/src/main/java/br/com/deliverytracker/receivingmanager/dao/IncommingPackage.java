@@ -15,13 +15,13 @@ public interface IncommingPackage {
 
     public String getTransporter();
 
-    public Timestamp getSenddate();
+    public long getSenddate();
 
-    public Timestamp getInitialEta();
+    public long getInitialEta();
 
-    public Timestamp getCurrentEta();
+    public long getCurrentEta();
 
     public Location getCurrentLocation();
 
-    public Timestamp getLastAtualizationTime();
+    public long getLastAtualizationTime();
 }
