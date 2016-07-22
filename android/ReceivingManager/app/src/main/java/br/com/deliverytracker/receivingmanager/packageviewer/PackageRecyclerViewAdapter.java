@@ -27,9 +27,9 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
     private boolean hasMore = false;
     private static final int NUM_ITENS = 50;
 
-    private List<IncommingPackage> getValues(){
-        if (_values==null){
-          _values =  dataLoader.loadIncommingPackages(NUM_ITENS);
+    private List<IncommingPackage> getValues() {
+        if (_values == null) {
+            _values = dataLoader.loadIncommingPackages(NUM_ITENS);
             hasMore = _values.size() == NUM_ITENS;
         }
         return _values;
@@ -49,9 +49,14 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-     IncommingPackage item =  getValues().get(position);
+        IncommingPackage item = getValues().get(position);
         holder.mItem = item;
         holder.mIdDescription.setText(item.getDescription());
+        holder.mSender.setText(item.getSender());
+        holder.mTransporter.setText(item.getTransporter());
+        holder.mSenddate.setText(item.getSenddate().toString());
+        holder.mSender.setText(item.getSender());
+        holder.mSender.setText(item.getSender());
         holder.mSender.setText(item.getSender());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +80,10 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
         public final View mView;
         public final TextView mIdDescription;
         public final TextView mSender;
+        public final TextView mTransporter;
+        public final TextView mSenddate;
+        public final TextView mInitialEta;
+        public final TextView mCurrentEta;
         public IncommingPackage mItem;
 
         public ViewHolder(View view) {
@@ -82,6 +91,10 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
             mView = view;
             mIdDescription = (TextView) view.findViewById(R.id.ipk_description);
             mSender = (TextView) view.findViewById(R.id.ipk_sender);
+            mTransporter = (TextView) view.findViewById(R.id.ipk_transporter);
+            mSenddate = (TextView) view.findViewById(R.id.ipk_senddate);
+            mInitialEta = (TextView) view.findViewById(R.id.ipk_initialEta);
+            mCurrentEta = (TextView) view.findViewById(R.id.ipk_currentEta);
         }
 
         @Override
