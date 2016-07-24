@@ -7,4 +7,5 @@ import java.util.List;
  */
 public interface DataLoader {
    List<IncommingPackage> loadIncommingPackages(int count);
+
 }

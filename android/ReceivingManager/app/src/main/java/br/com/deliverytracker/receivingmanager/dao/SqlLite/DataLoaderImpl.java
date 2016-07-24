@@ -28,14 +28,15 @@ public class DataLoaderImpl extends SQLiteOpenHelper implements DataLoader {
 
     private static final String INCOMMING_PACKAGES_TABLE_NAME = "incomminPackages";
 
-
-    private static final String LIMIT = "50";
-
     public DataLoaderImpl(Context context) {
 
         super(context, DATABASE_NAME, null, VCURRENT);
-        //// TODO: 19/07/16 colocar um populador
-        populate(getWritableDatabase());
+        try {
+            //// TODO: 19/07/16 colocar um populador
+            populate(getWritableDatabase());
+        } catch (Exception e) {
+            //NOP
+        }
     }
 
     private static void populate(SQLiteDatabase db) {
@@ -143,7 +144,7 @@ public class DataLoaderImpl extends SQLiteOpenHelper implements DataLoader {
     @Override
     public List<IncommingPackage> loadIncommingPackages(int count) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query(INCOMMING_PACKAGES_TABLE_NAME, null, null, null, null, null, null, LIMIT);
+        Cursor c = db.query(INCOMMING_PACKAGES_TABLE_NAME, null, null, null, null, null, null, Integer.toString(count));
         List<IncommingPackage> ret = new ArrayList<>();
         try {
             while (c.moveToNext()) {

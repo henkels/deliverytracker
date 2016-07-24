@@ -1,49 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/ipk_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/text_margin"
+        android:src="@drawable/ic_ontime" />
 
     <TextView
         android:id="@+id/ipk_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-
-    <TextView
-        android:id="@+id/ipk_sender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-
-    <TextView
-        android:id="@+id/ipk_transporter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-
-    <TextView
-        android:id="@+id/ipk_senddate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-
-    <TextView
-        android:id="@+id/ipk_initialEta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:text="meu pacote a receber"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_toRightOf="@+id/ipk_image"
+        android:layout_alignParentTop="true"
+       />
 
     <TextView
         android:id="@+id/ipk_currentEta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
+        android:text="vai chegar em 15/08/2016 (10 dias)"
+        android:layout_toRightOf="@+id/ipk_image"
+        android:layout_below="@id/ipk_description"
         android:textAppearance="?attr/textAppearanceListItem" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/ipk_currentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="a ultima localização é Blumenau?Velha Grande"
+        android:layout_toRightOf="@+id/ipk_image"
+        android:layout_below="@id/ipk_currentEta"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/ipk_lastAtualizationTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="a última localização de staus foi a 5 dias atrás"
+        android:layout_toRightOf="@+id/ipk_image"
+        android:layout_below="@id/ipk_currentLocation"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+</RelativeLayout>

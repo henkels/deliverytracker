@@ -1,5 +1,7 @@
 package br.com.deliverytracker.receivingmanager.packageviewer;
 
+import android.content.Context;
+import android.location.Location;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +10,11 @@ import android.widget.TextView;
 
 import br.com.deliverytracker.receivingmanager.R;
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
+import br.com.deliverytracker.receivingmanager.dao.DataloaderFacory;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
 import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,23 +24,23 @@ import java.util.List;
  */
 public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecyclerViewAdapter.ViewHolder> {
 
-    private final DataLoader dataLoader;
+    private final Context context;
     private final OnListFragmentInteractionListener listener;
 
-    private List<IncommingPackage> _values;
+    private List<IncommingPackage> values;
     private boolean hasMore = false;
     private static final int NUM_ITENS = 50;
 
     private List<IncommingPackage> getValues() {
-        if (_values == null) {
-            _values = dataLoader.loadIncommingPackages(NUM_ITENS);
-            hasMore = _values.size() == NUM_ITENS;
+        if (values == null) {
+            values = DataloaderFacory.getInstance(context).loadIncommingPackages(NUM_ITENS);
+            hasMore = values.size() == NUM_ITENS;
         }
-        return _values;
+        return values;
     }
 
-    public PackageRecyclerViewAdapter(DataLoader dataLoader, OnListFragmentInteractionListener listener) {
-        this.dataLoader = dataLoader;
+    public PackageRecyclerViewAdapter(Context context,OnListFragmentInteractionListener listener) {
+        this.context = context;
         this.listener = listener;
     }
 
@@ -52,12 +56,14 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
         IncommingPackage item = getValues().get(position);
         holder.mItem = item;
         holder.mIdDescription.setText(item.getDescription());
-        holder.mSender.setText(item.getSender());
-        holder.mTransporter.setText(item.getTransporter());
-        holder.mSenddate.setText(item.getSenddate().toString());
-        holder.mSender.setText(item.getSender());
-        holder.mSender.setText(item.getSender());
-        holder.mSender.setText(item.getSender());
+        //holder.mSender.setText(item.getSender());
+        //holder.mTransporter.setText(item.getTransporter());
+        //holder.mSenddate.setText(new Date(item.getSenddate()).toString());
+        //holder.mInitialEta.setText(new Date(item.getInitialEta()).toString());
+        holder.mCurrentEta.setText(new Date(item.getInitialEta()).toString());
+        //holder.mSender.setText(item.getSender());
+        holder.mLastAtualizationTime.setText(new Date(item.getLastAtualizationTime()).toString());
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,22 +85,26 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdDescription;
-        public final TextView mSender;
-        public final TextView mTransporter;
-        public final TextView mSenddate;
-        public final TextView mInitialEta;
+        //public final TextView mSender;
+        //public final TextView mTransporter;
+        //public final TextView mSenddate;
+        //public final TextView mInitialEta;
         public final TextView mCurrentEta;
+        // public final TextView mCurrentLocation;
+        public final TextView mLastAtualizationTime;
         public IncommingPackage mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdDescription = (TextView) view.findViewById(R.id.ipk_description);
-            mSender = (TextView) view.findViewById(R.id.ipk_sender);
-            mTransporter = (TextView) view.findViewById(R.id.ipk_transporter);
-            mSenddate = (TextView) view.findViewById(R.id.ipk_senddate);
-            mInitialEta = (TextView) view.findViewById(R.id.ipk_initialEta);
+            //mSender = (TextView) view.findViewById(R.id.ipk_sender);
+            //mTransporter = (TextView) view.findViewById(R.id.ipk_transporter);
+            //mSenddate = (TextView) view.findViewById(R.id.ipk_senddate);
+            //mInitialEta = (TextView) view.findViewById(R.id.ipk_initialEta);
             mCurrentEta = (TextView) view.findViewById(R.id.ipk_currentEta);
+            //mCurrentLocation = (TextView) view.findViewById(R.id.ipk_currentLocation);
+            mLastAtualizationTime = (TextView) view.findViewById(R.id.ipk_lastAtualizationTime);
         }
 
         @Override
