@@ -1,9 +1,11 @@
 package br.com.deliverytracker.receivingmanager.packageviewer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import br.com.deliverytracker.receivingmanager.dao.DataloaderFacory;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
 import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
 
     private final Context context;
     private final OnListFragmentInteractionListener listener;
+    private int selected = -1;
 
     private List<IncommingPackage> values;
     private boolean hasMore = false;
@@ -39,7 +43,7 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
         return values;
     }
 
-    public PackageRecyclerViewAdapter(Context context,OnListFragmentInteractionListener listener) {
+    public PackageRecyclerViewAdapter(Context context, OnListFragmentInteractionListener listener) {
         this.context = context;
         this.listener = listener;
     }
@@ -55,6 +59,7 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         IncommingPackage item = getValues().get(position);
         holder.mItem = item;
+        holder.index = position;
         holder.mIdDescription.setText(item.getDescription());
         //holder.mSender.setText(item.getSender());
         //holder.mTransporter.setText(item.getTransporter());
@@ -64,6 +69,11 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
         //holder.mSender.setText(item.getSender());
         holder.mLastAtualizationTime.setText(new Date(item.getLastAtualizationTime()).toString());
 
+        if (selected == position) {
+            holder.itemView.setBackgroundColor(Color.GREEN);
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +82,13 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     listener.onListFragmentInteraction(holder.mItem);
+                    notifyItemChanged(selected);
+                    if (selected == holder.index) {
+                        selected = -1;
+                    } else {
+                        selected = holder.index;
+                        notifyItemChanged(selected);
+                    }
                 }
             }
         });
@@ -93,6 +110,7 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
         // public final TextView mCurrentLocation;
         public final TextView mLastAtualizationTime;
         public IncommingPackage mItem;
+        public int index;
 
         public ViewHolder(View view) {
             super(view);
