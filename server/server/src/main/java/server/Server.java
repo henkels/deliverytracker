@@ -40,72 +40,56 @@ public class Server {
 	private void run()
 			throws SmackException, IOException, XMPPException, NoSuchAlgorithmException, KeyManagementException {
 		Base64Utils.init();
-		// Builder config = XMPPTCPConnectionConfiguration.builder();
-		// config.setSecurityMode(SecurityMode.ifpossible);
-		// config.setHost("gcm.googleapis.com");
-		// config.setPort(5235);
-		// config.setServiceName(SERVICE_NAME);
-		// config.setSocketFactory(SSLSocketFactory.getDefault());
-		// config.setUsernameAndPassword(USER_NAME, PASSWORD);
-		// config.setDebuggerEnabled(true);
-		// mConnection = new XMPPTCPConnection(config.build());
-		// mConnection.setPacketReplyTimeout(10000);
 
-		// SSLContext sslContext = null;
-		//
-		// sslContext = SSLContext.getInstance("TLS");
-		// // SASL PLAIN,
-		// TrustManager tm = new X509TrustManager() {
-		// @Override
-		// public void checkClientTrusted(X509Certificate[] x509Certificates,
-		// String s) throws CertificateException {
-		// }
-		//
-		// @Override
-		// public void checkServerTrusted(X509Certificate[] x509Certificates,
-		// String s) throws CertificateException {
-		// }
-		//
-		// @Override
-		// public X509Certificate[] getAcceptedIssuers() {
-		// return new X509Certificate[0];
-		// }
-		// };
-		// sslContext.init(null, new TrustManager[] { tm }, null);
-
-		// SASLAuthentication.registerSASLMechanism(new SASLPlainMechanism());
-
-		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder().setHost(SERVER_HOST)//
+		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()//
+				.setHost(SERVER_HOST)//
 				.setPort(SERVER_PORT)//
 				.setServiceName(SERVICE_NAME)//
 				.setSecurityMode(SecurityMode.ifpossible)//
 				.setUsernameAndPassword(USER_NAME, PASSWORD)//
-				// .setSASLAuthenticationEnabled()//
-				// .setCustomSSLContext(sslContext)//
-				// .setEnabledSSLProtocols(new String[] {
-				// SASLPlainMechanism.PLAIN })//
 				.setSocketFactory(SSLSocketFactory.getDefault())//
-				.setResource("RES").setDebuggerEnabled(true)//
+				.setSendPresence(false)//
+				.setDebuggerEnabled(true)//
 				.build();
 
-		XMPPTCPConnection conn = new XMPPTCPConnection(config);
+        XMPPTCPConnection conn = new XMPPTCPConnection(config);
 
-		conn.connect();
+        conn.connect();
 
-		conn.login();
+        conn.login();
 
-		conn.addAsyncStanzaListener(new StanzaListener() {
+        conn.addAsyncStanzaListener(new StanzaListener() {
 
-			public void processPacket(Stanza packet) throws NotConnectedException {
-				System.out.println(packet);
+            public void processPacket(Stanza packet) throws NotConnectedException {
+                System.out.println(packet);
 
-			}
-		}, new StanzaFilter() {
+            }
+        }, new StanzaFilter() {
 
-			public boolean accept(Stanza stanza) {
-				return true;
-			}
-		});
+            public boolean accept(Stanza stanza) {
+                return true;
+            }
+        });
+
+        XMPPTCPConnection conn2 = new XMPPTCPConnection(config);
+
+        conn2.connect();
+
+        conn2.login();
+
+        conn2.addAsyncStanzaListener(new StanzaListener() {
+
+            public void processPacket(Stanza packet) throws NotConnectedException {
+                System.out.println(packet);
+
+            }
+        }, new StanzaFilter() {
+
+            public boolean accept(Stanza stanza) {
+                System.out.println(stanza);
+                return true;
+            }
+        });
 
 		while (true) {
 
