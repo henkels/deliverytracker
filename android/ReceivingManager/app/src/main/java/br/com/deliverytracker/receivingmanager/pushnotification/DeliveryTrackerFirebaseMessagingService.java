@@ -1,4 +1,4 @@
-package br.com.deliverytrackerbr.com.deliverytracker.receivingmanager.pushnotification;
+package br.com.deliverytracker.receivingmanager.pushnotification;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +19,10 @@ import br.com.deliverytracker.receivingmanager.R;
  * Created by tarcisio on 28/07/16.
  */
 public class DeliveryTrackerFirebaseMessagingService extends FirebaseMessagingService {
+
+    public DeliveryTrackerFirebaseMessagingService(){
+        super();
+    }
 
     private static final String TAG = "MyFirebaseMsgService";
 

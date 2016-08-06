@@ -5,10 +5,16 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import java.util.HashMap;
+
 /**
  * Created by tarcisio on 28/07/16.
  */
 public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceIdService {
+
+    public DeliveryTrackerFirebaseInstanceIDService() {
+        super();
+    }
 
     private static final String TAG = "MyFirebaseIIDService";
 
@@ -33,14 +39,16 @@ public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceId
 
     /**
      * Persist token to third-party servers.
-     *
+     * <p/>
      * Modify this method to associate the user's FCM InstanceID token with any server-side account
      * maintained by your application.
      *
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // TODO: Implement this method to send token to your app server.
+        HashMap<String, String> msg = new HashMap<>();
+        msg.put("Token", token);
+        MessageSender.SendMessage(msg);
     }
 
 }
