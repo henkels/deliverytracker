@@ -1,4 +1,4 @@
-package br.com.deliverytracker.receivingmanager.pushnotification;
+package br.com.deliverytracker.receivingmanager;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

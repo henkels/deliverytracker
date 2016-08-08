@@ -1,4 +1,4 @@
-package br.com.deliverytracker.receivingmanager.pushnotification;
+package br.com.deliverytracker.receivingmanager;
 
 import android.util.Log;
 
@@ -6,6 +6,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.util.HashMap;
+
+import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
 /**
  * Created by tarcisio on 28/07/16.

@@ -22,6 +22,10 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
 import br.com.deliverytracker.receivingmanager.dao.DataloaderFacory;
@@ -29,6 +33,7 @@ import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 import br.com.deliverytracker.receivingmanager.dao.SqlLite.DataLoaderImpl;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
+import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
 
@@ -75,6 +80,10 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             }
         });
 
+        String val = FirebaseInstanceId.getInstance().getToken();
+        Map<String, String> msg = new HashMap<>();
+        msg.put("TOKEN", val);
+        MessageSender.SendMessage(msg);
     }
 
     private void checkGoolePlayServicesApi() {

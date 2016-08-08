@@ -21,13 +21,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name="br.com.deliverytracker.receivingmanager.pushnotification.DeliveryTrackerFirebaseMessagingService" >
+        <service android:name=".DeliveryTrackerFirebaseMessagingService" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name="br.com.deliverytracker.receivingmanager.pushnotification.DeliveryTrackerFirebaseInstanceIDService" >
+        <service android:name=".DeliveryTrackerFirebaseInstanceIDService" >
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
