@@ -16,10 +16,10 @@ public class MessageSender {
     private static final AtomicInteger msgId = new AtomicInteger();
 
     public static void SendMessage(Map<String, String> msgData) {
-        RemoteMessage.Builder builder = new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com") //
+        RemoteMessage.Builder builder = new RemoteMessage.Builder(SENDER_ID) //
                 .setMessageId(Integer.toString(msgId.incrementAndGet()));
         for (Map.Entry<String, String> entry : msgData.entrySet()) {
-            builder.addData(entry.getKey(), entry.getValue());
+            builder = builder.addData(entry.getKey(), entry.getValue());
         }
         FirebaseMessaging fm = FirebaseMessaging.getInstance();
         fm.send(builder.build());

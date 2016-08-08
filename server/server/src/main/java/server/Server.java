@@ -18,39 +18,38 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 public class Server {
 
-	private final String SERVER_HOST = "fcm-xmpp.googleapis.com";
-	// private final int SERVER_PORT = 5236;
-	private final int SERVER_PORT = 5235;
+    private final String SERVER_HOST = "fcm-xmpp.googleapis.com";
+    // private final int SERVER_PORT = 5236;
+    private final int SERVER_PORT = 5235;
 
-	private final String SERVICE_NAME = "gcm.googleapis.com";
+    private final String SERVICE_NAME = "gcm.googleapis.com";
 
-	private final String USER_NAME = "497175095084@gcm.googleapis.com";
-	private final String PASSWORD = "AIzaSyD4P94m9lVzUG73GI7Q5dRqZVgxg4Tq-Qo";
+    private final String USER_NAME = "497175095084@gcm.googleapis.com";
+    private final String PASSWORD = "AIzaSyD4P94m9lVzUG73GI7Q5dRqZVgxg4Tq-Qo";
 
-	public static void main(String[] args) {
-		Server srv = new Server();
-		try {
-			srv.run();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+    public static void main(String[] args) {
+        Server srv = new Server();
+        try {
+            srv.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-	}
+    }
 
-	private void run()
-			throws SmackException, IOException, XMPPException, NoSuchAlgorithmException, KeyManagementException {
-		Base64Utils.init();
+    private void run() throws SmackException, IOException, XMPPException, NoSuchAlgorithmException, KeyManagementException {
+        Base64Utils.init();
 
-		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()//
-				.setHost(SERVER_HOST)//
-				.setPort(SERVER_PORT)//
-				.setServiceName(SERVICE_NAME)//
-				.setSecurityMode(SecurityMode.ifpossible)//
-				.setUsernameAndPassword(USER_NAME, PASSWORD)//
-				.setSocketFactory(SSLSocketFactory.getDefault())//
-				.setSendPresence(false)//
-				.setDebuggerEnabled(true)//
-				.build();
+        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()//
+                .setHost(SERVER_HOST)//
+                .setPort(SERVER_PORT)//
+                .setServiceName(SERVICE_NAME)//
+                .setSecurityMode(SecurityMode.ifpossible)//
+                .setUsernameAndPassword(USER_NAME, PASSWORD)//
+                .setSocketFactory(SSLSocketFactory.getDefault())//
+                .setSendPresence(false)//
+                .setDebuggerEnabled(true)//
+                .build();
 
         XMPPTCPConnection conn = new XMPPTCPConnection(config);
 
@@ -60,13 +59,13 @@ public class Server {
 
         conn.addAsyncStanzaListener(new StanzaListener() {
 
-            public void processPacket(Stanza packet) throws NotConnectedException {
-                System.out.println(packet);
-
+            public void processPacket(Stanza stanza) throws NotConnectedException {
+                print(stanza);
             }
         }, new StanzaFilter() {
 
             public boolean accept(Stanza stanza) {
+                print(stanza);
                 return true;
             }
         });
@@ -79,21 +78,25 @@ public class Server {
 
         conn2.addAsyncStanzaListener(new StanzaListener() {
 
-            public void processPacket(Stanza packet) throws NotConnectedException {
-                System.out.println(packet);
-
+            public void processPacket(Stanza stanza) throws NotConnectedException {
+                print(stanza);
             }
         }, new StanzaFilter() {
 
             public boolean accept(Stanza stanza) {
-                System.out.println(stanza);
+                print(stanza);
                 return true;
             }
         });
 
-		while (true) {
+        while (true) {
 
-		}
-	}
+        }
+
+    }
+
+    private void print(Stanza stanza) {
+        System.out.println(stanza);
+    }
 
 }
