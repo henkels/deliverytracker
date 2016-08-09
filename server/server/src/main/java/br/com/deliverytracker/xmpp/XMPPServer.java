@@ -1,8 +1,21 @@
 package br.com.deliverytracker.xmpp;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.net.ssl.SSLSocketFactory;
+
+import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
+import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.DefaultExtensionElement;
-import org.jivesoftware.smack.provider.ProviderManager;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 // import com.codahale.metrics.Meter;
 // import com.codahale.metrics.MetricRegistry;
 // import com.codahale.metrics.SharedMetricRegistries;
@@ -14,13 +27,18 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 // import org.jivesoftware.smack.XMPPException;
 // import org.jivesoftware.smack.filter.PacketTypeFilter;
 // import org.jivesoftware.smack.packet.DefaultPacketExtension;
-// import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.provider.ExtensionElementProvider;
+import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 // import org.jivesoftware.smack.packet.Packet;
 // import org.jivesoftware.smack.packet.PacketExtension;
 // import org.jivesoftware.smack.provider.PacketExtensionProvider;
 // import org.jivesoftware.smack.provider.ProviderManager;
 // import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-// import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.util.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
@@ -31,20 +49,22 @@ import org.slf4j.LoggerFactory;
 // import org.whispersystems.pushserver.util.Constants;
 // import org.whispersystems.pushserver.util.Util;
 // import org.xmlpull.v1.XmlPullParser;
-
-import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 // import static com.codahale.metrics.MetricRegistry.name;
 
-public class Server // implements GCMSender, PacketListener
-{
+public class XMPPServer implements StanzaListener {
 
-    private final Logger logger = LoggerFactory.getLogger(Server.class);
+    private static final String GCM_ELEMENT_NAME = "gcm";
+    private static final String GCM_NAMESPACE = "google:mobile:data";
+    
+    static {
+        Base64Utils.init();
+        ProviderManager.addExtensionProvider(GCM_ELEMENT_NAME, GCM_NAMESPACE, new GcmPacketExtensionProvider());
+    }
+
+    private final Logger logger = LoggerFactory.getLogger(XMPPServer.class);
 
     // private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
     //
@@ -52,26 +72,22 @@ public class Server // implements GCMSender, PacketListener
     // private final Meter failure = metricRegistry.meter(name(getClass(), "sent", "failure"));
     // private final Meter unregistered = metricRegistry.meter(name(getClass(), "sent", "unregistered"));
 
-    private static final String GCM_SERVER = "gcm.googleapis.com";
-    private static final int GCM_PORT = 5235;
+    private static final String SERVER_HOST = "fcm-xmpp.googleapis.com";
+    private static final int SERVER_PORT = 5235;
 
-    private static final String GCM_ELEMENT_NAME = "gcm";
-    private static final String GCM_NAMESPACE = "google:mobile:data";
+    private static final String SERVICE_NAME = "gcm.googleapis.com";
+
+    private static final String USER_NAME = "497175095084@gcm.googleapis.com";
+    private static final String PASSWORD = "AIzaSyD4P94m9lVzUG73GI7Q5dRqZVgxg4Tq-Qo";
+
 
     private final Map<String, GcmMessage> pendingMessages = new ConcurrentHashMap<>();
 
     //private final UnregisteredQueue unregisteredQueue;
-    private final long senderId;
-    private final String apiKey;
+//    private final long senderId;
+//    private final String apiKey;
 
     private XMPPTCPConnection connection;
-
-    public Server(long senderId, String apiKey) {
-        this.senderId = senderId;
-        this.apiKey = apiKey;
-
-        ProviderManager.addExtensionProvider(GCM_ELEMENT_NAME, GCM_NAMESPACE, new GcmPacketExtensionProvider());
-    }
 
     public void sendMessage(GcmMessage message) {
         String messageId = "m-" + UUID.randomUUID().toString();
@@ -94,26 +110,22 @@ public class Server // implements GCMSender, PacketListener
             String json = JSONObject.toJSONString(messageObject);
 
             pendingMessages.put(messageId, message);
-            connection.sendStanza(packet);
-            connection.sendPacket(new GcmPacketExtension(json).toPacket());
+            connection.sendStanza(new GcmPacketExtension(json).toStanza());
         } catch (SmackException.NotConnectedException e) {
             logger.warn("GCMClient", "No connection", e);
         }
     }
 
-    @Override
     public void start() throws Exception {
-        this.connection = connect(senderId, apiKey);
+        this.connection = connect();
     }
 
-    @Override
     public void stop() throws Exception {
         this.connection.disconnect();
     }
 
-    @Override
-    public void processPacket(Packet packet) throws SmackException.NotConnectedException {
-        Message incomingMessage = (Message) packet;
+    public void processPacket(Stanza stanza) throws SmackException.NotConnectedException {
+        Message incomingMessage = (Message) stanza;
         GcmPacketExtension gcmPacket = (GcmPacketExtension) incomingMessage.getExtension(GCM_NAMESPACE);
         String json = gcmPacket.getJson();
 
@@ -201,7 +213,7 @@ public class Server // implements GCMSender, PacketListener
     }
 
     private void handleAckReceipt(Map<String, Object> message) {
-        success.mark();
+        //TODO success.mark();
 
         String messageId = (String) message.get("message_id");
 
@@ -224,27 +236,27 @@ public class Server // implements GCMSender, PacketListener
 
         String json = JSONValue.toJSONString(ack);
 
-        Packet request = new GcmPacketExtension(json).toPacket();
-        connection.sendPacket(request);
+        Stanza request = new GcmPacketExtension(json).toStanza();
+        connection.sendStanza(request);
     }
 
     private void handleBadRegistration(Map<String, Object> message) {
         logger.warn("Got GCM unregistered notice!");
-        unregistered.mark();
+        //TODO unregistered.mark();
 
         String messageId = (String) message.get("message_id");
 
         if (messageId != null) {
-            GcmMessage unacknowledgedMessage = pendingMessages.remove(messageId);
-
-            if (unacknowledgedMessage != null) {
-                unregisteredQueue.put(new UnregisteredEvent(unacknowledgedMessage.getGcmId(), null, unacknowledgedMessage.getNumber(), unacknowledgedMessage.getDeviceId(), System.currentTimeMillis()));
-            }
+            //TODO
+            //GcmMessage unacknowledgedMessage = pendingMessages.remove(messageId);
+            //            if (unacknowledgedMessage != null) {
+            //                unregisteredQueue.put(new UnregisteredEvent(unacknowledgedMessage.getGcmId(), null, unacknowledgedMessage.getNumber(), unacknowledgedMessage.getDeviceId(), System.currentTimeMillis()));
+            //            }
         }
     }
 
     private void handleServerFailure(Map<String, Object> message) {
-        failure.mark();
+        //TODO failure.mark();
 
         String messageId = (String) message.get("message_id");
 
@@ -258,7 +270,7 @@ public class Server // implements GCMSender, PacketListener
     }
 
     private void handleClientFailure(Map<String, Object> message) {
-        failure.mark();
+        //TODO failure.mark();
 
         logger.warn("Unrecoverable error: " + message.get("error"));
         String messageId = (String) message.get("message_id");
@@ -271,13 +283,13 @@ public class Server // implements GCMSender, PacketListener
     private void reconnect() {
         try {
             this.connection.disconnect();
-        } catch (SmackException.NotConnectedException e) {
+        } catch (Exception e) {
             logger.warn("GCMClient", "Disconnect attempt", e);
         }
 
         while (true) {
             try {
-                this.connection = connect(senderId, apiKey);
+                this.connection = connect();
                 return;
             } catch (XMPPException | IOException | SmackException e) {
                 logger.warn("GCMClient", "Reconnecting", e);
@@ -286,30 +298,34 @@ public class Server // implements GCMSender, PacketListener
         }
     }
 
-    private XMPPTCPConnection connect(long senderId, String apiKey) throws XMPPException, IOException, SmackException {
-        ConnectionConfiguration config = new ConnectionConfiguration(GCM_SERVER, GCM_PORT);
-        config.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
-        config.setReconnectionAllowed(true);
-        config.setRosterLoadedAtLogin(false);
-        config.setSendPresence(false);
-        config.setSocketFactory(SSLSocketFactory.getDefault());
+    private XMPPTCPConnection connect() throws XMPPException, IOException, SmackException {
 
-        XMPPTCPConnection connection = new XMPPTCPConnection(config);
-        connection.connect();
+        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()//
+                .setHost(SERVER_HOST)//
+                .setPort(SERVER_PORT)//
+                .setServiceName(SERVICE_NAME)//
+                .setSecurityMode(SecurityMode.ifpossible)//
+                .setUsernameAndPassword(USER_NAME, PASSWORD)//
+                .setSocketFactory(SSLSocketFactory.getDefault())//
+                .setSendPresence(false)//
+                .setDebuggerEnabled(true)//
+                .build();
 
-        connection.addConnectionListener(new LoggingConnectionListener());
-        connection.addPacketListener(this, new PacketTypeFilter(Message.class));
+        XMPPTCPConnection conn = new XMPPTCPConnection(config);
+        conn.connect();
 
-        connection.login(senderId + "@gcm.googleapis.com", apiKey);
+        conn.addConnectionListener(new LoggingConnectionListener());
+        conn.addAsyncStanzaListener(this, new StanzaTypeFilter(Message.class));
 
-        return connection;
+        conn.login();
+        return conn;
     }
 
-    private static class GcmPacketExtensionProvider implements PacketExtensionProvider {
+    private static class GcmPacketExtensionProvider extends ExtensionElementProvider<GcmPacketExtension> {
 
         @Override
-        public PacketExtension parseExtension(XmlPullParser xmlPullParser) throws Exception {
-            String json = xmlPullParser.nextText();
+        public GcmPacketExtension parse(XmlPullParser parser, int initialDepth) throws XmlPullParserException, IOException, SmackException {
+            String json = parser.nextText();
             return new GcmPacketExtension(json);
         }
     }
@@ -332,7 +348,7 @@ public class Server // implements GCMSender, PacketListener
             return String.format("<%s xmlns=\"%s\">%s</%s>", GCM_ELEMENT_NAME, GCM_NAMESPACE, StringUtils.escapeForXML(json), GCM_ELEMENT_NAME);
         }
 
-        public Packet toPacket() {
+        public Stanza toStanza() {
             Message message = new Message();
             message.addExtension(this);
             return message;
@@ -347,7 +363,7 @@ public class Server // implements GCMSender, PacketListener
         }
 
         @Override
-        public void authenticated(XMPPConnection xmppConnection) {
+        public void authenticated(XMPPConnection xmppConnection, boolean resumed) {
             logger.warn("GCM XMPP Authenticated.");
             reconnectionSuccessful();
         }

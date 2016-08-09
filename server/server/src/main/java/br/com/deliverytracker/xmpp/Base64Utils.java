@@ -1,4 +1,4 @@
-package server;
+package br.com.deliverytracker.xmpp;
 
 import java.util.Arrays;
 
