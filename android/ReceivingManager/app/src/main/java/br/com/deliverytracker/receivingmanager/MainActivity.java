@@ -77,13 +77,13 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                String val = FirebaseInstanceId.getInstance().getToken();
+                Map<String, String> msg = new HashMap<>();
+                msg.put("TOKEN", val);
+                MessageSender.SendMessage(msg);
             }
         });
 
-        String val = FirebaseInstanceId.getInstance().getToken();
-        Map<String, String> msg = new HashMap<>();
-        msg.put("TOKEN", val);
-        MessageSender.SendMessage(msg);
     }
 
     private void checkGoolePlayServicesApi() {

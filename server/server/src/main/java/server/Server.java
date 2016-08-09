@@ -12,6 +12,9 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.StanzaFilter;
+import org.jivesoftware.smack.packet.DefaultExtensionElement;
+import org.jivesoftware.smack.packet.ExtensionElement;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -96,6 +99,17 @@ public class Server {
     }
 
     private void print(Stanza stanza) {
+        if (stanza instanceof Message) {
+            Message m = (Message) stanza;
+            System.out.println(m.getSubject());
+            
+        }
+        for (ExtensionElement element : stanza.getExtensions()) {
+            element.getElementName();
+
+            System.out.println(element);
+        }
+
         System.out.println(stanza);
     }
 
