@@ -8,7 +8,7 @@ import br.com.deliverytracker.xmpp.XMPPServer;
 
 public class Server {
 
-	private static final int WORKERS_COUNT = 10;
+	private static final int WORKERS_COUNT = 1;
 
 	public static void main(String[] args) {
 		Server srv = new Server();

@@ -6,6 +6,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import br.com.deliverytracker.commom.ProtocolConsts;
+
 /**
  * Created by tarcisio on 06/08/16.
  */
@@ -17,7 +19,8 @@ public class MessageSender {
 
     public static void SendMessage(Map<String, String> msgData) {
         RemoteMessage.Builder builder = new RemoteMessage.Builder(SENDER_ID) //
-                .setMessageId(Integer.toString(msgId.incrementAndGet()));
+                .setMessageId(Integer.toString(msgId.incrementAndGet()))//
+                .setMessageType(ProtocolConsts.APP_DATA);
         for (Map.Entry<String, String> entry : msgData.entrySet()) {
             builder = builder.addData(entry.getKey(), entry.getValue());
         }

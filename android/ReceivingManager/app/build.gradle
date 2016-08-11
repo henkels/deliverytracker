@@ -19,6 +19,11 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -28,6 +33,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.1.1'
     compile 'com.google.android.gms:play-services:9.4.0'
     compile 'com.google.firebase:firebase-messaging:9.2.1'
+    compile 'br.com.deliverytracker.commom:protocol:1.0.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -53,10 +53,12 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import br.com.deliverytracker.backoffice.MessageProcessor;
+import br.com.deliverytracker.backoffice.MessageSender;
+import br.com.deliverytracker.commom.ProtocolConsts;
 
 // import static com.codahale.metrics.MetricRegistry.name;
 
-public class XMPPServer implements StanzaListener {
+public class XMPPServer implements StanzaListener, MessageSender {
 
 	private static final String GCM_ELEMENT_NAME = "gcm";
 	private static final String GCM_NAMESPACE = "google:mobile:data";
@@ -146,7 +148,7 @@ public class XMPPServer implements StanzaListener {
 			Object messageType = jsonObject.get("message_type");
 
 			if (messageType == null) {
-				handleUpstreamMessage(jsonObject);
+				handleApStreamMessage(jsonObject);
 				return;
 			}
 
@@ -234,9 +236,10 @@ public class XMPPServer implements StanzaListener {
 		}
 	}
 
-	private void handleUpstreamMessage(Map<String, Object> message) throws SmackException.NotConnectedException {
-		logger.warn("Got upstream message from GCM Server!");
-
+	private void handleApStreamMessage(Map<String, Object> message) throws SmackException.NotConnectedException {
+		logger.info("Got AppData message!");
+		MessageSender x = this;
+		processor.processMessage(message, x);
 		for (String key : message.keySet()) {
 			logger.warn(key + " : " + message.get(key));
 		}
