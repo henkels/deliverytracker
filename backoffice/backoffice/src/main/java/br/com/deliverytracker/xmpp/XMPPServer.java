@@ -16,47 +16,23 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.DefaultExtensionElement;
-// import com.codahale.metrics.Meter;
-// import com.codahale.metrics.MetricRegistry;
-// import com.codahale.metrics.SharedMetricRegistries;
-// import org.jivesoftware.smack.ConnectionConfiguration;
-// import org.jivesoftware.smack.ConnectionListener;
-// import org.jivesoftware.smack.PacketListener;
-// import org.jivesoftware.smack.SmackException;
-// import org.jivesoftware.smack.XMPPConnection;
-// import org.jivesoftware.smack.XMPPException;
-// import org.jivesoftware.smack.filter.PacketTypeFilter;
-// import org.jivesoftware.smack.packet.DefaultPacketExtension;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.provider.ExtensionElementProvider;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-// import org.jivesoftware.smack.packet.Packet;
-// import org.jivesoftware.smack.packet.PacketExtension;
-// import org.jivesoftware.smack.provider.PacketExtensionProvider;
-// import org.jivesoftware.smack.provider.ProviderManager;
-// import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-// import org.whispersystems.pushserver.entities.GcmMessage;
-// import org.whispersystems.pushserver.entities.UnregisteredEvent;
-// import org.whispersystems.pushserver.util.Constants;
-// import org.whispersystems.pushserver.util.Util;
-// import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import br.com.deliverytracker.backoffice.MessageProcessor;
 import br.com.deliverytracker.backoffice.MessageSender;
+import br.com.deliverytracker.commom.JSonSerializer;
 import br.com.deliverytracker.commom.ProtocolConsts;
-
-// import static com.codahale.metrics.MetricRegistry.name;
+import br.com.deliverytracker.commom.XMPPMessage;
 
 public class XMPPServer implements StanzaListener, MessageSender {
 
@@ -88,7 +64,7 @@ public class XMPPServer implements StanzaListener, MessageSender {
 	private static final String USER_NAME = "497175095084@gcm.googleapis.com";
 	private static final String PASSWORD = "AIzaSyD4P94m9lVzUG73GI7Q5dRqZVgxg4Tq-Qo";
 
-	private final Map<String, GcmMessage> pendingMessages = new ConcurrentHashMap<>();
+	private final Map<String, XMPPMessage> pendingMessages = new ConcurrentHashMap<>();
 
 	// private final UnregisteredQueue unregisteredQueue;
 	// private final long senderId;
@@ -102,28 +78,29 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		this.processor = processor;
 	}
 
-	public void sendMessage(GcmMessage message) {
-		String messageId = "m-" + UUID.randomUUID().toString();
-		sendMessage(messageId, message);
+	public void sendMessage(XMPPMessage message) {
+		message.message_id = "m-" + UUID.randomUUID().toString();
+		internalSendMessage(message);
 	}
 
-	private void sendMessage(String messageId, GcmMessage message) {
+	private void internalSendMessage(XMPPMessage message) {
 		try {
-			boolean isReceipt = message.isReceipt();
-
-			Map<String, String> dataObject = new HashMap<>();
-			dataObject.put("type", "message");
-			dataObject.put(isReceipt ? "receipt" : "message", message.getMessage());
-
-			Map<String, Object> messageObject = new HashMap<>();
-			messageObject.put("to", message.getGcmId());
-			messageObject.put("message_id", messageId);
-			messageObject.put("data", dataObject);
-
-			String json = JSONObject.toJSONString(messageObject);
-
-			pendingMessages.put(messageId, message);
-			connection.sendStanza(new GcmPacketExtension(json).toStanza());
+			// boolean isReceipt = message.isReceipt();
+			//
+			// Map<String, String> dataObject = new HashMap<>();
+			// dataObject.put("type", "message");
+			// dataObject.put(isReceipt ? "receipt" : "message",
+			// message.getMessage());
+			//
+			// Map<String, Object> messageObject = new HashMap<>();
+			// messageObject.put("to", message.getGcmId());
+			// messageObject.put("message_id", messageId);
+			// messageObject.put("data", dataObject);
+			//
+			// String json = JSONObject.toJSONString(messageObject);
+			//
+			pendingMessages.put(message.message_id, message);
+			connection.sendStanza(new GcmPacketExtension(message).toStanza());
 		} catch (SmackException.NotConnectedException e) {
 			logger.warn("GCMClient", "No connection", e);
 		}
@@ -141,43 +118,39 @@ public class XMPPServer implements StanzaListener, MessageSender {
 	public void processPacket(Stanza stanza) throws SmackException.NotConnectedException {
 		Message incomingMessage = (Message) stanza;
 		GcmPacketExtension gcmPacket = (GcmPacketExtension) incomingMessage.getExtension(GCM_NAMESPACE);
-		String json = gcmPacket.getJson();
+		XMPPMessage message = gcmPacket.getMessage();
 
 		try {
-			Map<String, Object> jsonObject = (Map<String, Object>) JSONValue.parseWithException(json);
-			Object messageType = jsonObject.get("message_type");
+			String messageType = message.message_type;
 
 			if (messageType == null) {
-				handleApStreamMessage(jsonObject);
+				handleAppStreamMessage(message);
 				return;
 			}
 
-			switch (messageType.toString()) {
+			switch (messageType) {
 			case "ack":
-				handleAckReceipt(jsonObject);
+				handleAckReceipt(message);
 				break;
 			case "nack":
-				handleNackReceipt(jsonObject);
+				handleNackReceipt(message);
 				break;
 			case "receipt":
-				handleDeliveryReceipt(jsonObject);
+				handleDeliveryReceipt(message);
 				break;
 			case "control":
-				handleControlMessage(jsonObject);
+				handleControlMessage(message);
 				break;
 			default:
-				logger.warn("Received unknown GCM message: " + messageType.toString());
+				logger.warn("Received unknown GCM message: " + messageType);
 			}
-
-		} catch (ParseException e) {
-			logger.warn("GCMClient", "Received unparsable message", e);
 		} catch (Exception e) {
 			logger.warn("GCMClient", "Failed to process packet", e);
 		}
 	}
 
-	private void handleControlMessage(Map<String, Object> message) {
-		String controlType = (String) message.get("control_type");
+	private void handleControlMessage(XMPPMessage message) {
+		String controlType = message.control_type;
 
 		if ("CONNECTION_DRAINING".equals(controlType)) {
 			logger.warn("GCM Connection is draining! Initiating reconnect...");
@@ -187,13 +160,13 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		}
 	}
 
-	private void handleDeliveryReceipt(Map<String, Object> message) {
+	private void handleDeliveryReceipt(XMPPMessage message) {
 		logger.warn("Got delivery receipt!");
 	}
 
-	private void handleNackReceipt(Map<String, Object> message) {
-		String messageId = (String) message.get("message_id");
-		String errorCode = (String) message.get("error");
+	private void handleNackReceipt(XMPPMessage message) {
+		String messageId = message.message_id;
+		String errorCode = message.error;
 
 		if (errorCode == null) {
 			logger.warn("Null GCM error code!");
@@ -226,40 +199,31 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		}
 	}
 
-	private void handleAckReceipt(Map<String, Object> message) {
+	private void handleAckReceipt(XMPPMessage message) {
 		// TODO success.mark();
 
-		String messageId = (String) message.get("message_id");
+		String messageId = (String) message.message_id;
 
 		if (messageId != null) {
 			pendingMessages.remove(messageId);
 		}
 	}
 
-	private void handleApStreamMessage(Map<String, Object> message) throws SmackException.NotConnectedException {
-		logger.info("Got AppData message!");
-		MessageSender x = this;
-		processor.processMessage(message, x);
-		for (String key : message.keySet()) {
-			logger.warn(key + " : " + message.get(key));
-		}
+	private void handleAppStreamMessage(XMPPMessage message) throws SmackException.NotConnectedException {
+		logger.info(String.format("Got Message : [%s]", message));
+		processor.processMessage(message, this);
 
-		Map<String, Object> ack = new HashMap<>();
-		message.put("message_type", "ack");
-		message.put("to", message.get("from"));
-		message.put("message_id", message.get("message_id"));
+		XMPPMessage ack = message.ack();
 
-		String json = JSONValue.toJSONString(ack);
-
-		Stanza request = new GcmPacketExtension(json).toStanza();
+		Stanza request = new GcmPacketExtension(ack).toStanza();
 		connection.sendStanza(request);
 	}
 
-	private void handleBadRegistration(Map<String, Object> message) {
+	private void handleBadRegistration(XMPPMessage message) {
 		logger.warn("Got GCM unregistered notice!");
 		// TODO unregistered.mark();
 
-		String messageId = (String) message.get("message_id");
+		String messageId = message.message_id;
 
 		if (messageId != null) {
 			// TODO
@@ -275,10 +239,10 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		}
 	}
 
-	private void handleServerFailure(Map<String, Object> message) {
+	private void handleServerFailure(XMPPMessage message) {
 		// TODO failure.mark();
 
-		String messageId = (String) message.get("message_id");
+		String messageId = message.message_id;
 
 		if (messageId != null) {
 			GcmMessage unacknowledgedMessage = pendingMessages.remove(messageId);
@@ -289,7 +253,7 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		}
 	}
 
-	private void handleClientFailure(Map<String, Object> message) {
+	private void handleClientFailure(XMPPMessage message) {
 		// TODO failure.mark();
 
 		logger.warn("Unrecoverable error: " + message.get("error"));
@@ -353,21 +317,26 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
 	private static final class GcmPacketExtension extends DefaultExtensionElement {
 
-		private final String json;
+		private final XMPPMessage message;
 
-		public GcmPacketExtension(String json) {
+		public GcmPacketExtension(XMPPMessage message) {
 			super(GCM_ELEMENT_NAME, GCM_NAMESPACE);
-			this.json = json;
+			this.message = message;
 		}
 
-		public String getJson() {
-			return json;
+		// public GcmPacketExtension(String json) {
+		// super(GCM_ELEMENT_NAME, GCM_NAMESPACE);
+		// this.json = json;
+		// }
+
+		public XMPPMessage getMessage() {
+			return message;
 		}
 
 		@Override
 		public String toXML() {
 			return String.format("<%s xmlns=\"%s\">%s</%s>", GCM_ELEMENT_NAME, GCM_NAMESPACE,
-					StringUtils.escapeForXML(json), GCM_ELEMENT_NAME);
+					StringUtils.escapeForXML(JSonSerializer.toJSON(message)), GCM_ELEMENT_NAME);
 		}
 
 		public Stanza toStanza() {

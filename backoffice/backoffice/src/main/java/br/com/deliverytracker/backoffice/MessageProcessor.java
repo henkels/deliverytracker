@@ -1,9 +1,9 @@
 package br.com.deliverytracker.backoffice;
 
-import java.util.Map;
+import br.com.deliverytracker.commom.XMPPMessage;
 
 public interface MessageProcessor {
 
-	void processMessage(Map<String, Object> messageData, MessageSender messageSender);
+	void processMessage(XMPPMessage message, MessageSender messageSender);
 
 }
