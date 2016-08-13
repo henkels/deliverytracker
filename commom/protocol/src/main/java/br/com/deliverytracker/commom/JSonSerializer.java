@@ -5,7 +5,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
@@ -48,7 +47,6 @@ import com.google.gson.JsonSerializer;
  */
 public class JSonSerializer {
 
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
 	private static DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME;
 	private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
 	private static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_TIME;
@@ -226,9 +224,9 @@ public class JSonSerializer {
 				JsonArray asArray = json.getAsJsonArray();
 				Collection<Object> collection = new ArrayList<>();
 				Type elementType = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
-				asArray.forEach((JsonElement item) -> {
+				for (JsonElement item : asArray) {
 					collection.add(objectGson.fromJson(item, elementType));
-				});
+				}
 				return collection;
 			}
 			if (!(json instanceof JsonObject) || isPrimitive(typeOfT)) {
@@ -360,6 +358,9 @@ public class JSonSerializer {
 		}
 		return builder.create();
 	}
+	
+	private static List<?> PRIMITIVES_CLASSES = Arrays.asList(String.class, Date.class, LocalDate.class, LocalTime.class,
+			Double.class, Long.class, Boolean.class, BigDecimal.class);
 
 	/**
 	 * Is this a type of primitive value?
@@ -370,10 +371,9 @@ public class JSonSerializer {
 			return false;
 		}
 		Class<?> clazz = (Class<?>) valueType;
-		List<Class<?>> basicTypes = Arrays.asList(String.class, Date.class, LocalDate.class, LocalTime.class,
-				Double.class, Long.class, Boolean.class, BigDecimal.class);
-		return clazz.isPrimitive() || clazz.isEnum() || basicTypes.contains(valueType);
+		return clazz.isPrimitive() || clazz.isEnum() || PRIMITIVES_CLASSES.contains(valueType);
 	}
+
 
 	/**
 	 * Is this a type of value that we should not handle as an object?

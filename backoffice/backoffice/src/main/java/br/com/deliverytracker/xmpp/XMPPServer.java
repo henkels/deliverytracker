@@ -3,6 +3,7 @@ package br.com.deliverytracker.xmpp;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -245,10 +246,10 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		String messageId = message.message_id;
 
 		if (messageId != null) {
-			GcmMessage unacknowledgedMessage = pendingMessages.remove(messageId);
+			XMPPMessage unacknowledgedMessage = pendingMessages.remove(messageId);
 
 			if (unacknowledgedMessage != null) {
-				sendMessage(messageId, unacknowledgedMessage);
+				sendMessage(unacknowledgedMessage);
 			}
 		}
 	}
@@ -256,8 +257,8 @@ public class XMPPServer implements StanzaListener, MessageSender {
 	private void handleClientFailure(XMPPMessage message) {
 		// TODO failure.mark();
 
-		logger.warn("Unrecoverable error: " + message.get("error"));
-		String messageId = (String) message.get("message_id");
+		logger.warn("Unrecoverable error: " + message.error);
+		String messageId = (String) message.message_id;
 
 		if (messageId != null) {
 			pendingMessages.remove(messageId);
@@ -324,10 +325,10 @@ public class XMPPServer implements StanzaListener, MessageSender {
 			this.message = message;
 		}
 
-		// public GcmPacketExtension(String json) {
-		// super(GCM_ELEMENT_NAME, GCM_NAMESPACE);
-		// this.json = json;
-		// }
+		public GcmPacketExtension(String json) {
+			super(GCM_ELEMENT_NAME, GCM_NAMESPACE);
+			this.message = JSonSerializer.toObject(json, XMPPMessage.class);
+		}
 
 		public XMPPMessage getMessage() {
 			return message;
@@ -362,10 +363,10 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		@Override
 		public void reconnectionSuccessful() {
 			logger.warn("GCM XMPP Reconnected, resending... Pending Size: " + pendingMessages.size());
-			HashMap<String, GcmMessage> resendMessages = new HashMap<>(pendingMessages);
+			HashMap<String, XMPPMessage> resendMessages = new HashMap<>(pendingMessages);
 
-			for (Map.Entry<String, GcmMessage> resendMessage : resendMessages.entrySet()) {
-				sendMessage(resendMessage.getKey(), resendMessage.getValue());
+			for (Entry<String, XMPPMessage> resendMessage : resendMessages.entrySet()) {
+				sendMessage(resendMessage.getValue());
 			}
 		}
 

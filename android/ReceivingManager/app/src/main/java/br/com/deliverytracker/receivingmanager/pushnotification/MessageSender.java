@@ -19,8 +19,7 @@ public class MessageSender {
 
     public static void SendMessage(Map<String, String> msgData) {
         RemoteMessage.Builder builder = new RemoteMessage.Builder(SENDER_ID) //
-                .setMessageId(Integer.toString(msgId.incrementAndGet()))//
-                .setMessageType(ProtocolConsts.APP_DATA);
+                .setMessageId(Integer.toString(msgId.incrementAndGet()));
         for (Map.Entry<String, String> entry : msgData.entrySet()) {
             builder = builder.addData(entry.getKey(), entry.getValue());
         }
