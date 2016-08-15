@@ -327,6 +327,7 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
 		public GcmPacketExtension(String json) {
 			super(GCM_ELEMENT_NAME, GCM_NAMESPACE);
+			System.out.println(json);
 			this.message = JSonSerializer.toObject(json, XMPPMessage.class);
 		}
 

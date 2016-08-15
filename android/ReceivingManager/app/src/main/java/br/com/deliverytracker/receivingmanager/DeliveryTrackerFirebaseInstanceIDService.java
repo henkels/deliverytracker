@@ -50,6 +50,8 @@ public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceId
     private void sendRegistrationToServer(String token) {
         HashMap<String, String> msg = new HashMap<>();
         msg.put("Token", token);
+        msg.put("key1", "data1");
+        msg.put("key2", "data2");
         MessageSender.SendMessage(msg);
     }
 

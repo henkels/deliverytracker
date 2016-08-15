@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
                 String val = FirebaseInstanceId.getInstance().getToken();
                 Map<String, String> msg = new HashMap<>();
                 msg.put("TOKEN", val);
+                msg.put("DATA1", "VALUE1");
                 MessageSender.SendMessage(msg);
             }
         });
