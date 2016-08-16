@@ -4,18 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +16,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
@@ -47,9 +36,12 @@ import com.google.gson.JsonSerializer;
  */
 public class JSonSerializer {
 
-	private static DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME;
-	private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
-	private static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_TIME;
+	// private static DateTimeFormatter DATE_TIME_FORMAT =
+	// DateTimeFormatter.ISO_DATE_TIME;
+	// private static DateTimeFormatter DATE_FORMAT =
+	// DateTimeFormatter.ISO_LOCAL_DATE;
+	// private static DateTimeFormatter TIME_FORMAT =
+	// DateTimeFormatter.ISO_LOCAL_TIME;
 
 	/**
 	 * The name of the property that is used as discriminator for polymorphic
@@ -66,115 +58,129 @@ public class JSonSerializer {
 	 */
 	private static Gson primitiveGson = buildGson(false);
 
-	/**
-	 * Type adapter between JSON strings and Java Date objects.
-	 */
-	private static class DateTimeAdapter implements JsonSerializer<Date>, JsonDeserializer<Date> {
+	// /**
+	// * Type adapter between JSON strings and Java Date objects.
+	// */
+	// private static class DateTimeAdapter implements JsonSerializer<Date>,
+	// JsonDeserializer<Date> {
+	//
+	// @Override
+	// public JsonElement serialize(Date src, Type typeOfSrc,
+	// JsonSerializationContext context) {
+	// if (src == null) {
+	// return null;
+	// }
+	// return new JsonPrimitive(
+	// DATE_TIME_FORMAT.format(OffsetDateTime.ofInstant(src.toInstant(),
+	// ZoneOffset.UTC)));
+	// }
+	//
+	// @Override
+	// public Date deserialize(JsonElement json, Type typeOfT,
+	// JsonDeserializationContext context)
+	// throws JsonParseException {
+	// if (json == null || json instanceof JsonNull) {
+	// return null;
+	// }
+	// try {
+	// return new Date(OffsetDateTime.parse(json.getAsString(),
+	// DATE_TIME_FORMAT).toInstant().toEpochMilli());
+	// } catch (DateTimeParseException e) {
+	// throw new JsonParseException(e);
+	// }
+	// }
+	// }
 
-		@Override
-		public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
-			if (src == null) {
-				return null;
-			}
-			return new JsonPrimitive(
-					DATE_TIME_FORMAT.format(OffsetDateTime.ofInstant(src.toInstant(), ZoneOffset.UTC)));
-		}
+	// /**
+	// * Type adapter between JSON strings and Java LocalDate objects.
+	// */
+	// private static class DateAdapter implements JsonSerializer<LocalDate>,
+	// JsonDeserializer<LocalDate> {
+	//
+	// @Override
+	// public JsonElement serialize(LocalDate src, Type typeOfSrc,
+	// JsonSerializationContext context) {
+	// if (src == null) {
+	// return null;
+	// }
+	// return new JsonPrimitive(DATE_FORMAT.format(src));
+	// }
+	//
+	// @Override
+	// public LocalDate deserialize(JsonElement json, Type typeOfT,
+	// JsonDeserializationContext context)
+	// throws JsonParseException {
+	// if (json == null || json instanceof JsonNull) {
+	// return null;
+	// }
+	// try {
+	// return LocalDate.parse(json.getAsString(), DATE_FORMAT);
+	// } catch (DateTimeParseException e) {
+	// throw new JsonParseException(e);
+	// }
+	// }
+	// }
 
-		@Override
-		public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-				throws JsonParseException {
-			if (json == null || json instanceof JsonNull) {
-				return null;
-			}
-			try {
-				return new Date(OffsetDateTime.parse(json.getAsString(), DATE_TIME_FORMAT).toInstant().toEpochMilli());
-			} catch (DateTimeParseException e) {
-				throw new JsonParseException(e);
-			}
-		}
-	}
+	// /**
+	// * Type adapter between JSON strings and Java LocalTime objects.
+	// */
+	// private static class TimeAdapter implements JsonSerializer<LocalTime>,
+	// JsonDeserializer<LocalTime> {
+	//
+	// @Override
+	// public JsonElement serialize(LocalTime src, Type typeOfSrc,
+	// JsonSerializationContext context) {
+	// if (src == null) {
+	// return null;
+	// }
+	// return new JsonPrimitive(TIME_FORMAT.format(src));
+	// }
+	//
+	// @Override
+	// public LocalTime deserialize(JsonElement json, Type typeOfT,
+	// JsonDeserializationContext context)
+	// throws JsonParseException {
+	// if (json == null || json instanceof JsonNull) {
+	// return null;
+	// }
+	// try {
+	// return LocalTime.parse(json.getAsString(), TIME_FORMAT);
+	// } catch (DateTimeParseException e) {
+	// throw new JsonParseException(e);
+	// }
+	// }
+	// }
 
-	/**
-	 * Type adapter between JSON strings and Java LocalDate objects.
-	 */
-	private static class DateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
-
-		@Override
-		public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
-			if (src == null) {
-				return null;
-			}
-			return new JsonPrimitive(DATE_FORMAT.format(src));
-		}
-
-		@Override
-		public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-				throws JsonParseException {
-			if (json == null || json instanceof JsonNull) {
-				return null;
-			}
-			try {
-				return LocalDate.parse(json.getAsString(), DATE_FORMAT);
-			} catch (DateTimeParseException e) {
-				throw new JsonParseException(e);
-			}
-		}
-	}
-
-	/**
-	 * Type adapter between JSON strings and Java LocalTime objects.
-	 */
-	private static class TimeAdapter implements JsonSerializer<LocalTime>, JsonDeserializer<LocalTime> {
-
-		@Override
-		public JsonElement serialize(LocalTime src, Type typeOfSrc, JsonSerializationContext context) {
-			if (src == null) {
-				return null;
-			}
-			return new JsonPrimitive(TIME_FORMAT.format(src));
-		}
-
-		@Override
-		public LocalTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-				throws JsonParseException {
-			if (json == null || json instanceof JsonNull) {
-				return null;
-			}
-			try {
-				return LocalTime.parse(json.getAsString(), TIME_FORMAT);
-			} catch (DateTimeParseException e) {
-				throw new JsonParseException(e);
-			}
-		}
-	}
-
-	/**
-	 * Type adapter between (Base64-encoded) JSON strings and Java byte[]
-	 * objects.
-	 */
-	private static class BlobAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
-
-		@Override
-		public JsonElement serialize(byte[] src, Type typeOfSrc, JsonSerializationContext context) {
-			if (src == null) {
-				return null;
-			}
-			return new JsonPrimitive(Base64.getEncoder().encodeToString(src));
-		}
-
-		@Override
-		public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-				throws JsonParseException {
-			if (json == null || json instanceof JsonNull) {
-				return null;
-			}
-			try {
-				return Base64.getDecoder().decode(json.getAsString());
-			} catch (DateTimeParseException e) {
-				throw new JsonParseException(e);
-			}
-		}
-	}
+	// /**
+	// * Type adapter between (Base64-encoded) JSON strings and Java byte[]
+	// * objects.
+	// */
+	// private static class BlobAdapter implements JsonSerializer<byte[]>,
+	// JsonDeserializer<byte[]> {
+	//
+	// @Override
+	// public JsonElement serialize(byte[] src, Type typeOfSrc,
+	// JsonSerializationContext context) {
+	// if (src == null) {
+	// return null;
+	// }
+	// return new JsonPrimitive(Base64.getEncoder().encodeToString(src));
+	// }
+	//
+	// @Override
+	// public byte[] deserialize(JsonElement json, Type typeOfT,
+	// JsonDeserializationContext context)
+	// throws JsonParseException {
+	// if (json == null || json instanceof JsonNull) {
+	// return null;
+	// }
+	// try {
+	// return Base64.getDecoder().decode(json.getAsString());
+	// } catch (DateTimeParseException e) {
+	// throw new JsonParseException(e);
+	// }
+	// }
+	// }
 
 	/**
 	 * Type adapter between JSON and Java objects.
@@ -186,9 +192,10 @@ public class JSonSerializer {
 			if (src == null) {
 				return null;
 			}
-			if (isPrimitive(typeOfSrc)) {
-				return primitiveGson.toJsonTree(src);
-			}
+			// TODO
+			// if (isPrimitive(typeOfSrc)) {
+			// return primitiveGson.toJsonTree(src);
+			// }
 			if (isCollection(typeOfSrc)) {
 				JsonArray array = new JsonArray();
 				for (Object current : (Collection<?>) src) {
@@ -229,9 +236,10 @@ public class JSonSerializer {
 				}
 				return collection;
 			}
-			if (!(json instanceof JsonObject) || isPrimitive(typeOfT)) {
-				return primitiveGson.fromJson(json, typeOfT);
-			}
+			// TODO
+			// if (!(json instanceof JsonObject) || isPrimitive(typeOfT)) {
+			// return primitiveGson.fromJson(json, typeOfT);
+			// }
 			JsonObject jsonObject = (JsonObject) json;
 			JsonElement discriminatorValue = jsonObject.get(DISCRIMINATOR);
 			try {
@@ -348,32 +356,34 @@ public class JSonSerializer {
 		// we don't want Gson's default handling of date/time/date time/byte
 		// array
 		// representations
-		builder.registerTypeAdapter(Date.class, new DateTimeAdapter());
-		builder.registerTypeAdapter(LocalDate.class, new DateAdapter());
-		builder.registerTypeAdapter(LocalTime.class, new TimeAdapter());
-		builder.registerTypeAdapter(byte[].class, new BlobAdapter());
+		// TODO
+		// builder.registerTypeAdapter(Date.class, new DateTimeAdapter());
+		// builder.registerTypeAdapter(LocalDate.class, new DateAdapter());
+		// builder.registerTypeAdapter(LocalTime.class, new TimeAdapter());
+		// builder.registerTypeAdapter(byte[].class, new BlobAdapter());
 
 		if (supportObjects) {
 			builder.registerTypeHierarchyAdapter(Object.class, new ObjectAdapter());
 		}
 		return builder.create();
 	}
-	
-	private static List<?> PRIMITIVES_CLASSES = Arrays.asList(String.class, Date.class, LocalDate.class, LocalTime.class,
-			Double.class, Long.class, Boolean.class, BigDecimal.class);
 
-	/**
-	 * Is this a type of primitive value?
-	 */
-	private static boolean isPrimitive(Type valueType) {
-		if (!(valueType instanceof Class)) {
-			// don't know what this is
-			return false;
-		}
-		Class<?> clazz = (Class<?>) valueType;
-		return clazz.isPrimitive() || clazz.isEnum() || PRIMITIVES_CLASSES.contains(valueType);
-	}
+	// private static List<?> PRIMITIVES_CLASSES = Arrays.asList(String.class,
+	// Date.class, LocalDate.class, LocalTime.class,
+	// Double.class, Long.class, Boolean.class, BigDecimal.class);
 
+	// /**
+	// * Is this a type of primitive value?
+	// */
+	// private static boolean isPrimitive(Type valueType) {
+	// if (!(valueType instanceof Class)) {
+	// // don't know what this is
+	// return false;
+	// }
+	// Class<?> clazz = (Class<?>) valueType;
+	// return clazz.isPrimitive() || clazz.isEnum() ||
+	// PRIMITIVES_CLASSES.contains(valueType);
+	// }
 
 	/**
 	 * Is this a type of value that we should not handle as an object?
