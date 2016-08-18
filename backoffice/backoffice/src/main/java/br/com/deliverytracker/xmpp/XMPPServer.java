@@ -32,7 +32,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import br.com.deliverytracker.backoffice.MessageProcessor;
 import br.com.deliverytracker.backoffice.MessageSender;
 import br.com.deliverytracker.commom.JSonSerializer;
-import br.com.deliverytracker.commom.ProtocolConsts;
 import br.com.deliverytracker.commom.XMPPMessage;
 
 public class XMPPServer implements StanzaListener, MessageSender {
@@ -47,16 +46,6 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
 	private final Logger logger = LoggerFactory.getLogger(XMPPServer.class);
 
-	// private final MetricRegistry metricRegistry =
-	// SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
-	//
-	// private final Meter success = metricRegistry.meter(name(getClass(),
-	// "sent", "success"));
-	// private final Meter failure = metricRegistry.meter(name(getClass(),
-	// "sent", "failure"));
-	// private final Meter unregistered = metricRegistry.meter(name(getClass(),
-	// "sent", "unregistered"));
-
 	private static final String SERVER_HOST = "fcm-xmpp.googleapis.com";
 	private static final int SERVER_PORT = 5235;
 
@@ -66,10 +55,6 @@ public class XMPPServer implements StanzaListener, MessageSender {
 	private static final String PASSWORD = "AIzaSyD4P94m9lVzUG73GI7Q5dRqZVgxg4Tq-Qo";
 
 	private final Map<String, XMPPMessage> pendingMessages = new ConcurrentHashMap<>();
-
-	// private final UnregisteredQueue unregisteredQueue;
-	// private final long senderId;
-	// private final String apiKey;
 
 	private XMPPTCPConnection connection;
 
@@ -86,20 +71,6 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
 	private void internalSendMessage(XMPPMessage message) {
 		try {
-			// boolean isReceipt = message.isReceipt();
-			//
-			// Map<String, String> dataObject = new HashMap<>();
-			// dataObject.put("type", "message");
-			// dataObject.put(isReceipt ? "receipt" : "message",
-			// message.getMessage());
-			//
-			// Map<String, Object> messageObject = new HashMap<>();
-			// messageObject.put("to", message.getGcmId());
-			// messageObject.put("message_id", messageId);
-			// messageObject.put("data", dataObject);
-			//
-			// String json = JSONObject.toJSONString(messageObject);
-			//
 			pendingMessages.put(message.message_id, message);
 			connection.sendStanza(new GcmPacketExtension(message).toStanza());
 		} catch (SmackException.NotConnectedException e) {
@@ -201,8 +172,6 @@ public class XMPPServer implements StanzaListener, MessageSender {
 	}
 
 	private void handleAckReceipt(XMPPMessage message) {
-		// TODO success.mark();
-
 		String messageId = (String) message.message_id;
 
 		if (messageId != null) {
@@ -221,28 +190,23 @@ public class XMPPServer implements StanzaListener, MessageSender {
 	}
 
 	private void handleBadRegistration(XMPPMessage message) {
-		logger.warn("Got GCM unregistered notice!");
-		// TODO unregistered.mark();
+		// TODO
+		// logger.warn("Got GCM unregistered notice!");
+		// String messageId = message.message_id;
 
-		String messageId = message.message_id;
-
-		if (messageId != null) {
-			// TODO
-			// GcmMessage unacknowledgedMessage =
-			// pendingMessages.remove(messageId);
-			// if (unacknowledgedMessage != null) {
-			// unregisteredQueue.put(new
-			// UnregisteredEvent(unacknowledgedMessage.getGcmId(), null,
-			// unacknowledgedMessage.getNumber(),
-			// unacknowledgedMessage.getDeviceId(),
-			// System.currentTimeMillis()));
-			// }
-		}
+		// if (messageId != null) {
+		// XMPPMessage unacknowledgedMessage =
+		// pendingMessages.remove(messageId);
+		// if (unacknowledgedMessage != null) {
+		// unregisteredQueue.put(
+		// new UnregisteredEvent(unacknowledgedMessage.getGcmId(), null,
+		// unacknowledgedMessage.getNumber(),
+		// unacknowledgedMessage.getDeviceId(), System.currentTimeMillis()));
+		// }
+		// }
 	}
 
 	private void handleServerFailure(XMPPMessage message) {
-		// TODO failure.mark();
-
 		String messageId = message.message_id;
 
 		if (messageId != null) {
@@ -255,10 +219,8 @@ public class XMPPServer implements StanzaListener, MessageSender {
 	}
 
 	private void handleClientFailure(XMPPMessage message) {
-		// TODO failure.mark();
-
 		logger.warn("Unrecoverable error: " + message.error);
-		String messageId = (String) message.message_id;
+		String messageId = message.message_id;
 
 		if (messageId != null) {
 			pendingMessages.remove(messageId);
@@ -326,9 +288,7 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		}
 
 		public GcmPacketExtension(String json) {
-			super(GCM_ELEMENT_NAME, GCM_NAMESPACE);
-			System.out.println(json);
-			this.message = JSonSerializer.toObject(json, XMPPMessage.class);
+			this(JSonSerializer.toObject(json, XMPPMessage.class));
 		}
 
 		public XMPPMessage getMessage() {
