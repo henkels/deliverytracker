@@ -317,21 +317,9 @@ public class JSonSerializer {
 		return true;
 	}
 
-	/**
-	 * Converts the given JSON representation into a instance of the given POJO
-	 * type.
-	 * 
-	 * @param <T>
-	 *            type of the object being converted
-	 * @param json
-	 *            input json markup
-	 * @param targetType
-	 *            the target POJO class
-	 * @return an instance of the specified POJO class with the values loaded
-	 *         from the JSON representation
-	 */
-	public static <T> T toObject(String json, Class<T> targetType) {
-		return getGson().fromJson(json, targetType);
+	public static XMPPMessage toMessage(String json) {
+		return null;
+		//return getGson().fromJson(json, targetType);
 	}
 
 	/**
