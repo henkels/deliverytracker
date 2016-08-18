@@ -31,7 +31,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import br.com.deliverytracker.backoffice.MessageProcessor;
 import br.com.deliverytracker.backoffice.MessageSender;
-import br.com.deliverytracker.commom.JSonSerializer;
+import br.com.deliverytracker.commom.MapSerializer;
 import br.com.deliverytracker.commom.XMPPMessage;
 
 public class XMPPServer implements StanzaListener, MessageSender {
@@ -288,7 +288,7 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		}
 
 		public GcmPacketExtension(String json) {
-			this(JSonSerializer.toObject(json, XMPPMessage.class));
+			this(MapSerializer.toObject(json, XMPPMessage.class));
 		}
 
 		public XMPPMessage getMessage() {
@@ -298,7 +298,7 @@ public class XMPPServer implements StanzaListener, MessageSender {
 		@Override
 		public String toXML() {
 			return String.format("<%s xmlns=\"%s\">%s</%s>", GCM_ELEMENT_NAME, GCM_NAMESPACE,
-					StringUtils.escapeForXML(JSonSerializer.toJSON(message)), GCM_ELEMENT_NAME);
+					StringUtils.escapeForXML(MapSerializer.toJSON(message)), GCM_ELEMENT_NAME);
 		}
 
 		public Stanza toStanza() {

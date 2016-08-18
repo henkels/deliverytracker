@@ -34,7 +34,7 @@ import com.google.gson.JsonSerializer;
  * <li>other kinds of arrays are ignored
  * </ul>
  */
-public class JSonSerializer {
+public class MapSerializer {
 
 	// private static DateTimeFormatter DATE_TIME_FORMAT =
 	// DateTimeFormatter.ISO_DATE_TIME;
@@ -317,9 +317,9 @@ public class JSonSerializer {
 		return true;
 	}
 
-	public static XMPPMessage toMessage(String json) {
+	public static XMPPMessage unserialize(Map<String, String> data) {
 		return null;
-		//return getGson().fromJson(json, targetType);
+		// return getGson().fromJson(json, targetType);
 	}
 
 	/**
@@ -331,8 +331,9 @@ public class JSonSerializer {
 	 *            the POJO to convert
 	 * @return the resulting JSON representation
 	 */
-	public static <T> String toJSON(T source) {
-		return getGson().toJson(source);
+	public static Map<String, String> serialize(XMPPMessage message) {
+		return null;
+		// return getGson().toJson(source);
 	}
 
 	private static Gson getGson() {

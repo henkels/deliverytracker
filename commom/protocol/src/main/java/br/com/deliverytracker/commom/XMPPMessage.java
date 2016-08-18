@@ -1,6 +1,6 @@
 package br.com.deliverytracker.commom;
 
-public class XMPPMessage {
+public class XMPPMessage implements MapSerializable {
 
 	public String message_type;
 	public String to;
@@ -9,6 +9,8 @@ public class XMPPMessage {
 	public boolean isReceipt;
 	public String error;
 	public String control_type;
+	public MapSerializable data;
+	
 
 	public XMPPMessage ack() {
 		XMPPMessage ack = new XMPPMessage();
