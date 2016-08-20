@@ -1,6 +1,6 @@
 package br.com.deliverytracker.commom;
 
-public class XMPPMessage extends AbstractMapSerializable {
+public class XMPPMessage {
 
 	public String message_type;
 	public String to;
@@ -9,7 +9,7 @@ public class XMPPMessage extends AbstractMapSerializable {
 	public boolean isReceipt;
 	public String error;
 	public String control_type;
-	public AbstractMapSerializable data;
+	public ToMapSerializer data;
 	
 
 	public XMPPMessage ack() {
