@@ -9,13 +9,82 @@ import java.util.Map.Entry;
 public abstract class AbstractMapSerializable {
 
     private interface IMapSerializer {
+
+        void serializeTo(Map<String, String> data, StringBuilder ctx, Object value);
     }
 
-    private static final IMapSerializer SIMPLE_CLASS_SERIALIZER = new IMapSerializer() {};
+    private static class SimpleClassSerializer implements IMapSerializer {
 
-    private static final IMapSerializer MULTI_CLASS_SERIALIZER = new IMapSerializer() {};
+        protected void serializeTo(Map<String, String> data, StringBuilder ctx, AbstractMapSerializable value) {
+            value.serializeTo(data, ctx);
+        }
+
+        @Override
+        public void serializeTo(Map<String, String> data, StringBuilder ctx, Object value) {
+            serializeTo(data, ctx, (AbstractMapSerializable) value);
+        }
+
+    }
+
+    private static class MultiClassSerializer extends SimpleClassSerializer {
+
+        @Override
+        protected void serializeTo(Map<String, String> data, StringBuilder ctx, AbstractMapSerializable value) {
+            int len = ctx.length();
+            ctx.append(".class");
+            Class<? extends Object> clazz = value.getClass();
+            // Salve a classe em questão
+            // Se o package da classe é o mesmo do objeto corrente, salva o simpleName, senão o canonicalName
+            String className = clazz.getPackage().equals(getClass().getPackage()) ? clazz.getSimpleName() : clazz.getCanonicalName();
+            data.put(ctx.toString(), className);
+            ctx.setLength(len);
+            super.serializeTo(data, ctx, value);
+        }
+
+    }
+
+    private static abstract class AbstractPrimitiveSerializer implements IMapSerializer {
+
+        protected void serializeTo(Map<String, String> data, StringBuilder ctx, String value) {
+            data.put(ctx.toString(), value);
+        }
+    }
+
+    private static class BooleanPrimitiveSerializer extends AbstractPrimitiveSerializer {
+
+        @Override
+        public void serializeTo(Map<String, String> data, StringBuilder ctx, Object value) {
+            Boolean b = (Boolean) value;
+            if (b) {
+                serializeTo(data, ctx, value.toString());
+            }
+        }
+    }
+
+    private static class StringPrimitiveSerializer extends AbstractPrimitiveSerializer {
+
+        @Override
+        public void serializeTo(Map<String, String> data, StringBuilder ctx, Object value) {
+            String val = value.toString();
+            val = val.replaceAll("\"", "\"\"");
+            serializeTo(data, ctx, val);
+        }
+    }
+
+    private static final IMapSerializer SIMPLE_CLASS_SERIALIZER = new SimpleClassSerializer();
+
+    private static final IMapSerializer MULTI_CLASS_SERIALIZER = new MultiClassSerializer();
+
+    private static final Map<Class<?>, IMapSerializer> PRIMITIVE_SERIALIZERS = buildPrimitiveSerilizers();
 
     private static final Map<Field, IMapSerializer> SERIALIZER_MAP = new HashMap<>();
+
+    private static Map<Class<?>, IMapSerializer> buildPrimitiveSerilizers() {
+        Map<Class<?>, IMapSerializer> ret = new HashMap<>();
+        ret.put(boolean.class, new BooleanPrimitiveSerializer());
+        //ret.put(String.class, new StringPrimitiveSerializer());
+        return ret;
+    }
 
     synchronized private static final IMapSerializer getSerializer(Field field, Object currentValue) {
         IMapSerializer serializer = SERIALIZER_MAP.get(field);
@@ -23,8 +92,11 @@ public abstract class AbstractMapSerializable {
             Class<?> type = field.getType();
             if (type.isAssignableFrom(AbstractMapSerializable.class)) {
                 serializer = field.getType() != currentValue.getClass() ? MULTI_CLASS_SERIALIZER : SIMPLE_CLASS_SERIALIZER;
-            } else if (1 == 1) {
-                serializer = null;
+            } else {
+                serializer = PRIMITIVE_SERIALIZERS.get(type);
+                if (serializer == null) {
+                    throw new RuntimeException(String.format("A serialização para mapa do tipo <%s> não é suportada", type.getCanonicalName()));
+                }
             }
             SERIALIZER_MAP.put(field, serializer);
         } else {
@@ -38,8 +110,7 @@ public abstract class AbstractMapSerializable {
         return serializer;
     }
 
-    void serializeTo(Map<String, String> data, String parentContext) {
-        StringBuilder ctx = new StringBuilder(parentContext);
+    protected void serializeTo(Map<String, String> data, StringBuilder ctx) {
         int len = ctx.length();
         Field[] fields = this.getClass().getFields();
         for (Field field : fields) {
@@ -49,25 +120,10 @@ public abstract class AbstractMapSerializable {
                 Object value = field.get(this);
                 if (value != null) {
                     IMapSerializer serializer = getSerializer(field, value);
-                    if (value instanceof AbstractMapSerializable) {
-                        ctx.append(".class");
-                        Class<? extends Object> clazz = value.getClass();
-                        // É uma derivação ou implementação
-                        if (field.getType() != clazz) {
-                            // Salve a classe em questão
-                            // Se o package da classe é o mesmo do objeto corrente, salva o simpleName, senão o canonicalName
-                            String className = clazz.getPackage().equals(getClass().getPackage()) ? clazz.getSimpleName() : clazz.getCanonicalName();
-                            data.put(ctx.toString(), className);
-                        }
-                        AbstractMapSerializable serializable = (AbstractMapSerializable) value;
-                        ctx.setLength(len + 1);
-                        serializable.serializeTo(data, ctx.toString());
-                    } else {
-                        data.put(ctx.toString(), value.toString());
-                    }
+                    serializer.serializeTo(data, ctx, value);
                 }
             } catch (Exception e) {
-                // TODO: handle exception
+                throw new RuntimeException(e);
             }
         }
     }
@@ -112,7 +168,7 @@ public abstract class AbstractMapSerializable {
     @Override
     final public String toString() {
         Map<String, String> map = new LinkedHashMap<>();
-        serializeTo(map, "");
+        serializeTo(map, new StringBuilder());
         StringBuilder sb = new StringBuilder("{");
         for (Entry<String, String> entry : map.entrySet()) {
             sb.append("\r\"");
