@@ -19,19 +19,32 @@ public final class ToMapSerializer {
 
         private Map<Object, Integer> ctxsMap = new HashMap<>();
 
-        private StringBuilder getNextObjCtx(Object object) {
-            Integer ctxId = ctxsMap.get(object);
-            if (ctxId == null) {
-                currentNewId++;
-                ctxsMap.put(object, currentNewId);
-                ctxId = currentNewId;
-            }
+        private StringBuilder innerBuildContext(Integer ctxId) {
             if (ctxId == 0) {
                 return new StringBuilder();
             }
             StringBuilder ret = new StringBuilder(OBJECT_CONTEXT_PREFIX);
             ret.append(Integer.toString(ctxId));
             return ret;
+        }
+
+        private StringBuilder getExistingObjCtx(Object object) {
+            Integer ctxId = ctxsMap.get(object);
+            if (ctxId == null) {
+                return null;
+            }
+            return innerBuildContext(ctxId);
+        }
+
+        private StringBuilder getNewObjCtx(Object object) {
+            currentNewId++;
+            Integer oldCtxId = ctxsMap.put(object, currentNewId);
+            if (oldCtxId != null) {
+                ctxsMap.put(object, oldCtxId);
+                currentNewId--;
+                throw new RuntimeException(String.format("The object %s already was contextualied!", object));
+            }
+            return innerBuildContext(currentNewId);
         }
     }
 
@@ -43,10 +56,16 @@ public final class ToMapSerializer {
     private static class SimpleClassSerializer implements IMapSerializer {
 
         public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
-            StringBuilder nextObjCtx = ctxBuilder.getNextObjCtx(object);
-            data.put(ctx.toString(), nextObjCtx.toString());
-            nextObjCtx.append('.');
-            ToMapSerializer.serializeTo(object, data, nextObjCtx, ctxBuilder);
+            StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
+            boolean notSerializedYet = objCtx == null;
+            if (notSerializedYet) {
+                objCtx = ctxBuilder.getNewObjCtx(object);
+            }
+            data.put(ctx.toString(), objCtx.toString());
+            if (notSerializedYet) {
+                objCtx.append('.');
+                ToMapSerializer.serializeTo(object, data, objCtx, ctxBuilder);
+            }
         }
     }
 
@@ -307,18 +326,17 @@ public final class ToMapSerializer {
     }
 
     private static void serializeTo(Object object, Map<String, String> data, ObjCtxBuilder ctxBuilder) {
-        serializeTo(object, data, ctxBuilder.getNextObjCtx(object), ctxBuilder);
+        serializeTo(object, data, ctxBuilder.getNewObjCtx(object), ctxBuilder);
     }
 
     public static Map<String, String> serialize(Object object) {
-        Map<String, String> ret = new HashMap<>();
+        Map<String, String> ret = new LinkedHashMap<>();
         serializeTo(object, ret, new ObjCtxBuilder());
         return ret;
     }
 
     static public String toJson(Object object) {
-        Map<String, String> map = new LinkedHashMap<>();
-        serializeTo(object, map, new ObjCtxBuilder());
+        Map<String, String> map = serialize(object);
         StringBuilder sb = new StringBuilder("{\r\"");
         for (Entry<String, String> entry : map.entrySet()) {
             sb.append(entry.getKey());
