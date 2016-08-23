@@ -93,6 +93,15 @@ public class ToMapSerializerTest {
 
         public Double double1;
     }
+    
+    public static class ClassSimpleInnerObject {
+        public int int1;
+    }
+
+    public static class ClassSimpleOuterObject {
+        public int int1;
+        public ClassSimpleInnerObject object;
+    }
 
     private static final String EMPTY_OBJECT = "{}";
 
@@ -1031,114 +1040,37 @@ public class ToMapSerializerTest {
         object.double1 = 123456789012345600000000000000000D* -1d;
         doTest(DOUBLE_32, object);
     }
-    //TODO
-    //    private static final String INT_02 = "{\r\"int1\":\"-2147483648\"\r}";
-    //
-    //    @Test
-    //    public void test14() {
-    //        ClazzInt object = new ClazzInt();
-    //        object.int1 = Integer.MIN_VALUE;
-    //        doTest(INT_02, object);
-    //    }
-    //
-    //    private static final String INT_03 = "{\r\"int1\":\"2147483647\"\r}";
-    //
-    //    @Test
-    //    public void test15() {
-    //        ClazzInt object = new ClazzInt();
-    //        object.int1 = Integer.MAX_VALUE;
-    //        doTest(INT_03, object);
-    //    }
-    //
-    //    @Test
-    //    public void test16() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        doTest(EMPTY_OBJECT, object);
-    //    }
-    //
-    //    private static final String INT_04 = "{\r\"int1\":\"0\"\r}";
-    //
-    //    @Test
-    //    public void test17() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        object.int1 = 0;
-    //        doTest(INT_04, object);
-    //    }
-    //
-    //    @Test
-    //    public void test18() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        object.int1 = Integer.MIN_VALUE;
-    //        doTest(INT_02, object);
-    //    }
-    //
-    //    @Test
-    //    public void test19() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        object.int1 = Integer.MAX_VALUE;
-    //        doTest(INT_03, object);
-    //    }
-    //
-    //    @Test
-    //    public void test12() {
-    //        ClazzInt object = new ClazzInt();
-    //        doTest(EMPTY_OBJECT, object);
-    //    }
-    //
-    //    private static final String INT_01 = "{\r\"int1\":\"1\"\r}";
-    //
-    //    @Test
-    //    public void test13() {
-    //        ClazzInt object = new ClazzInt();
-    //        object.int1 = 1;
-    //        doTest(INT_01, object);
-    //    }
-    //
-    //    private static final String INT_02 = "{\r\"int1\":\"-2147483648\"\r}";
-    //
-    //    @Test
-    //    public void test14() {
-    //        ClazzInt object = new ClazzInt();
-    //        object.int1 = Integer.MIN_VALUE;
-    //        doTest(INT_02, object);
-    //    }
-    //
-    //    private static final String INT_03 = "{\r\"int1\":\"2147483647\"\r}";
-    //
-    //    @Test
-    //    public void test15() {
-    //        ClazzInt object = new ClazzInt();
-    //        object.int1 = Integer.MAX_VALUE;
-    //        doTest(INT_03, object);
-    //    }
-    //
-    //    @Test
-    //    public void test16() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        doTest(EMPTY_OBJECT, object);
-    //    }
-    //
-    //    private static final String INT_04 = "{\r\"int1\":\"0\"\r}";
-    //
-    //    @Test
-    //    public void test17() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        object.int1 = 0;
-    //        doTest(INT_04, object);
-    //    }
-    //
-    //    @Test
-    //    public void test18() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        object.int1 = Integer.MIN_VALUE;
-    //        doTest(INT_02, object);
-    //    }
-    //
-    //    @Test
-    //    public void test19() {
-    //        ClazzInteger object = new ClazzInteger();
-    //        object.int1 = Integer.MAX_VALUE;
-    //        doTest(INT_03, object);
-    //    }
+    
+    //////////////////////////////////////////// Object ///////////////////////////////////////
+    
+    private static final String OBJECT_01 = "{\r\"int1\":\"11\"\r}";
+
+    @Test
+    public void test110() {
+        ClassSimpleOuterObject object = new ClassSimpleOuterObject();
+        object.int1 = 11;
+        doTest(OBJECT_01, object);
+    }
+
+    private static final String OBJECT_02 = "{\r\"int1\":\"12\",\r\"object\":\"REF_1\"\r}";
+
+    @Test
+    public void test111() {
+        ClassSimpleOuterObject object = new ClassSimpleOuterObject();
+        object.int1 = 12;
+        object.object = new ClassSimpleInnerObject();
+        doTest(OBJECT_02, object);
+    }
+
+    private static final String OBJECT_03 = "{\r\"int1\":\"13\",\r\"object\":\"REF_1\",\r\"REF_1.int1\":\"14\"\r}";
+
+    @Test
+    public void test112() {
+        ClassSimpleOuterObject object = new ClassSimpleOuterObject();
+        object.int1 = 13;
+        object.object = new ClassSimpleInnerObject();
+        object.object.int1 = 14;
+        doTest(OBJECT_03, object);
+    }
 
 }
