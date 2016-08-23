@@ -172,6 +172,25 @@ public final class ToMapSerializer {
         }
     }
 
+    private static class DoublePrimitiveSerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx) {
+            Double i = (Double) value;
+            if (i != 0d) {
+                serializeTo(prepareFloat(i.toString()), data, ctx);
+            }
+        }
+    }
+
+    private static class DoubleSerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx) {
+            serializeTo(prepareFloat(((Double) value).toString()), data, ctx);
+        }
+    }
+
     private static class StringPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
@@ -210,6 +229,9 @@ public final class ToMapSerializer {
 
         ret.put(float.class, new FloatPrimitiveSerializer());
         ret.put(Float.class, new FloatSerializer());
+
+        ret.put(double.class, new DoublePrimitiveSerializer());
+        ret.put(Double.class, new DoubleSerializer());
 
         ret.put(String.class, new StringPrimitiveSerializer());
         return ret;
