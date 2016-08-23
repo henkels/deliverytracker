@@ -93,14 +93,29 @@ public class ToMapSerializerTest {
 
         public Double double1;
     }
-    
+
     public static class ClassSimpleInnerObject {
+
         public int int1;
     }
 
     public static class ClassSimpleOuterObject {
+
         public int int1;
         public ClassSimpleInnerObject object;
+    }
+
+    public static class ClassHierarquicalObject {
+
+        public int int1;
+        public ClassHierarquicalObject object;
+    }
+
+    public static class ClassCrossRefObject {
+
+        public int int1;
+        public ClassSimpleInnerObject object1;
+        public ClassSimpleInnerObject object2;
     }
 
     private static final String EMPTY_OBJECT = "{}";
@@ -626,7 +641,7 @@ public class ToMapSerializerTest {
     @Test
     public void test063() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = Float.MIN_NORMAL*-1f;
+        object.float1 = Float.MIN_NORMAL * -1f;
         doTest(FLOAT_19, object);
     }
 
@@ -635,7 +650,7 @@ public class ToMapSerializerTest {
     @Test
     public void test064() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = Float.MAX_VALUE*-1f;
+        object.float1 = Float.MAX_VALUE * -1f;
         doTest(FLOAT_20, object);
     }
 
@@ -644,7 +659,7 @@ public class ToMapSerializerTest {
     @Test
     public void test065() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 1.234567F*-1F;
+        object.float1 = 1.234567F * -1F;
         doTest(FLOAT_21, object);
     }
 
@@ -653,7 +668,7 @@ public class ToMapSerializerTest {
     @Test
     public void test066() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 1.2345678F*-1f;
+        object.float1 = 1.2345678F * -1f;
         doTest(FLOAT_22, object);
     }
 
@@ -662,7 +677,7 @@ public class ToMapSerializerTest {
     @Test
     public void test067() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 1.23456789F*-1f;
+        object.float1 = 1.23456789F * -1f;
         doTest(FLOAT_23, object);
     }
 
@@ -671,7 +686,7 @@ public class ToMapSerializerTest {
     @Test
     public void test068() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 0.001F*-1f;
+        object.float1 = 0.001F * -1f;
         doTest(FLOAT_24, object);
     }
 
@@ -680,7 +695,7 @@ public class ToMapSerializerTest {
     @Test
     public void test069() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 0.0001F*-1f;
+        object.float1 = 0.0001F * -1f;
         doTest(FLOAT_25, object);
     }
 
@@ -689,7 +704,7 @@ public class ToMapSerializerTest {
     @Test
     public void test070() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 0.0000000012345678F*-1f;
+        object.float1 = 0.0000000012345678F * -1f;
         doTest(FLOAT_26, object);
     }
 
@@ -698,7 +713,7 @@ public class ToMapSerializerTest {
     @Test
     public void test071() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 1234567F*-1f;
+        object.float1 = 1234567F * -1f;
         doTest(FLOAT_27, object);
     }
 
@@ -707,7 +722,7 @@ public class ToMapSerializerTest {
     @Test
     public void test072() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 12345678F*-1f;
+        object.float1 = 12345678F * -1f;
         doTest(FLOAT_28, object);
     }
 
@@ -716,7 +731,7 @@ public class ToMapSerializerTest {
     @Test
     public void test073() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 123456789F*-1f;
+        object.float1 = 123456789F * -1f;
         doTest(FLOAT_29, object);
     }
 
@@ -725,7 +740,7 @@ public class ToMapSerializerTest {
     @Test
     public void test074() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 1000F*-1f;
+        object.float1 = 1000F * -1f;
         doTest(FLOAT_30, object);
     }
 
@@ -734,7 +749,7 @@ public class ToMapSerializerTest {
     @Test
     public void test075() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 10000F*-1f;
+        object.float1 = 10000F * -1f;
         doTest(FLOAT_31, object);
     }
 
@@ -743,7 +758,7 @@ public class ToMapSerializerTest {
     @Test
     public void test076() {
         ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
-        object.float1 = 12345678000000000F*-1f;
+        object.float1 = 12345678000000000F * -1f;
         doTest(FLOAT_32, object);
     }
 
@@ -911,7 +926,7 @@ public class ToMapSerializerTest {
     @Test
     public void test095() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = Double.MIN_VALUE* -1d;
+        object.double1 = Double.MIN_VALUE * -1d;
         doTest(DOUBLE_18, object);
     }
 
@@ -920,7 +935,7 @@ public class ToMapSerializerTest {
     @Test
     public void test096() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = Double.MIN_NORMAL* -1d;
+        object.double1 = Double.MIN_NORMAL * -1d;
         doTest(DOUBLE_19, object);
     }
 
@@ -929,7 +944,7 @@ public class ToMapSerializerTest {
     @Test
     public void test097() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = Double.MAX_VALUE* -1d;
+        object.double1 = Double.MAX_VALUE * -1d;
         doTest(DOUBLE_20, object);
     }
 
@@ -938,7 +953,7 @@ public class ToMapSerializerTest {
     @Test
     public void test098() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 1.2345678901234567D* -1d;
+        object.double1 = 1.2345678901234567D * -1d;
         doTest(DOUBLE_21, object);
     }
 
@@ -947,7 +962,7 @@ public class ToMapSerializerTest {
     @Test
     public void test099() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 1.23456789012345678D* -1d;
+        object.double1 = 1.23456789012345678D * -1d;
         doTest(DOUBLE_22, object);
     }
 
@@ -956,7 +971,7 @@ public class ToMapSerializerTest {
     @Test
     public void test100() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 1.2345678901234569D* -1d;
+        object.double1 = 1.2345678901234569D * -1d;
         doTest(DOUBLE_23, object);
     }
 
@@ -965,7 +980,7 @@ public class ToMapSerializerTest {
     @Test
     public void test101() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 0.001D* -1d;
+        object.double1 = 0.001D * -1d;
         doTest(DOUBLE_24, object);
     }
 
@@ -974,7 +989,7 @@ public class ToMapSerializerTest {
     @Test
     public void test102() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 0.0001D* -1d;
+        object.double1 = 0.0001D * -1d;
         doTest(DOUBLE_25, object);
     }
 
@@ -983,7 +998,7 @@ public class ToMapSerializerTest {
     @Test
     public void test103() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 0.000000000000000012345678901234567D* -1d;
+        object.double1 = 0.000000000000000012345678901234567D * -1d;
         doTest(DOUBLE_26, object);
     }
 
@@ -992,7 +1007,7 @@ public class ToMapSerializerTest {
     @Test
     public void test104() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 1234567D* -1d;
+        object.double1 = 1234567D * -1d;
         doTest(DOUBLE_27, object);
     }
 
@@ -1001,7 +1016,7 @@ public class ToMapSerializerTest {
     @Test
     public void test105() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 1234567890123456D* -1d;
+        object.double1 = 1234567890123456D * -1d;
         doTest(DOUBLE_28, object);
     }
 
@@ -1010,7 +1025,7 @@ public class ToMapSerializerTest {
     @Test
     public void test106() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 123456789012345678D* -1d;
+        object.double1 = 123456789012345678D * -1d;
         doTest(DOUBLE_29, object);
     }
 
@@ -1019,7 +1034,7 @@ public class ToMapSerializerTest {
     @Test
     public void test107() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 1000000D* -1d;
+        object.double1 = 1000000D * -1d;
         doTest(DOUBLE_30, object);
     }
 
@@ -1028,7 +1043,7 @@ public class ToMapSerializerTest {
     @Test
     public void test108() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 10000000D* -1d;
+        object.double1 = 10000000D * -1d;
         doTest(DOUBLE_31, object);
     }
 
@@ -1037,12 +1052,12 @@ public class ToMapSerializerTest {
     @Test
     public void test109() {
         ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
-        object.double1 = 123456789012345600000000000000000D* -1d;
+        object.double1 = 123456789012345600000000000000000D * -1d;
         doTest(DOUBLE_32, object);
     }
-    
+
     //////////////////////////////////////////// Object ///////////////////////////////////////
-    
+
     private static final String OBJECT_01 = "{\r\"int1\":\"11\"\r}";
 
     @Test
@@ -1071,6 +1086,43 @@ public class ToMapSerializerTest {
         object.object = new ClassSimpleInnerObject();
         object.object.int1 = 14;
         doTest(OBJECT_03, object);
+    }
+
+    private static final String OBJECT_04 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
+                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
+                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"REF_3\",\r" + //
+                                            "\"REF_3.int1\":\"16\"\r" + //
+                                            "}";
+
+    @Test
+    public void test113() {
+        ClassHierarquicalObject object = new ClassHierarquicalObject();
+        object.int1 = 13;
+        object.object = new ClassHierarquicalObject();
+        object.object.int1 = 14;
+        object.object.object = new ClassHierarquicalObject();
+        object.object.object.int1 = 15;
+        object.object.object.object = new ClassHierarquicalObject();
+        object.object.object.object.int1 = 16;
+        doTest(OBJECT_04, object);
+    }
+
+    private static final String OBJECT_05 = "{\r" + //
+                                            "\"int1\":\"13\",\r" +
+                                            "\"object1\":\"REF_1\",\r" + //
+                                            "\"REF_1.int1\":\"14\",\r" + //
+                                            "\"object2\":\"REF_1\"\r" + //
+                                            "}";
+
+    @Test
+    public void test114() {
+        ClassCrossRefObject object = new ClassCrossRefObject();
+        object.int1 = 13;
+        object.object1 = new ClassSimpleInnerObject();
+        object.object1.int1 = 14;
+        object.object2 = object.object1;
+        doTest(OBJECT_05, object);
     }
 
 }
