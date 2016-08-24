@@ -37,20 +37,26 @@ public class ObjectsToMapSerializerTest {
         public ClassSimpleInnerObject object2;
     }
 
-    public static class ClassArrayRefObject {
+    public static class ClassPrimitiveByteArrayObject {
 
         public int int1;
-        public ClassSimpleInnerObject[] objects;
+        public byte[] bytes;
     }
 
-//    private static final String EMPTY_OBJECT = "{}";
+    public static class ClassByteArrayObject {
+
+        public int int1;
+        public Byte[] bytes;
+    }
+
+    //    private static final String EMPTY_OBJECT = "{}";
 
     //////////////////////////////////////////// Object ///////////////////////////////////////
 
     private static final String OBJECT_01 = "{\r\"int1\":\"11\"\r}";
 
     @Test
-    public void test110() {
+    public void test001() {
         ClassSimpleOuterObject object = new ClassSimpleOuterObject();
         object.int1 = 11;
         doTest(OBJECT_01, object);
@@ -59,7 +65,7 @@ public class ObjectsToMapSerializerTest {
     private static final String OBJECT_02 = "{\r\"int1\":\"12\",\r\"object\":\"REF_1\"\r}";
 
     @Test
-    public void test111() {
+    public void test002() {
         ClassSimpleOuterObject object = new ClassSimpleOuterObject();
         object.int1 = 12;
         object.object = new ClassSimpleInnerObject();
@@ -69,7 +75,7 @@ public class ObjectsToMapSerializerTest {
     private static final String OBJECT_03 = "{\r\"int1\":\"13\",\r\"object\":\"REF_1\",\r\"REF_1.int1\":\"14\"\r}";
 
     @Test
-    public void test112() {
+    public void test003() {
         ClassSimpleOuterObject object = new ClassSimpleOuterObject();
         object.int1 = 13;
         object.object = new ClassSimpleInnerObject();
@@ -85,7 +91,7 @@ public class ObjectsToMapSerializerTest {
                                             "}";
 
     @Test
-    public void test113() {
+    public void test004() {
         ClassHierarquicalObject object = new ClassHierarquicalObject();
         object.int1 = 13;
         object.object = new ClassHierarquicalObject();
@@ -104,7 +110,7 @@ public class ObjectsToMapSerializerTest {
                                             "}";
 
     @Test
-    public void test114() {
+    public void test005() {
         ClassCrossRefObject object = new ClassCrossRefObject();
         object.int1 = 13;
         object.object1 = new ClassSimpleInnerObject();
@@ -120,7 +126,7 @@ public class ObjectsToMapSerializerTest {
                                             "}";
 
     @Test
-    public void test116() {
+    public void test006() {
         ClassHierarquicalObject object = new ClassHierarquicalObject();
         object.int1 = 13;
         object.object = new ClassHierarquicalObject();
@@ -133,49 +139,79 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_07 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
-                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"\"\r" + //
+                                            "\"int1\":\"13\"\r" + //
                                             "}";
 
     @Test
-    public void test117() {
-        ClassArrayRefObject object = new ClassArrayRefObject();
+    public void test007() {
+        ClassPrimitiveByteArrayObject object = new ClassPrimitiveByteArrayObject();
         object.int1 = 13;
-        object.objects = null;
+        object.bytes = null;
         doTest(OBJECT_07, object);
     }
 
     private static final String OBJECT_08 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
-                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"\"\r" + //
+                                            "\"int1\":\"13\",\r\"bytes\":\"0 0\"\r" + //
                                             "}";
 
     @Test
-    public void test118() {
-        ClassArrayRefObject object = new ClassArrayRefObject();
+    public void test008() {
+        ClassPrimitiveByteArrayObject object = new ClassPrimitiveByteArrayObject();
         object.int1 = 13;
-        object.objects = new ClassSimpleInnerObject[2];
+        object.bytes = new byte[2];
         doTest(OBJECT_08, object);
     }
 
     private static final String OBJECT_09 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
-                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"\"\r" + //
+                                            "\"int1\":\"13\",\r\"bytes\":\"1 -1\"\r" + //
                                             "}";
 
     @Test
-    public void test119() {
-        ClassArrayRefObject object = new ClassArrayRefObject();
+    public void test009() {
+        ClassPrimitiveByteArrayObject object = new ClassPrimitiveByteArrayObject();
         object.int1 = 13;
-        object.objects = new ClassSimpleInnerObject[2];
-        object.objects[0] = new ClassSimpleInnerObject();
-        object.objects[0].int1 = 14;
-        object.objects[1] = new ClassSimpleInnerObject();
-        object.objects[1].int1 = 15;
+        object.bytes = new byte[2];
+        object.bytes[0] = 1;
+        object.bytes[1] = -1;
         doTest(OBJECT_09, object);
+    }
+
+    private static final String OBJECT_10 = "{\r" + //
+                                            "\"int1\":\"13\"\r" + //
+                                            "}";
+
+    @Test
+    public void test010() {
+        ClassByteArrayObject object = new ClassByteArrayObject();
+        object.int1 = 13;
+        object.bytes = null;
+        doTest(OBJECT_10, object);
+    }
+
+    private static final String OBJECT_11 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"bytes\":\"N N\"\r" + //
+                                            "}";
+
+    @Test
+    public void test011() {
+        ClassByteArrayObject object = new ClassByteArrayObject();
+        object.int1 = 13;
+        object.bytes = new Byte[2];
+        doTest(OBJECT_11, object);
+    }
+
+    private static final String OBJECT_12 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"bytes\":\"1 -1\"\r" + //
+                                            "}";
+
+    @Test
+    public void test012() {
+        ClassByteArrayObject object = new ClassByteArrayObject();
+        object.int1 = 13;
+        object.bytes = new Byte[2];
+        object.bytes[0] = 1;
+        object.bytes[1] = -1;
+        doTest(OBJECT_12, object);
     }
 
 }

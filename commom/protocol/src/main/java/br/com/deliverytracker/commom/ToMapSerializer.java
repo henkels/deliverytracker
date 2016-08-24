@@ -237,6 +237,8 @@ public final class ToMapSerializer {
         }
     }
 
+    private static final String FLAG_NULL = "N";
+
     private static class StringPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
@@ -247,9 +249,203 @@ public final class ToMapSerializer {
         }
     }
 
+    private static class PrimitiveByteArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (byte currValue : ((byte[]) object)) {
+                val.append(Byte.toString(currValue));
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class ByteArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (Byte currValue : ((Byte[]) object)) {
+                if (currValue == null) {
+                    val.append(FLAG_NULL);
+                } else {
+                    val.append(Byte.toString(currValue));
+                }
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class PrimitiveShortArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (short currValue : ((short[]) object)) {
+                val.append(Short.toString(currValue));
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class ShortArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (Short currValue : ((Short[]) object)) {
+                if (currValue == null) {
+                    val.append(FLAG_NULL);
+                } else {
+                    val.append(Short.toString(currValue));
+                }
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class PrimitiveIntArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (int currValue : ((int[]) object)) {
+                val.append(Integer.toString(currValue));
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class IntegerArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (Integer currValue : ((Integer[]) object)) {
+                if (currValue == null) {
+                    val.append(FLAG_NULL);
+                } else {
+                    val.append(Integer.toString(currValue));
+                }
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class PrimitiveLongArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (long currValue : ((long[]) object)) {
+                val.append(Long.toString(currValue));
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class LongArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (Long currValue : ((Long[]) object)) {
+                if (currValue == null) {
+                    val.append(FLAG_NULL);
+                } else {
+                    val.append(Long.toString(currValue));
+                }
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class PrimitiveFloatArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (float currValue : ((float[]) object)) {
+                val.append(Float.toString(currValue));
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class FloatArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (Float currValue : ((Float[]) object)) {
+                if (currValue == null) {
+                    val.append(FLAG_NULL);
+                } else {
+                    val.append(Float.toString(currValue));
+                }
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class PrimitiveDoubleArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (double currValue : ((double[]) object)) {
+                val.append(Double.toString(currValue));
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class DoubleArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (Double currValue : ((Double[]) object)) {
+                if (currValue == null) {
+                    val.append(FLAG_NULL);
+                } else {
+                    val.append(Double.toString(currValue));
+                }
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
     private static final IMapSerializer SIMPLE_CLASS_SERIALIZER = new SimpleClassSerializer();
 
     private static final IMapSerializer MULTI_CLASS_SERIALIZER = new MultiClassSerializer();
+
+    //private static final IMapSerializer ARRAY_SERIALIZER = new ObjectArraySerializer();
 
     private static final Map<Class<?>, IMapSerializer> PRIMITIVE_SERIALIZERS = buildPrimitiveSerilizers();
 
@@ -280,6 +476,24 @@ public final class ToMapSerializer {
         ret.put(Double.class, new DoubleSerializer());
 
         ret.put(String.class, new StringPrimitiveSerializer());
+
+        ret.put(byte[].class, new PrimitiveByteArraySerializer());
+        ret.put(Byte[].class, new ByteArraySerializer());
+
+        ret.put(short[].class, new PrimitiveShortArraySerializer());
+        ret.put(Short[].class, new ShortArraySerializer());
+
+        ret.put(int[].class, new PrimitiveIntArraySerializer());
+        ret.put(Integer[].class, new IntegerArraySerializer());
+
+        ret.put(long[].class, new PrimitiveLongArraySerializer());
+        ret.put(Long[].class, new LongArraySerializer());
+
+        ret.put(float[].class, new PrimitiveFloatArraySerializer());
+        ret.put(Float[].class, new FloatArraySerializer());
+
+        ret.put(double[].class, new PrimitiveDoubleArraySerializer());
+        ret.put(Double[].class, new DoubleArraySerializer());
         return ret;
     }
 
@@ -290,7 +504,13 @@ public final class ToMapSerializer {
             // é primitivo?
             serializer = PRIMITIVE_SERIALIZERS.get(type);
             if (serializer == null) {
+                //                if (type.isArray()) {
+                //                    Class<?> arrayType = type.getComponentType();
+                //                    if ()
+                //                    serializer = ARRAY_SERIALIZER;
+                //                } else {
                 serializer = field.getType() != currentValue.getClass() ? MULTI_CLASS_SERIALIZER : SIMPLE_CLASS_SERIALIZER;
+                //                }
             }
             //              } else {
             //                throw new RuntimeException(String.format("A serialização para mapa do tipo <%s> não é suportada", type.getCanonicalName()));
