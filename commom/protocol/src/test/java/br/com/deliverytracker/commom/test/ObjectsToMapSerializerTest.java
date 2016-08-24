@@ -1,4 +1,4 @@
-package protocol;
+package br.com.deliverytracker.commom.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,51 +13,15 @@ public class ObjectsToMapSerializerTest {
         assertEquals(expected, actual);
     }
 
-    public static class ClassSimpleInnerObject {
-
-        public int int1;
-    }
-
-    public static class ClassSimpleOuterObject {
-
-        public int int1;
-        public ClassSimpleInnerObject object;
-    }
-
-    public static class ClassHierarquicalObject {
-
-        public int int1;
-        public ClassHierarquicalObject object;
-    }
-
-    public static class ClassCrossRefObject {
-
-        public int int1;
-        public ClassSimpleInnerObject object1;
-        public ClassSimpleInnerObject object2;
-    }
-
-    public static class ClassPrimitiveByteArrayObject {
-
-        public int int1;
-        public byte[] bytes;
-    }
-
-    public static class ClassByteArrayObject {
-
-        public int int1;
-        public Byte[] bytes;
-    }
+    //////////////////////////////////////////// Object ///////////////////////////////////////
 
     //    private static final String EMPTY_OBJECT = "{}";
-
-    //////////////////////////////////////////// Object ///////////////////////////////////////
 
     private static final String OBJECT_01 = "{\r\"int1\":\"11\"\r}";
 
     @Test
     public void test001() {
-        ClassSimpleOuterObject object = new ClassSimpleOuterObject();
+        PojoSimpleOuter object = new PojoSimpleOuter();
         object.int1 = 11;
         doTest(OBJECT_01, object);
     }
@@ -66,9 +30,9 @@ public class ObjectsToMapSerializerTest {
 
     @Test
     public void test002() {
-        ClassSimpleOuterObject object = new ClassSimpleOuterObject();
+        PojoSimpleOuter object = new PojoSimpleOuter();
         object.int1 = 12;
-        object.object = new ClassSimpleInnerObject();
+        object.object = new PojoSimpleInner();
         doTest(OBJECT_02, object);
     }
 
@@ -76,9 +40,9 @@ public class ObjectsToMapSerializerTest {
 
     @Test
     public void test003() {
-        ClassSimpleOuterObject object = new ClassSimpleOuterObject();
+        PojoSimpleOuter object = new PojoSimpleOuter();
         object.int1 = 13;
-        object.object = new ClassSimpleInnerObject();
+        object.object = new PojoSimpleInner();
         object.object.int1 = 14;
         doTest(OBJECT_03, object);
     }
@@ -92,13 +56,13 @@ public class ObjectsToMapSerializerTest {
 
     @Test
     public void test004() {
-        ClassHierarquicalObject object = new ClassHierarquicalObject();
+        PojoHierarquical object = new PojoHierarquical();
         object.int1 = 13;
-        object.object = new ClassHierarquicalObject();
+        object.object = new PojoHierarquical();
         object.object.int1 = 14;
-        object.object.object = new ClassHierarquicalObject();
+        object.object.object = new PojoHierarquical();
         object.object.object.int1 = 15;
-        object.object.object.object = new ClassHierarquicalObject();
+        object.object.object.object = new PojoHierarquical();
         object.object.object.object.int1 = 16;
         doTest(OBJECT_04, object);
     }
@@ -111,9 +75,9 @@ public class ObjectsToMapSerializerTest {
 
     @Test
     public void test005() {
-        ClassCrossRefObject object = new ClassCrossRefObject();
+        PojoCrossRef object = new PojoCrossRef();
         object.int1 = 13;
-        object.object1 = new ClassSimpleInnerObject();
+        object.object1 = new PojoSimpleInner();
         object.object1.int1 = 14;
         object.object2 = object.object1;
         doTest(OBJECT_05, object);
@@ -127,11 +91,11 @@ public class ObjectsToMapSerializerTest {
 
     @Test
     public void test006() {
-        ClassHierarquicalObject object = new ClassHierarquicalObject();
+        PojoHierarquical object = new PojoHierarquical();
         object.int1 = 13;
-        object.object = new ClassHierarquicalObject();
+        object.object = new PojoHierarquical();
         object.object.int1 = 14;
-        object.object.object = new ClassHierarquicalObject();
+        object.object.object = new PojoHierarquical();
         object.object.object.int1 = 15;
         //referencia circular
         object.object.object.object = object;
@@ -144,35 +108,35 @@ public class ObjectsToMapSerializerTest {
 
     @Test
     public void test007() {
-        ClassPrimitiveByteArrayObject object = new ClassPrimitiveByteArrayObject();
+        PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
         object.int1 = 13;
-        object.bytes = null;
+        object.byteArray = null;
         doTest(OBJECT_07, object);
     }
 
     private static final String OBJECT_08 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"bytes\":\"0 0\"\r" + //
+                                            "\"int1\":\"13\",\r\"byteArray\":\"0 0\"\r" + //
                                             "}";
 
     @Test
     public void test008() {
-        ClassPrimitiveByteArrayObject object = new ClassPrimitiveByteArrayObject();
+        PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
         object.int1 = 13;
-        object.bytes = new byte[2];
+        object.byteArray = new byte[2];
         doTest(OBJECT_08, object);
     }
 
     private static final String OBJECT_09 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"bytes\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"byteArray\":\"1 -1\"\r" + //
                                             "}";
 
     @Test
     public void test009() {
-        ClassPrimitiveByteArrayObject object = new ClassPrimitiveByteArrayObject();
+        PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
         object.int1 = 13;
-        object.bytes = new byte[2];
-        object.bytes[0] = 1;
-        object.bytes[1] = -1;
+        object.byteArray = new byte[2];
+        object.byteArray[0] = 1;
+        object.byteArray[1] = -1;
         doTest(OBJECT_09, object);
     }
 
@@ -182,35 +146,35 @@ public class ObjectsToMapSerializerTest {
 
     @Test
     public void test010() {
-        ClassByteArrayObject object = new ClassByteArrayObject();
+        PojoByteArray object = new PojoByteArray();
         object.int1 = 13;
-        object.bytes = null;
+        object.byteArray = null;
         doTest(OBJECT_10, object);
     }
 
     private static final String OBJECT_11 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"bytes\":\"N N\"\r" + //
+                                            "\"int1\":\"13\",\r\"byteArray\":\"N N\"\r" + //
                                             "}";
 
     @Test
     public void test011() {
-        ClassByteArrayObject object = new ClassByteArrayObject();
+        PojoByteArray object = new PojoByteArray();
         object.int1 = 13;
-        object.bytes = new Byte[2];
+        object.byteArray = new Byte[2];
         doTest(OBJECT_11, object);
     }
 
     private static final String OBJECT_12 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"bytes\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"byteArray\":\"1 -1\"\r" + //
                                             "}";
 
     @Test
     public void test012() {
-        ClassByteArrayObject object = new ClassByteArrayObject();
+        PojoByteArray object = new PojoByteArray();
         object.int1 = 13;
-        object.bytes = new Byte[2];
-        object.bytes[0] = 1;
-        object.bytes[1] = -1;
+        object.byteArray = new Byte[2];
+        object.byteArray[0] = 1;
+        object.byteArray[1] = -1;
         doTest(OBJECT_12, object);
     }
 

@@ -1,4 +1,4 @@
-package protocol;
+package br.com.deliverytracker.commom.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,87 +13,6 @@ public class PrimitivesToMapSerializerTest {
         assertEquals(expected, actual);
     }
 
-    public static class ClazzString {
-
-        public String st1;
-    }
-
-    public static class ClazzStrings {
-
-        public String st1;
-        public String st2;
-    }
-
-    public static class ClazzPrimitiveBoolean {
-
-        public boolean bool1;
-    }
-
-    public static class ClazzBoolean {
-
-        public Boolean bool1;
-    }
-
-    public static class ClazzPrimitiveByte {
-
-        public byte byte1;
-    }
-
-    public static class ClazzByte {
-
-        public Byte byte1;
-    }
-
-    public static class ClazzPrimitiveShort {
-
-        public short short1;
-    }
-
-    public static class ClazzShort {
-
-        public Short short1;
-    }
-
-    public static class ClazzPrimitiveInt {
-
-        public int int1;
-    }
-
-    public static class ClazzInteger {
-
-        public Integer int1;
-    }
-
-    public static class ClazzPrimitiveLong {
-
-        public long long1;
-    }
-
-    public static class ClazzLong {
-
-        public Long long1;
-    }
-
-    public static class ClazzPrimitiveFloat {
-
-        public float float1;
-    }
-
-    public static class ClazzFloat {
-
-        public Float float1;
-    }
-
-    public static class ClazzPrimitiveDouble {
-
-        public double double1;
-    }
-
-    public static class ClazzDouble {
-
-        public Double double1;
-    }
-
     private static final String EMPTY_OBJECT = "{}";
 
     /**
@@ -101,7 +20,7 @@ public class PrimitivesToMapSerializerTest {
      */
     @Test
     public void test001() {
-        doTest(EMPTY_OBJECT, new ClazzString());
+        doTest(EMPTY_OBJECT, new PojoString());
     }
 
     private static final String SIMPLE_STRING = "{\r\"st1\":\"A\"\r}";
@@ -111,7 +30,7 @@ public class PrimitivesToMapSerializerTest {
      */
     @Test
     public void test002() {
-        ClazzString object = new ClazzString();
+        PojoString object = new PojoString();
         object.st1 = "A";
         doTest(SIMPLE_STRING, object);
     }
@@ -123,7 +42,7 @@ public class PrimitivesToMapSerializerTest {
      */
     @Test
     public void test003() {
-        ClazzString object = new ClazzString();
+        PojoString object = new PojoString();
         object.st1 = "A\"A";
         doTest(DOUBLE_QUOTE_STRING, object);
     }
@@ -135,7 +54,7 @@ public class PrimitivesToMapSerializerTest {
      */
     @Test
     public void test004() {
-        ClazzString object = new ClazzString();
+        PojoString object = new PojoString();
         object.st1 = "A\"B\"C";
         doTest(TWO_DOUBLE_QUOTE_STRING, object);
     }
@@ -144,7 +63,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test005() {
-        ClazzStrings object = new ClazzStrings();
+        PojoStrings object = new PojoStrings();
         object.st1 = "A";
         doTest(TWO_STRINGS_01, object);
     }
@@ -153,7 +72,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test006() {
-        ClazzStrings object = new ClazzStrings();
+        PojoStrings object = new PojoStrings();
         object.st1 = "A";
         object.st2 = "B";
         doTest(TWO_STRINGS_02, object);
@@ -161,7 +80,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test007() {
-        ClazzPrimitiveBoolean object = new ClazzPrimitiveBoolean();
+        PojoPrimitiveBoolean object = new PojoPrimitiveBoolean();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -169,20 +88,20 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test008() {
-        ClazzPrimitiveBoolean object = new ClazzPrimitiveBoolean();
+        PojoPrimitiveBoolean object = new PojoPrimitiveBoolean();
         object.bool1 = true;
         doTest(BOOL_01, object);
     }
 
     @Test
     public void test009() {
-        ClazzBoolean object = new ClazzBoolean();
+        PojoBoolean object = new PojoBoolean();
         doTest(EMPTY_OBJECT, object);
     }
 
     @Test
     public void test010() {
-        ClazzBoolean object = new ClazzBoolean();
+        PojoBoolean object = new PojoBoolean();
         object.bool1 = true;
         doTest(BOOL_01, object);
     }
@@ -191,14 +110,14 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test011() {
-        ClazzBoolean object = new ClazzBoolean();
+        PojoBoolean object = new PojoBoolean();
         object.bool1 = false;
         doTest(BOOL_02, object);
     }
 
     @Test
     public void test012() {
-        ClazzPrimitiveByte object = new ClazzPrimitiveByte();
+        PojoPrimitiveByte object = new PojoPrimitiveByte();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -206,7 +125,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test013() {
-        ClazzPrimitiveByte object = new ClazzPrimitiveByte();
+        PojoPrimitiveByte object = new PojoPrimitiveByte();
         object.byte1 = 1;
         doTest(BYTE_01, object);
     }
@@ -215,7 +134,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test014() {
-        ClazzPrimitiveByte object = new ClazzPrimitiveByte();
+        PojoPrimitiveByte object = new PojoPrimitiveByte();
         object.byte1 = Byte.MIN_VALUE;
         doTest(BYTE_02, object);
     }
@@ -224,14 +143,14 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test015() {
-        ClazzPrimitiveByte object = new ClazzPrimitiveByte();
+        PojoPrimitiveByte object = new PojoPrimitiveByte();
         object.byte1 = Byte.MAX_VALUE;
         doTest(BYTE_03, object);
     }
 
     @Test
     public void test016() {
-        ClazzByte object = new ClazzByte();
+        PojoByte object = new PojoByte();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -239,28 +158,28 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test017() {
-        ClazzByte object = new ClazzByte();
+        PojoByte object = new PojoByte();
         object.byte1 = 0;
         doTest(BYTE_04, object);
     }
 
     @Test
     public void test018() {
-        ClazzByte object = new ClazzByte();
+        PojoByte object = new PojoByte();
         object.byte1 = Byte.MIN_VALUE;
         doTest(BYTE_02, object);
     }
 
     @Test
     public void test019() {
-        ClazzByte object = new ClazzByte();
+        PojoByte object = new PojoByte();
         object.byte1 = Byte.MAX_VALUE;
         doTest(BYTE_03, object);
     }
 
     @Test
     public void test020() {
-        ClazzPrimitiveShort object = new ClazzPrimitiveShort();
+        PojoPrimitiveShort object = new PojoPrimitiveShort();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -268,7 +187,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test021() {
-        ClazzPrimitiveShort object = new ClazzPrimitiveShort();
+        PojoPrimitiveShort object = new PojoPrimitiveShort();
         object.short1 = 1;
         doTest(SHORT_01, object);
     }
@@ -277,7 +196,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test022() {
-        ClazzPrimitiveShort object = new ClazzPrimitiveShort();
+        PojoPrimitiveShort object = new PojoPrimitiveShort();
         object.short1 = Short.MIN_VALUE;
         doTest(SHORT_02, object);
     }
@@ -286,14 +205,14 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test023() {
-        ClazzPrimitiveShort object = new ClazzPrimitiveShort();
+        PojoPrimitiveShort object = new PojoPrimitiveShort();
         object.short1 = Short.MAX_VALUE;
         doTest(SHORT_03, object);
     }
 
     @Test
     public void test024() {
-        ClazzShort object = new ClazzShort();
+        PojoShort object = new PojoShort();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -301,28 +220,28 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test025() {
-        ClazzShort object = new ClazzShort();
+        PojoShort object = new PojoShort();
         object.short1 = 0;
         doTest(SHORT_04, object);
     }
 
     @Test
     public void test026() {
-        ClazzShort object = new ClazzShort();
+        PojoShort object = new PojoShort();
         object.short1 = Short.MIN_VALUE;
         doTest(SHORT_02, object);
     }
 
     @Test
     public void test027() {
-        ClazzShort object = new ClazzShort();
+        PojoShort object = new PojoShort();
         object.short1 = Short.MAX_VALUE;
         doTest(SHORT_03, object);
     }
 
     @Test
     public void test028() {
-        ClazzPrimitiveInt object = new ClazzPrimitiveInt();
+        PojoPrimitiveInt object = new PojoPrimitiveInt();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -330,7 +249,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test029() {
-        ClazzPrimitiveInt object = new ClazzPrimitiveInt();
+        PojoPrimitiveInt object = new PojoPrimitiveInt();
         object.int1 = 1;
         doTest(INT_01, object);
     }
@@ -339,7 +258,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test030() {
-        ClazzPrimitiveInt object = new ClazzPrimitiveInt();
+        PojoPrimitiveInt object = new PojoPrimitiveInt();
         object.int1 = Integer.MIN_VALUE;
         doTest(INT_02, object);
     }
@@ -348,14 +267,14 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test031() {
-        ClazzPrimitiveInt object = new ClazzPrimitiveInt();
+        PojoPrimitiveInt object = new PojoPrimitiveInt();
         object.int1 = Integer.MAX_VALUE;
         doTest(INT_03, object);
     }
 
     @Test
     public void test032() {
-        ClazzInteger object = new ClazzInteger();
+        PojoInteger object = new PojoInteger();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -363,28 +282,28 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test033() {
-        ClazzInteger object = new ClazzInteger();
+        PojoInteger object = new PojoInteger();
         object.int1 = 0;
         doTest(INT_04, object);
     }
 
     @Test
     public void test034() {
-        ClazzInteger object = new ClazzInteger();
+        PojoInteger object = new PojoInteger();
         object.int1 = Integer.MIN_VALUE;
         doTest(INT_02, object);
     }
 
     @Test
     public void test035() {
-        ClazzInteger object = new ClazzInteger();
+        PojoInteger object = new PojoInteger();
         object.int1 = Integer.MAX_VALUE;
         doTest(INT_03, object);
     }
 
     @Test
     public void test036() {
-        ClazzPrimitiveLong object = new ClazzPrimitiveLong();
+        PojoPrimitiveLong object = new PojoPrimitiveLong();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -392,7 +311,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test037() {
-        ClazzPrimitiveLong object = new ClazzPrimitiveLong();
+        PojoPrimitiveLong object = new PojoPrimitiveLong();
         object.long1 = 1;
         doTest(LONG_01, object);
     }
@@ -401,7 +320,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test038() {
-        ClazzPrimitiveLong object = new ClazzPrimitiveLong();
+        PojoPrimitiveLong object = new PojoPrimitiveLong();
         object.long1 = Long.MIN_VALUE;
         doTest(LONG_02, object);
     }
@@ -410,14 +329,14 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test039() {
-        ClazzPrimitiveLong object = new ClazzPrimitiveLong();
+        PojoPrimitiveLong object = new PojoPrimitiveLong();
         object.long1 = Long.MAX_VALUE;
         doTest(LONG_03, object);
     }
 
     @Test
     public void test040() {
-        ClazzLong object = new ClazzLong();
+        PojoLong object = new PojoLong();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -425,28 +344,28 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test041() {
-        ClazzLong object = new ClazzLong();
+        PojoLong object = new PojoLong();
         object.long1 = 0L;
         doTest(LONG_04, object);
     }
 
     @Test
     public void test042() {
-        ClazzLong object = new ClazzLong();
+        PojoLong object = new PojoLong();
         object.long1 = Long.MIN_VALUE;
         doTest(LONG_02, object);
     }
 
     @Test
     public void test043() {
-        ClazzLong object = new ClazzLong();
+        PojoLong object = new PojoLong();
         object.long1 = Long.MAX_VALUE;
         doTest(LONG_03, object);
     }
 
     @Test
     public void test044() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -454,7 +373,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test045() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1;
         doTest(FLOAT_01, object);
     }
@@ -463,7 +382,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test046() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = Float.MIN_VALUE;
         doTest(FLOAT_02, object);
     }
@@ -472,7 +391,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test047() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = Float.MIN_NORMAL;
         doTest(FLOAT_03, object);
     }
@@ -481,7 +400,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test048() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = Float.MAX_VALUE;
         doTest(FLOAT_04, object);
     }
@@ -490,7 +409,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test049() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1.234567F;
         doTest(FLOAT_05, object);
     }
@@ -499,7 +418,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test050() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1.2345678F;
         doTest(FLOAT_06, object);
     }
@@ -508,7 +427,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test051() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1.23456789F;
         doTest(FLOAT_07, object);
     }
@@ -517,7 +436,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test052() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 0.001F;
         doTest(FLOAT_08, object);
     }
@@ -526,7 +445,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test053() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 0.0001F;
         doTest(FLOAT_09, object);
     }
@@ -535,7 +454,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test054() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 0.0000000012345678F;
         doTest(FLOAT_10, object);
     }
@@ -544,7 +463,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test055() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1234567F;
         doTest(FLOAT_11, object);
     }
@@ -553,7 +472,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test056() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 12345678F;
         doTest(FLOAT_12, object);
     }
@@ -562,7 +481,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test057() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 123456789F;
         doTest(FLOAT_13, object);
     }
@@ -571,7 +490,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test058() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1000F;
         doTest(FLOAT_14, object);
     }
@@ -580,7 +499,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test059() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 10000F;
         doTest(FLOAT_15, object);
     }
@@ -589,7 +508,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test060() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 12345678000000000F;
         doTest(FLOAT_16, object);
     }
@@ -598,7 +517,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test061() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = -1;
         doTest(FLOAT_17, object);
     }
@@ -607,7 +526,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test062() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = Float.MIN_VALUE * -1f;
         doTest(FLOAT_18, object);
     }
@@ -616,7 +535,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test063() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = Float.MIN_NORMAL * -1f;
         doTest(FLOAT_19, object);
     }
@@ -625,7 +544,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test064() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = Float.MAX_VALUE * -1f;
         doTest(FLOAT_20, object);
     }
@@ -634,7 +553,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test065() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1.234567F * -1F;
         doTest(FLOAT_21, object);
     }
@@ -643,7 +562,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test066() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1.2345678F * -1f;
         doTest(FLOAT_22, object);
     }
@@ -652,7 +571,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test067() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1.23456789F * -1f;
         doTest(FLOAT_23, object);
     }
@@ -661,7 +580,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test068() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 0.001F * -1f;
         doTest(FLOAT_24, object);
     }
@@ -670,7 +589,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test069() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 0.0001F * -1f;
         doTest(FLOAT_25, object);
     }
@@ -679,7 +598,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test070() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 0.0000000012345678F * -1f;
         doTest(FLOAT_26, object);
     }
@@ -688,7 +607,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test071() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1234567F * -1f;
         doTest(FLOAT_27, object);
     }
@@ -697,7 +616,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test072() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 12345678F * -1f;
         doTest(FLOAT_28, object);
     }
@@ -706,7 +625,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test073() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 123456789F * -1f;
         doTest(FLOAT_29, object);
     }
@@ -715,7 +634,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test074() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 1000F * -1f;
         doTest(FLOAT_30, object);
     }
@@ -724,7 +643,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test075() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 10000F * -1f;
         doTest(FLOAT_31, object);
     }
@@ -733,14 +652,14 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test076() {
-        ClazzPrimitiveFloat object = new ClazzPrimitiveFloat();
+        PojoPrimitiveFloat object = new PojoPrimitiveFloat();
         object.float1 = 12345678000000000F * -1f;
         doTest(FLOAT_32, object);
     }
 
     @Test
     public void test077() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         doTest(EMPTY_OBJECT, object);
     }
 
@@ -748,7 +667,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test078() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1;
         doTest(DOUBLE_01, object);
     }
@@ -757,7 +676,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test079() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = Double.MIN_VALUE;
         doTest(DOUBLE_02, object);
     }
@@ -766,7 +685,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test080() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = Double.MIN_NORMAL;
         doTest(DOUBLE_03, object);
     }
@@ -775,7 +694,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test081() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = Double.MAX_VALUE;
         doTest(DOUBLE_04, object);
     }
@@ -784,7 +703,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test082() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1.2345678901234567D;
         doTest(DOUBLE_05, object);
     }
@@ -793,7 +712,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test083() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1.23456789012345678D;
         doTest(DOUBLE_06, object);
     }
@@ -802,7 +721,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test084() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1.2345678901234569D;
         doTest(DOUBLE_07, object);
     }
@@ -811,7 +730,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test085() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 0.001D;
         doTest(DOUBLE_08, object);
     }
@@ -820,7 +739,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test086() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 0.0001D;
         doTest(DOUBLE_09, object);
     }
@@ -829,7 +748,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test087() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 0.000000000000000012345678901234567D;
         doTest(DOUBLE_10, object);
     }
@@ -838,7 +757,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test088() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1234567D;
         doTest(DOUBLE_11, object);
     }
@@ -847,7 +766,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test089() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1234567890123456D;
         doTest(DOUBLE_12, object);
     }
@@ -856,7 +775,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test090() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 123456789012345678D;
         doTest(DOUBLE_13, object);
     }
@@ -865,7 +784,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test091() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1000000D;
         doTest(DOUBLE_14, object);
     }
@@ -874,7 +793,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test092() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 10000000D;
         doTest(DOUBLE_15, object);
     }
@@ -883,7 +802,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test093() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 123456789012345600000000000000000D;
         doTest(DOUBLE_16, object);
     }
@@ -892,7 +811,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test094() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1 * -1d;
         doTest(DOUBLE_17, object);
     }
@@ -901,7 +820,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test095() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = Double.MIN_VALUE * -1d;
         doTest(DOUBLE_18, object);
     }
@@ -910,7 +829,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test096() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = Double.MIN_NORMAL * -1d;
         doTest(DOUBLE_19, object);
     }
@@ -919,7 +838,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test097() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = Double.MAX_VALUE * -1d;
         doTest(DOUBLE_20, object);
     }
@@ -928,7 +847,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test098() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1.2345678901234567D * -1d;
         doTest(DOUBLE_21, object);
     }
@@ -937,7 +856,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test099() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1.23456789012345678D * -1d;
         doTest(DOUBLE_22, object);
     }
@@ -946,7 +865,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test100() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1.2345678901234569D * -1d;
         doTest(DOUBLE_23, object);
     }
@@ -955,7 +874,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test101() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 0.001D * -1d;
         doTest(DOUBLE_24, object);
     }
@@ -964,7 +883,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test102() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 0.0001D * -1d;
         doTest(DOUBLE_25, object);
     }
@@ -973,7 +892,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test103() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 0.000000000000000012345678901234567D * -1d;
         doTest(DOUBLE_26, object);
     }
@@ -982,7 +901,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test104() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1234567D * -1d;
         doTest(DOUBLE_27, object);
     }
@@ -991,7 +910,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test105() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1234567890123456D * -1d;
         doTest(DOUBLE_28, object);
     }
@@ -1000,7 +919,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test106() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 123456789012345678D * -1d;
         doTest(DOUBLE_29, object);
     }
@@ -1009,7 +928,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test107() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 1000000D * -1d;
         doTest(DOUBLE_30, object);
     }
@@ -1018,7 +937,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test108() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 10000000D * -1d;
         doTest(DOUBLE_31, object);
     }
@@ -1027,7 +946,7 @@ public class PrimitivesToMapSerializerTest {
 
     @Test
     public void test109() {
-        ClazzPrimitiveDouble object = new ClazzPrimitiveDouble();
+        PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 123456789012345600000000000000000D * -1d;
         doTest(DOUBLE_32, object);
     }
