@@ -383,7 +383,7 @@ public final class ToMapSerializer {
         public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
             StringBuilder val = new StringBuilder();
             for (float currValue : ((float[]) object)) {
-                val.append(Float.toString(currValue));
+                val.append(prepareFloat(Float.toString(currValue)));
                 val.append(' ');
             }
             val.setLength(val.length() - 1);
@@ -400,7 +400,7 @@ public final class ToMapSerializer {
                 if (currValue == null) {
                     val.append(FLAG_NULL);
                 } else {
-                    val.append(Float.toString(currValue));
+                    val.append(prepareFloat(Float.toString(currValue)));
                 }
                 val.append(' ');
             }
@@ -415,7 +415,7 @@ public final class ToMapSerializer {
         public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
             StringBuilder val = new StringBuilder();
             for (double currValue : ((double[]) object)) {
-                val.append(Double.toString(currValue));
+                val.append(prepareFloat(Double.toString(currValue)));
                 val.append(' ');
             }
             val.setLength(val.length() - 1);
@@ -432,7 +432,27 @@ public final class ToMapSerializer {
                 if (currValue == null) {
                     val.append(FLAG_NULL);
                 } else {
-                    val.append(Double.toString(currValue));
+                    val.append(prepareFloat(Double.toString(currValue)));
+                }
+                val.append(' ');
+            }
+            val.setLength(val.length() - 1);
+            serializeTo(val.toString(), data, ctx);
+        }
+    }
+
+    private static class StringArraySerializer extends AbstractBasicSerializer {
+
+        @Override
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            StringBuilder val = new StringBuilder();
+            for (String currValue : ((String[]) object)) {
+                if (currValue == null) {
+                    val.append(FLAG_NULL);
+                } else {
+                    val.append("\"");
+                    val.append((currValue.replaceAll("\"", "\"\"")));
+                    val.append("\"");
                 }
                 val.append(' ');
             }
@@ -459,41 +479,37 @@ public final class ToMapSerializer {
 
         ret.put(byte.class, new BytePrimitiveSerializer());
         ret.put(Byte.class, new ByteSerializer());
-
-        ret.put(short.class, new ShortPrimitiveSerializer());
-        ret.put(Short.class, new ShortSerializer());
-
-        ret.put(int.class, new IntPrimitiveSerializer());
-        ret.put(Integer.class, new IntegerSerializer());
-
-        ret.put(long.class, new LongPrimitiveSerializer());
-        ret.put(Long.class, new LongSerializer());
-
-        ret.put(float.class, new FloatPrimitiveSerializer());
-        ret.put(Float.class, new FloatSerializer());
-
-        ret.put(double.class, new DoublePrimitiveSerializer());
-        ret.put(Double.class, new DoubleSerializer());
-
-        ret.put(String.class, new StringPrimitiveSerializer());
-
         ret.put(byte[].class, new PrimitiveByteArraySerializer());
         ret.put(Byte[].class, new ByteArraySerializer());
 
+        ret.put(short.class, new ShortPrimitiveSerializer());
+        ret.put(Short.class, new ShortSerializer());
         ret.put(short[].class, new PrimitiveShortArraySerializer());
         ret.put(Short[].class, new ShortArraySerializer());
 
+        ret.put(int.class, new IntPrimitiveSerializer());
+        ret.put(Integer.class, new IntegerSerializer());
         ret.put(int[].class, new PrimitiveIntArraySerializer());
         ret.put(Integer[].class, new IntegerArraySerializer());
 
+        ret.put(long.class, new LongPrimitiveSerializer());
+        ret.put(Long.class, new LongSerializer());
         ret.put(long[].class, new PrimitiveLongArraySerializer());
         ret.put(Long[].class, new LongArraySerializer());
 
+        ret.put(float.class, new FloatPrimitiveSerializer());
+        ret.put(Float.class, new FloatSerializer());
         ret.put(float[].class, new PrimitiveFloatArraySerializer());
         ret.put(Float[].class, new FloatArraySerializer());
 
+        ret.put(double.class, new DoublePrimitiveSerializer());
+        ret.put(Double.class, new DoubleSerializer());
         ret.put(double[].class, new PrimitiveDoubleArraySerializer());
         ret.put(Double[].class, new DoubleArraySerializer());
+
+        ret.put(String.class, new StringPrimitiveSerializer());
+        ret.put(String[].class, new StringArraySerializer());
+
         return ret;
     }
 

@@ -1,7 +1,7 @@
 package br.com.deliverytracker.commom.test;
 
-public class PojoShortArray {
+public class PojoPrimitiveLongArray {
 
     public int int1;
-    public Short[] arrayData;
+    public long[] arrayData;
 }
