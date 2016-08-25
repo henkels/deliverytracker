@@ -582,7 +582,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_46 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"A,N,A A,A\"A,A\rA\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"A,N,A A,\\,B\\,b\\,N\\,,\\,,\\\\,a,A\"A,A\rA\"\r" + //
                                             "}";
 
     @Test
