@@ -237,7 +237,11 @@ public final class ToMapSerializer {
         }
     }
 
-    private static final String FLAG_NULL = "N";
+    private static final String ARRAY_NULL_FLAG = "N";
+    private static final String ARRAY_VALUE_SEPARATOR = ",";
+    private static final String ARRAY_STRING_SCAPE_SIMBOL = "\\\\";
+    private static final String ARRAY_STRING_SCAPED_SIMBOL = "\\\\";
+    private static final String ARRAY_STRING_SCAPED_VALUE_SEPARATOR = "\\\\,";
 
     private static class StringPrimitiveSerializer extends AbstractBasicSerializer {
 
@@ -256,7 +260,7 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (byte currValue : ((byte[]) object)) {
                 val.append(Byte.toString(currValue));
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -270,11 +274,11 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (Byte currValue : ((Byte[]) object)) {
                 if (currValue == null) {
-                    val.append(FLAG_NULL);
+                    val.append(ARRAY_NULL_FLAG);
                 } else {
                     val.append(Byte.toString(currValue));
                 }
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -288,7 +292,7 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (short currValue : ((short[]) object)) {
                 val.append(Short.toString(currValue));
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -302,11 +306,11 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (Short currValue : ((Short[]) object)) {
                 if (currValue == null) {
-                    val.append(FLAG_NULL);
+                    val.append(ARRAY_NULL_FLAG);
                 } else {
                     val.append(Short.toString(currValue));
                 }
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -320,7 +324,7 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (int currValue : ((int[]) object)) {
                 val.append(Integer.toString(currValue));
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -334,11 +338,11 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (Integer currValue : ((Integer[]) object)) {
                 if (currValue == null) {
-                    val.append(FLAG_NULL);
+                    val.append(ARRAY_NULL_FLAG);
                 } else {
                     val.append(Integer.toString(currValue));
                 }
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -352,7 +356,7 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (long currValue : ((long[]) object)) {
                 val.append(Long.toString(currValue));
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -366,11 +370,11 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (Long currValue : ((Long[]) object)) {
                 if (currValue == null) {
-                    val.append(FLAG_NULL);
+                    val.append(ARRAY_NULL_FLAG);
                 } else {
                     val.append(Long.toString(currValue));
                 }
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -384,7 +388,7 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (float currValue : ((float[]) object)) {
                 val.append(prepareFloat(Float.toString(currValue)));
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -398,11 +402,11 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (Float currValue : ((Float[]) object)) {
                 if (currValue == null) {
-                    val.append(FLAG_NULL);
+                    val.append(ARRAY_NULL_FLAG);
                 } else {
                     val.append(prepareFloat(Float.toString(currValue)));
                 }
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -416,7 +420,7 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (double currValue : ((double[]) object)) {
                 val.append(prepareFloat(Double.toString(currValue)));
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -430,11 +434,11 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (Double currValue : ((Double[]) object)) {
                 if (currValue == null) {
-                    val.append(FLAG_NULL);
+                    val.append(ARRAY_NULL_FLAG);
                 } else {
                     val.append(prepareFloat(Double.toString(currValue)));
                 }
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);
@@ -448,13 +452,15 @@ public final class ToMapSerializer {
             StringBuilder val = new StringBuilder();
             for (String currValue : ((String[]) object)) {
                 if (currValue == null) {
-                    val.append(FLAG_NULL);
+                    val.append(ARRAY_NULL_FLAG);
                 } else {
-                    val.append("\"");
-                    val.append((currValue.replaceAll("\"", "\"\"")));
-                    val.append("\"");
+                    // after this, all '\' are transformed to '\\'  
+                    currValue = currValue.replaceAll(ARRAY_STRING_SCAPE_SIMBOL, ARRAY_STRING_SCAPED_SIMBOL);
+                    // after this, all ',' are transformed to '\,'
+                    currValue = currValue.replaceAll(ARRAY_VALUE_SEPARATOR, ARRAY_STRING_SCAPED_VALUE_SEPARATOR);
+                    val.append(currValue);
                 }
-                val.append(' ');
+                val.append(ARRAY_VALUE_SEPARATOR);
             }
             val.setLength(val.length() - 1);
             serializeTo(val.toString(), data, ctx);

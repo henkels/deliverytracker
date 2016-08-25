@@ -115,7 +115,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_08 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"0 0\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"0,0\"\r" + //
                                             "}";
 
     @Test
@@ -127,7 +127,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_09 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -153,7 +153,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_11 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"N N\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"N,N\"\r" + //
                                             "}";
 
     @Test
@@ -165,7 +165,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_12 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -191,7 +191,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_14 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"0 0\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"0,0\"\r" + //
                                             "}";
 
     @Test
@@ -203,7 +203,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_15 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -229,7 +229,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_17 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"N N\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"N,N\"\r" + //
                                             "}";
 
     @Test
@@ -241,7 +241,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_18 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -267,7 +267,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_20 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"0 0\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"0,0\"\r" + //
                                             "}";
 
     @Test
@@ -279,7 +279,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_21 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -305,7 +305,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_23 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"N N\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"N,N\"\r" + //
                                             "}";
 
     @Test
@@ -317,7 +317,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_24 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -343,7 +343,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_26 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"0 0\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"0,0\"\r" + //
                                             "}";
 
     @Test
@@ -355,7 +355,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_27 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -381,7 +381,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_29 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"N N\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"N,N\"\r" + //
                                             "}";
 
     @Test
@@ -393,7 +393,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_30 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1 -1\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1,-1\"\r" + //
                                             "}";
 
     @Test
@@ -419,7 +419,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_32 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"0 0\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"0,0\"\r" + //
                                             "}";
 
     @Test
@@ -431,7 +431,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_33 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"3.4028235E38 -1.4E-45\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"3.4028235E38,-1.4E-45\"\r" + //
                                             "}";
 
     @Test
@@ -457,7 +457,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_35 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"N N\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"N,N\"\r" + //
                                             "}";
 
     @Test
@@ -469,7 +469,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_36 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"3.4028235E38 -1.4E-45\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"3.4028235E38,-1.4E-45\"\r" + //
                                             "}";
 
     @Test
@@ -495,7 +495,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_39 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"0 0\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"0,0\"\r" + //
                                             "}";
 
     @Test
@@ -507,7 +507,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_40 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1.7976931348623157E308 -4.9E-324\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1.7976931348623157E308,-4.9E-324\"\r" + //
                                             "}";
 
     @Test
@@ -533,7 +533,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_42 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"N N\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"N,N\"\r" + //
                                             "}";
 
     @Test
@@ -545,7 +545,7 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_43 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"1.7976931348623157E308 -4.9E-324\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"1.7976931348623157E308,-4.9E-324\"\r" + //
                                             "}";
 
     @Test
@@ -570,15 +570,27 @@ public class ObjectsToMapSerializerTest {
     }
 
     private static final String OBJECT_45 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"\"A\" N \"A A\" \"A\"\"A\" \"A\rA\"\"\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"\\,\"\r" + //
                                             "}";
 
     @Test
     public void test045() {
         PojoStringArray object = new PojoStringArray();
         object.int1 = 13;
-        object.arrayData = new String[]{"A",null,"A A", "A\"A","A\rA"};
+        object.arrayData = new String[] { "," };
         doTest(OBJECT_45, object);
+    }
+
+    private static final String OBJECT_46 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"A,N,A A,A\"A,A\rA\"\r" + //
+                                            "}";
+
+    @Test
+    public void test046() {
+        PojoStringArray object = new PojoStringArray();
+        object.int1 = 13;
+        object.arrayData = new String[] { "A", null, "A A", ",B,b,N,", ",", "\\,a", "A\"A", "A\rA" };
+        doTest(OBJECT_46, object);
     }
 
 }
