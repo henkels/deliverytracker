@@ -593,4 +593,56 @@ public class ObjectsToMapSerializerTest {
         doTest(OBJECT_46, object);
     }
 
+    private static final String OBJECT_47 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"A,N,A A,\\,B\\,b\\,N\\,,\\,,\\\\,a,A\"A,A\rA\"\r" + //
+                                            "}";
+
+    @Test
+    public void test047() {
+        PojoObjectArray object = new PojoObjectArray();
+        object.int1 = 13;
+        doTest(OBJECT_47, object);
+    }
+
+    private static final String OBJECT_48 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"????\"\r" + //
+                                            "}";
+
+    @Test
+    public void test048() {
+        PojoObjectArray object = new PojoObjectArray();
+        object.int1 = 13;
+        // array do tipo do campo
+        object.arrayData = new Object[] { new PojoSimpleInner() };
+        ((PojoSimpleInner) object.arrayData[0]).int1 = 11;
+        doTest(OBJECT_48, object);
+    }
+
+    private static final String OBJECT_49 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"????\"\r" + //
+                                            "}";
+
+    @Test
+    public void test049() {
+        PojoObjectArray object = new PojoObjectArray();
+        object.int1 = 13;
+        // array do tipo do campo
+        object.arrayData = new PojoSimpleInner[] { new PojoSimpleInner() };
+        ((PojoSimpleInner)object.arrayData[0]).int1 = 11;
+        doTest(OBJECT_49, object);
+    }
+
+    private static final String OBJECT_50 = "{\r" + //
+                                            "\"int1\":\"13\",\r\"arrayData\":\"????\"\r" + //
+                                            "}";
+
+    @Test
+    public void test050() {
+        PojoObjectArray2 object = new PojoObjectArray2();
+        object.int1 = 13;
+        object.arrayData = new PojoSimpleInner[] { new PojoSimpleInner() };
+        object.arrayData[0].int1 = 11;
+        doTest(OBJECT_50, object);
+    }
+
 }
