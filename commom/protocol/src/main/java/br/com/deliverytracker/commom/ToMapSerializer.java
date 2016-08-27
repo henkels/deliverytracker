@@ -55,7 +55,7 @@ public final class ToMapSerializer {
 
     private static class ObjectSerializer implements IMapSerializer {
 
-        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
             StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
             boolean notSerializedYet = objCtx == null;
             if (notSerializedYet) {
@@ -64,16 +64,24 @@ public final class ToMapSerializer {
             data.put(ctx.toString(), objCtx.toString());
             if (notSerializedYet) {
                 int len = ctx.length();
-                ctx.append(".class");
-                Class<? extends Object> clazz = object.getClass();
-                // Salve a classe em questão
-                // Se o package da classe é o mesmo do objeto corrente, salva o simpleName, senão o canonicalName
-                String className = clazz.getPackage().equals(getClass().getPackage()) ? clazz.getSimpleName() : clazz.getCanonicalName();
-                data.put(ctx.toString(), className);
+                prepareSerializeTo(object, data, ctx);
                 ctx.setLength(len);
                 objCtx.append('.');
                 ToMapSerializer.serializeTo(object, data, objCtx, ctxBuilder);
             }
+        }
+
+        protected void prepareSerializeTo(Object object, Map<String, String> data, StringBuilder ctx) {
+        }
+    }
+
+    private static class ClassAndObjectSerializer extends ObjectSerializer {
+
+        protected void prepareSerializeTo(Object object, Map<String, String> data, StringBuilder ctx) {
+            ctx.append(".class");
+            Class<? extends Object> clazz = object.getClass();
+            // Salve a classe em questão
+            data.put(ctx.toString(), clazz.getCanonicalName());
         }
     }
 
@@ -87,17 +95,45 @@ public final class ToMapSerializer {
             }
             data.put(ctx.toString(), objCtx.toString());
             if (notSerializedYet) {
-                int len = ctx.length();
-                ctx.append(".class");
-                Class<? extends Object> clazz = object.getClass();
-                // Salve a classe em questão
-                // Se o package da classe é o mesmo do objeto corrente, salva o simpleName, senão o canonicalName
-                String className = clazz.getPackage().equals(getClass().getPackage()) ? clazz.getSimpleName() : clazz.getCanonicalName();
-                data.put(ctx.toString(), className);
-                ctx.setLength(len);
-                objCtx.append('.');
-                ToMapSerializer.serializeTo(object, data, objCtx, ctxBuilder);
+                int objCtxLen = objCtx.length();
+                prepareSerializeTo(object, data, objCtx);
+                Object[] aux = (Object[]) object;
+                StringBuilder val = new StringBuilder();
+                for (Object inner : aux) {
+                    if (inner == null) {
+                        val.append(ARRAY_NULL_FLAG);
+                    } else {
+                        StringBuilder innerCtx = ctxBuilder.getExistingObjCtx(inner);
+                        if (innerCtx == null) {
+                            innerCtx = ctxBuilder.getNewObjCtx(inner);
+                            int innerLen = innerCtx.length();
+                            innerCtx.append('.');
+                            ToMapSerializer.serializeTo(inner, data, innerCtx, ctxBuilder);
+                            innerCtx.setLength(innerLen);
+                        }
+                        val.append(innerCtx.toString());
+                    }
+                    val.append(ARRAY_VALUE_SEPARATOR);
+                }
+                int valLen = val.length();
+                if (valLen > 1) {
+                    val.setLength(valLen - 1);
+                }
+                objCtx.setLength(objCtxLen);
+                data.put(objCtx.toString(), val.toString());
             }
+        }
+
+        protected void prepareSerializeTo(Object object, Map<String, String> data, StringBuilder ctx) {
+        }
+    }
+
+    private static class ClassAndObjectArraySerializer extends ObjectArraySerializer {
+
+        protected void prepareSerializeTo(Object object, Map<String, String> data, StringBuilder ctx) {
+            ctx.append(".class");
+            Class<? extends Object> clazz = object.getClass();
+            data.put(ctx.toString(), clazz.getCanonicalName());
         }
     }
 
@@ -484,11 +520,13 @@ public final class ToMapSerializer {
 
     private static final IMapSerializer OBJECT_SERIALIZER = new ObjectSerializer();
 
+    private static final IMapSerializer CLASS_OBJECT_SERIALIZER = new ClassAndObjectSerializer();
+
     private static final IMapSerializer OBJECT_ARRAY_SERIALIZER = new ObjectArraySerializer();
 
-    private static final Map<Class<?>, IMapSerializer> PRIMITIVE_SERIALIZERS = buildPrimitiveSerilizers();
+    private static final IMapSerializer CLASS_OBJECT_ARRAY_SERIALIZER = new ClassAndObjectArraySerializer();
 
-    private static final Map<Field, IMapSerializer> SERIALIZER_MAP = new HashMap<>();
+    private static final Map<Class<?>, IMapSerializer> PRIMITIVE_SERIALIZERS = buildPrimitiveSerilizers();
 
     private static Map<Class<?>, IMapSerializer> buildPrimitiveSerilizers() {
         Map<Class<?>, IMapSerializer> ret = new HashMap<>();
@@ -532,22 +570,26 @@ public final class ToMapSerializer {
         return ret;
     }
 
-    synchronized private static final IMapSerializer getSerializer(Field field, Object currentValue) {
-        IMapSerializer serializer = SERIALIZER_MAP.get(field);
-        if (serializer == null) {
-            Class<?> type = field.getType();
-            // é primitivo?
-            serializer = PRIMITIVE_SERIALIZERS.get(type);
-            if (serializer == null) {
-                if (type.isArray()) {
-                    serializer = OBJECT_ARRAY_SERIALIZER;
-                } else {
-                    serializer = OBJECT_SERIALIZER;
-                }
-            }
-            SERIALIZER_MAP.put(field, serializer);
+    private static final IMapSerializer getSerializer(Field field, Object currentValue) {
+        Class<?> type = field.getType();
+        // é primitivo?
+        IMapSerializer serializer = PRIMITIVE_SERIALIZERS.get(type);
+        if (serializer != null) {
+            return serializer;
         }
-        return serializer;
+
+        if (type.isArray()) {
+            if (type.getComponentType().equals(currentValue.getClass().getComponentType())) {
+                return OBJECT_ARRAY_SERIALIZER;
+            }
+            return CLASS_OBJECT_ARRAY_SERIALIZER;
+        }
+
+        if (type.equals(currentValue.getClass())) {
+            return OBJECT_SERIALIZER;
+        }
+        return CLASS_OBJECT_SERIALIZER;
+
     }
 
     private static void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
