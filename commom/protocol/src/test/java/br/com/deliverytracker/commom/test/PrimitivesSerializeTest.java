@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import br.com.deliverytracker.commom.ToMapSerializer;
 
-public class PrimitivesToMapSerializerTest {
+public class PrimitivesSerializeTest {
 
     private void doTest(String expected, Object object) {
         String actual = ToMapSerializer.toJson(object);
@@ -949,5 +949,39 @@ public class PrimitivesToMapSerializerTest {
         PojoPrimitiveDouble object = new PojoPrimitiveDouble();
         object.double1 = 123456789012345600000000000000000D * -1d;
         doTest(DOUBLE_32, object);
+    }
+    
+    private static final String FLOAT_33 = "{}";
+
+    @Test
+    public void test110() {
+        PojoFloat object = new PojoFloat();
+        doTest(FLOAT_33, object);
+    }
+    
+    private static final String FLOAT_34 = "{\r\"float1\":\"1\"\r}";
+
+    @Test
+    public void test111() {
+        PojoFloat object = new PojoFloat();
+        object.float1 = 1f;
+        doTest(FLOAT_34, object);
+    }
+    
+    private static final String DOUBLE_33 = "{}";
+
+    @Test
+    public void test112() {
+        PojoDouble object = new PojoDouble();
+        doTest(DOUBLE_33, object);
+    }
+    
+    private static final String DOUBLE_34 = "{\r\"double1\":\"1\"\r}";
+
+    @Test
+    public void test113() {
+        PojoDouble object = new PojoDouble();
+        object.double1 = 1d;
+        doTest(DOUBLE_34, object);
     }
 }
