@@ -17,7 +17,7 @@ public class ObjectsSerializeTest {
 
     //    private static final String EMPTY_OBJECT = "{}";
 
-    private static final String OBJECT_01 = "{\r\"int1\":\"11\"\r}";
+    private static final String OBJECT_01 = "{\r\".C\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter\",\r\"int1\":\"11\"\r}";
 
     @Test
     public void test001() {

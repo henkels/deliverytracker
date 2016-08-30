@@ -14,7 +14,7 @@ public class PrimitivesUnserializeTest {
         assertEquals(tested, ToMapSerializer.toJson(actual));
     }
 
-    private static final String EMPTY_OBJECT = "{.C=\"\"}";
+    private static final String EMPTY_OBJECT = "{\r\".C\":\"br.com.deliverytracker.commom.test.PojoString\"\r}";
 
     @Test
     public void sanityTest() {

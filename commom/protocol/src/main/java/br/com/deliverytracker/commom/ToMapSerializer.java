@@ -9,8 +9,6 @@ import java.util.Map.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import br.com.deliverytracker.commom.MapSerializer.ObjectAdapter;
-
 public final class ToMapSerializer {
 
     private static final String OBJECT_CONTEXT_PREFIX = "REF_";
@@ -605,6 +603,8 @@ public final class ToMapSerializer {
 
     private static void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
         int len = ctx.length();
+        ctx.append(CLASS_CONTEXT_SUFFIX);
+        data.put(ctx.toString(), object.getClass().getCanonicalName());
         Field[] fields = object.getClass().getFields();
         for (Field field : fields) {
             ctx.setLength(len);
@@ -652,7 +652,33 @@ public final class ToMapSerializer {
 
     private interface IMapUnserializer {
 
-        void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder);
+        Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap);
+    }
+
+    //    private static abstract class AbstractBasicUnserializer implements IMapUnserializer {
+    //
+    //        protected Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap) {
+    //            data.put(ctx.toString(), value);
+    //        }
+    //    }
+
+    private static class StringPrimitiveUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap) {
+            String val = data.get(ctx.toString());
+            if (val != null) {
+                val = val.replaceAll("\"\"", "\"");
+            }
+            return val;
+        }
+        //
+        //        @Override
+        //        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        //            String val = object.toString();
+        //            val = val.replaceAll("\"", "\"\"");
+        //            serializeTo(val, data, ctx);
+        //        }
     }
 
     private static final IMapUnserializer OBJECT_UNSERIALIZER = null;//new ObjectSerializer();
@@ -701,39 +727,43 @@ public final class ToMapSerializer {
         //        ret.put(double[].class, new PrimitiveDoubleArraySerializer());
         //        ret.put(Double[].class, new DoubleArraySerializer());
         //
-        //        ret.put(String.class, new StringPrimitiveSerializer());
+        ret.put(String.class, new StringPrimitiveUnserializer());
         //        ret.put(String[].class, new StringArraySerializer());
         //
         return ret;
     }
 
-    interface IMapUnserializer getUnserializer(Field field, Object currentValue) {
+    private static IMapUnserializer getUnserializer(Field field/*, Map<String, String> data, StringBuilder ctx*/) {
         Class<?> fieldType = field.getType();
         // é primitivo?
-        IMapSerializer serializer = PRIMITIVE_SERIALIZERS.get(fieldType);
-        if (serializer != null) {
-            return serializer;
+        IMapUnserializer unserializer = PRIMITIVE_UNSERIALIZERS.get(fieldType);
+        if (unserializer != null) {
+            return unserializer;
         }
 
-        Class<?> valueType = currentValue.getClass();
-        serializer = PRIMITIVE_SERIALIZERS.get(valueType);
-        if (serializer != null) {
-            return new PrimitiveInObjectSerializer(serializer);
-        }
-        if (valueType.isArray()) {
-            if (valueType.getComponentType().equals(fieldType.getComponentType())) {
-                return OBJECT_ARRAY_SERIALIZER;
-            }
-            return CLASS_OBJECT_ARRAY_SERIALIZER;
-        }
-
-        if (valueType.equals(fieldType)) {
-            return OBJECT_SERIALIZER;
-        }
-        return CLASS_OBJECT_SERIALIZER;
-
+        throw new RuntimeException("Tipo não suportado:" + fieldType.getCanonicalName());
+        //        ctx.append(CLASS_CONTEXT_SUFFIX);
+        //        
+        //        data.get(key)
+        //
+        //        Class<?> valueType = currentValue.getClass();
+        //        unserializer = PRIMITIVE_SERIALIZERS.get(valueType);
+        //        if (unserializer != null) {
+        //            return new PrimitiveInObjectSerializer(unserializer);
+        //        }
+        //        if (valueType.isArray()) {
+        //            if (valueType.getComponentType().equals(fieldType.getComponentType())) {
+        //                return OBJECT_ARRAY_SERIALIZER;
+        //            }
+        //            return CLASS_OBJECT_ARRAY_SERIALIZER;
+        //        }
+        //
+        //        if (valueType.equals(fieldType)) {
+        //            return OBJECT_SERIALIZER;
+        //        }
+        //        return CLASS_OBJECT_SERIALIZER;
+        //
     }
-
 
     private static void unserialize(Map<String, String> data, StringBuilder ctx, Object object) {
         int len = ctx.length();
@@ -741,49 +771,38 @@ public final class ToMapSerializer {
         for (Field field : fields) {
             ctx.setLength(len);
             ctx.append(field.getName());
+            IMapUnserializer unserializer = getUnserializer(field);
+            Object value = unserializer.unserializeFrom(data, ctx, null);
             try {
-                Class<?> fieldClazz = field.getType();
-                if (fieldClazz.isAssignableFrom(ToMapSerializer.class)) {
-                    Class<? extends ToMapSerializer> objectFieldClass = (Class<? extends ToMapSerializer>) fieldClazz;
-                    ctx.append(".class");
-                    String clazzName = data.get(ctx.toString());
-                    if (clazzName != null) {
-                        // É uma derivação ou implementação
-                        if (clazzName.indexOf('.') != -1) {
-                            // A classe é do mesmo package
-                            clazzName = String.format("%s.$s", getClass().getPackage().getName(), clazzName);
-                        }
-                        objectFieldClass = (Class<? extends ToMapSerializer>) getClass().getClassLoader().loadClass(clazzName);
-                    }
-                    ToMapSerializer newInstance = objectFieldClass.newInstance();
-                    field.set(this, newInstance);
-                    ctx.setLength(len + 1);
-                    newInstance.unserializeFrom(data, ctx);
-                } else {
-                    String value = data.get(ctx.toString());
-                    if (value != null) {
-                        field.set(this, value);
-                    }
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
+                field.set(object, value);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
     private static Object unserialize(Map<String, String> data, StringBuilder ctx, Class<?> clazz) {
-        Object object = clazz.newInstance();
-        unserialize(data, ctx, object);
-        return object;
+        Object object;
+        try {
+            object = clazz.newInstance();
+            unserialize(data, ctx, object);
+            return object;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static Object unserialize(Map<String, String> data, StringBuilder ctx) {
         int len = ctx.length();
         ctx.append(CLASS_CONTEXT_SUFFIX);
-        String className = data.get(ctx);
+        String className = data.get(ctx.toString());
         ctx.setLength(len);
-        Class<?> clazz = ToMapSerializer.class.getClassLoader().loadClass(className);
-        return unserialize(data, ctx, clazz);
+        try {
+            Class<?> clazz = ToMapSerializer.class.getClassLoader().loadClass(className);
+            return unserialize(data, ctx, clazz);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Object unserialize(Map<String, String> map) {
@@ -792,6 +811,7 @@ public final class ToMapSerializer {
 
     public static Object fromJson(String json) {
         Gson gson = new GsonBuilder().create();
+        @SuppressWarnings("unchecked")
         Map<String, String> map = gson.fromJson(json, LinkedHashMap.class);
         return unserialize(map);
     }
