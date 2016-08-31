@@ -23,7 +23,7 @@ public class ObjectsUnserializeTest {
     public void test001() {
         PojoSimpleOuter object = new PojoSimpleOuter();
         object.int1 = 11;
-        doTest(OBJECT_01, object);
+        doTest(SerializeTestUtils.OBJECT_01, object);
     }
 
     private static final String OBJECT_02 = "{\r\"int1\":\"12\",\r\"object\":\"REF_1\"\r}";
@@ -33,7 +33,7 @@ public class ObjectsUnserializeTest {
         PojoSimpleOuter object = new PojoSimpleOuter();
         object.int1 = 12;
         object.object = new PojoSimpleInner();
-        doTest(OBJECT_02, object);
+        doTest(SerializeTestUtils.OBJECT_02, object);
     }
 
     private static final String OBJECT_03 = "{\r\"int1\":\"13\",\r\"object\":\"REF_1\",\r\"REF_1.int1\":\"14\"\r}";
@@ -44,7 +44,7 @@ public class ObjectsUnserializeTest {
         object.int1 = 13;
         object.object = new PojoSimpleInner();
         object.object.int1 = 14;
-        doTest(OBJECT_03, object);
+        doTest(SerializeTestUtils.OBJECT_03, object);
     }
 
     private static final String OBJECT_04 = "{\r" + //
@@ -64,7 +64,7 @@ public class ObjectsUnserializeTest {
         object.object.object.int1 = 15;
         object.object.object.object = new PojoHierarquical();
         object.object.object.object.int1 = 16;
-        doTest(OBJECT_04, object);
+        doTest(SerializeTestUtils.OBJECT_04, object);
     }
 
     private static final String OBJECT_05 = "{\r" + //
@@ -80,7 +80,7 @@ public class ObjectsUnserializeTest {
         object.object1 = new PojoSimpleInner();
         object.object1.int1 = 14;
         object.object2 = object.object1;
-        doTest(OBJECT_05, object);
+        doTest(SerializeTestUtils.OBJECT_05, object);
     }
 
     private static final String OBJECT_06 = "{\r" + //
@@ -99,7 +99,7 @@ public class ObjectsUnserializeTest {
         object.object.object.int1 = 15;
         //referencia circular
         object.object.object.object = object;
-        doTest(OBJECT_06, object);
+        doTest(SerializeTestUtils.OBJECT_06, object);
     }
 
     private static final String OBJECT_07 = "{\r" + //
@@ -111,7 +111,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_07, object);
+        doTest(SerializeTestUtils.OBJECT_07, object);
     }
 
     private static final String OBJECT_08 = "{\r" + //
@@ -124,7 +124,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
         object.int1 = 13;
         object.arrayData = new byte[2];
-        doTest(OBJECT_08, object);
+        doTest(SerializeTestUtils.OBJECT_08, object);
     }
 
     private static final String OBJECT_09 = "{\r" + //
@@ -139,7 +139,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new byte[2];
         object.arrayData[0] = 1;
         object.arrayData[1] = -1;
-        doTest(OBJECT_09, object);
+        doTest(SerializeTestUtils.OBJECT_09, object);
     }
 
     private static final String OBJECT_10 = "{\r" + //
@@ -151,7 +151,7 @@ public class ObjectsUnserializeTest {
         PojoByteArray object = new PojoByteArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_10, object);
+        doTest(SerializeTestUtils.OBJECT_10, object);
     }
 
     private static final String OBJECT_11 = "{\r" + //
@@ -164,7 +164,7 @@ public class ObjectsUnserializeTest {
         PojoByteArray object = new PojoByteArray();
         object.int1 = 13;
         object.arrayData = new Byte[2];
-        doTest(OBJECT_11, object);
+        doTest(SerializeTestUtils.OBJECT_11, object);
     }
 
     private static final String OBJECT_12 = "{\r" + //
@@ -179,7 +179,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new Byte[2];
         object.arrayData[0] = 1;
         object.arrayData[1] = -1;
-        doTest(OBJECT_12, object);
+        doTest(SerializeTestUtils.OBJECT_12, object);
     }
 
     private static final String OBJECT_13 = "{\r" + //
@@ -191,7 +191,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveShortArray object = new PojoPrimitiveShortArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_13, object);
+        doTest(SerializeTestUtils.OBJECT_13, object);
     }
 
     private static final String OBJECT_14 = "{\r" + //
@@ -204,7 +204,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveShortArray object = new PojoPrimitiveShortArray();
         object.int1 = 13;
         object.arrayData = new short[2];
-        doTest(OBJECT_14, object);
+        doTest(SerializeTestUtils.OBJECT_14, object);
     }
 
     private static final String OBJECT_15 = "{\r" + //
@@ -219,7 +219,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new short[2];
         object.arrayData[0] = 1;
         object.arrayData[1] = -1;
-        doTest(OBJECT_15, object);
+        doTest(SerializeTestUtils.OBJECT_15, object);
     }
 
     private static final String OBJECT_16 = "{\r" + //
@@ -231,7 +231,7 @@ public class ObjectsUnserializeTest {
         PojoShortArray object = new PojoShortArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_16, object);
+        doTest(SerializeTestUtils.OBJECT_16, object);
     }
 
     private static final String OBJECT_17 = "{\r" + //
@@ -244,7 +244,7 @@ public class ObjectsUnserializeTest {
         PojoShortArray object = new PojoShortArray();
         object.int1 = 13;
         object.arrayData = new Short[2];
-        doTest(OBJECT_17, object);
+        doTest(SerializeTestUtils.OBJECT_17, object);
     }
 
     private static final String OBJECT_18 = "{\r" + //
@@ -259,7 +259,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new Short[2];
         object.arrayData[0] = 1;
         object.arrayData[1] = -1;
-        doTest(OBJECT_18, object);
+        doTest(SerializeTestUtils.OBJECT_18, object);
     }
 
     private static final String OBJECT_19 = "{\r" + //
@@ -271,7 +271,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveIntArray object = new PojoPrimitiveIntArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_19, object);
+        doTest(SerializeTestUtils.OBJECT_19, object);
     }
 
     private static final String OBJECT_20 = "{\r" + //
@@ -284,7 +284,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveIntArray object = new PojoPrimitiveIntArray();
         object.int1 = 13;
         object.arrayData = new int[2];
-        doTest(OBJECT_20, object);
+        doTest(SerializeTestUtils.OBJECT_20, object);
     }
 
     private static final String OBJECT_21 = "{\r" + //
@@ -299,7 +299,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new int[2];
         object.arrayData[0] = 1;
         object.arrayData[1] = -1;
-        doTest(OBJECT_21, object);
+        doTest(SerializeTestUtils.OBJECT_21, object);
     }
 
     private static final String OBJECT_22 = "{\r" + //
@@ -311,7 +311,7 @@ public class ObjectsUnserializeTest {
         PojoIntegerArray object = new PojoIntegerArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_22, object);
+        doTest(SerializeTestUtils.OBJECT_22, object);
     }
 
     private static final String OBJECT_23 = "{\r" + //
@@ -324,7 +324,7 @@ public class ObjectsUnserializeTest {
         PojoIntegerArray object = new PojoIntegerArray();
         object.int1 = 13;
         object.arrayData = new Integer[2];
-        doTest(OBJECT_23, object);
+        doTest(SerializeTestUtils.OBJECT_23, object);
     }
 
     private static final String OBJECT_24 = "{\r" + //
@@ -339,7 +339,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new Integer[2];
         object.arrayData[0] = 1;
         object.arrayData[1] = -1;
-        doTest(OBJECT_24, object);
+        doTest(SerializeTestUtils.OBJECT_24, object);
     }
 
     private static final String OBJECT_25 = "{\r" + //
@@ -351,7 +351,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveLongArray object = new PojoPrimitiveLongArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_25, object);
+        doTest(SerializeTestUtils.OBJECT_25, object);
     }
 
     private static final String OBJECT_26 = "{\r" + //
@@ -364,7 +364,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveLongArray object = new PojoPrimitiveLongArray();
         object.int1 = 13;
         object.arrayData = new long[2];
-        doTest(OBJECT_26, object);
+        doTest(SerializeTestUtils.OBJECT_26, object);
     }
 
     private static final String OBJECT_27 = "{\r" + //
@@ -379,7 +379,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new long[2];
         object.arrayData[0] = 1;
         object.arrayData[1] = -1;
-        doTest(OBJECT_27, object);
+        doTest(SerializeTestUtils.OBJECT_27, object);
     }
 
     private static final String OBJECT_28 = "{\r" + //
@@ -391,7 +391,7 @@ public class ObjectsUnserializeTest {
         PojoLongArray object = new PojoLongArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_28, object);
+        doTest(SerializeTestUtils.OBJECT_28, object);
     }
 
     private static final String OBJECT_29 = "{\r" + //
@@ -404,7 +404,7 @@ public class ObjectsUnserializeTest {
         PojoLongArray object = new PojoLongArray();
         object.int1 = 13;
         object.arrayData = new Long[2];
-        doTest(OBJECT_29, object);
+        doTest(SerializeTestUtils.OBJECT_29, object);
     }
 
     private static final String OBJECT_30 = "{\r" + //
@@ -419,7 +419,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new Long[2];
         object.arrayData[0] = 1l;
         object.arrayData[1] = -1l;
-        doTest(OBJECT_30, object);
+        doTest(SerializeTestUtils.OBJECT_30, object);
     }
 
     private static final String OBJECT_31 = "{\r" + //
@@ -431,7 +431,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveFloatArray object = new PojoPrimitiveFloatArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_31, object);
+        doTest(SerializeTestUtils.OBJECT_31, object);
     }
 
     private static final String OBJECT_32 = "{\r" + //
@@ -444,7 +444,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveFloatArray object = new PojoPrimitiveFloatArray();
         object.int1 = 13;
         object.arrayData = new float[2];
-        doTest(OBJECT_32, object);
+        doTest(SerializeTestUtils.OBJECT_32, object);
     }
 
     private static final String OBJECT_33 = "{\r" + //
@@ -459,7 +459,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new float[2];
         object.arrayData[0] = Float.MAX_VALUE;
         object.arrayData[1] = Float.MIN_VALUE * -1f;
-        doTest(OBJECT_33, object);
+        doTest(SerializeTestUtils.OBJECT_33, object);
     }
 
     private static final String OBJECT_34 = "{\r" + //
@@ -471,7 +471,7 @@ public class ObjectsUnserializeTest {
         PojoFloatArray object = new PojoFloatArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_34, object);
+        doTest(SerializeTestUtils.OBJECT_34, object);
     }
 
     private static final String OBJECT_35 = "{\r" + //
@@ -484,7 +484,7 @@ public class ObjectsUnserializeTest {
         PojoFloatArray object = new PojoFloatArray();
         object.int1 = 13;
         object.arrayData = new Float[2];
-        doTest(OBJECT_35, object);
+        doTest(SerializeTestUtils.OBJECT_35, object);
     }
 
     private static final String OBJECT_36 = "{\r" + //
@@ -499,7 +499,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new Float[2];
         object.arrayData[0] = Float.MAX_VALUE;
         object.arrayData[1] = Float.MIN_VALUE * -1f;
-        doTest(OBJECT_36, object);
+        doTest(SerializeTestUtils.OBJECT_36, object);
     }
 
     private static final String OBJECT_38 = "{\r" + //
@@ -511,7 +511,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveDoubleArray object = new PojoPrimitiveDoubleArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_38, object);
+        doTest(SerializeTestUtils.OBJECT_38, object);
     }
 
     private static final String OBJECT_39 = "{\r" + //
@@ -524,7 +524,7 @@ public class ObjectsUnserializeTest {
         PojoPrimitiveDoubleArray object = new PojoPrimitiveDoubleArray();
         object.int1 = 13;
         object.arrayData = new double[2];
-        doTest(OBJECT_39, object);
+        doTest(SerializeTestUtils.OBJECT_39, object);
     }
 
     private static final String OBJECT_40 = "{\r" + //
@@ -539,7 +539,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new double[2];
         object.arrayData[0] = Double.MAX_VALUE;
         object.arrayData[1] = Double.MIN_VALUE * -1d;
-        doTest(OBJECT_40, object);
+        doTest(SerializeTestUtils.OBJECT_40, object);
     }
 
     private static final String OBJECT_41 = "{\r" + //
@@ -551,7 +551,7 @@ public class ObjectsUnserializeTest {
         PojoDoubleArray object = new PojoDoubleArray();
         object.int1 = 13;
         object.arrayData = null;
-        doTest(OBJECT_41, object);
+        doTest(SerializeTestUtils.OBJECT_41, object);
     }
 
     private static final String OBJECT_42 = "{\r" + //
@@ -564,7 +564,7 @@ public class ObjectsUnserializeTest {
         PojoDoubleArray object = new PojoDoubleArray();
         object.int1 = 13;
         object.arrayData = new Double[2];
-        doTest(OBJECT_42, object);
+        doTest(SerializeTestUtils.OBJECT_42, object);
     }
 
     private static final String OBJECT_43 = "{\r" + //
@@ -579,7 +579,7 @@ public class ObjectsUnserializeTest {
         object.arrayData = new Double[2];
         object.arrayData[0] = Double.MAX_VALUE;
         object.arrayData[1] = Double.MIN_VALUE * -1d;
-        doTest(OBJECT_43, object);
+        doTest(SerializeTestUtils.OBJECT_43, object);
     }
 
     private static final String OBJECT_44 = "{\r" + //
@@ -590,7 +590,7 @@ public class ObjectsUnserializeTest {
     public void test044() {
         PojoStringArray object = new PojoStringArray();
         object.int1 = 13;
-        doTest(OBJECT_44, object);
+        doTest(SerializeTestUtils.OBJECT_44, object);
     }
 
     private static final String OBJECT_45 = "{\r" + //
@@ -602,7 +602,7 @@ public class ObjectsUnserializeTest {
         PojoStringArray object = new PojoStringArray();
         object.int1 = 13;
         object.arrayData = new String[] { "," };
-        doTest(OBJECT_45, object);
+        doTest(SerializeTestUtils.OBJECT_45, object);
     }
 
     private static final String OBJECT_46 = "{\r" + //
@@ -614,7 +614,7 @@ public class ObjectsUnserializeTest {
         PojoStringArray object = new PojoStringArray();
         object.int1 = 13;
         object.arrayData = new String[] { "A", null, "A A", ",B,b,N,", ",", "\\,a", "A\"A", "A\rA" };
-        doTest(OBJECT_46, object);
+        doTest(SerializeTestUtils.OBJECT_46, object);
     }
 
     private static final String OBJECT_47 = "{\r" + //
@@ -625,7 +625,7 @@ public class ObjectsUnserializeTest {
     public void test047() {
         PojoObjectArray object = new PojoObjectArray();
         object.int1 = 13;
-        doTest(OBJECT_47, object);
+        doTest(SerializeTestUtils.OBJECT_47, object);
     }
 
     private static final String OBJECT_48 = "{\r" + //
@@ -641,7 +641,7 @@ public class ObjectsUnserializeTest {
         // array do tipo do campo
         object.arrayData = new Object[] { new PojoSimpleInner() };
         ((PojoSimpleInner) object.arrayData[0]).int1 = 11;
-        doTest(OBJECT_48, object);
+        doTest(SerializeTestUtils.OBJECT_48, object);
     }
 
     private static final String OBJECT_49 = "{\r" + //
@@ -658,7 +658,7 @@ public class ObjectsUnserializeTest {
         // array do tipo do campo
         object.arrayData = new PojoSimpleInner[] { new PojoSimpleInner() };
         ((PojoSimpleInner) object.arrayData[0]).int1 = 11;
-        doTest(OBJECT_49, object);
+        doTest(SerializeTestUtils.OBJECT_49, object);
     }
 
     private static final String OBJECT_50 = "{\r" + //
@@ -673,7 +673,7 @@ public class ObjectsUnserializeTest {
         object.int1 = 13;
         object.arrayData = new PojoSimpleInner[] { new PojoSimpleInner() };
         object.arrayData[0].int1 = 11;
-        doTest(OBJECT_50, object);
+        doTest(SerializeTestUtils.OBJECT_50, object);
     }
 
     private static final String OBJECT_51 = "{\r" + //
@@ -686,7 +686,7 @@ public class ObjectsUnserializeTest {
         PojoObjectArray2 object = new PojoObjectArray2();
         object.int1 = 13;
         object.arrayData = new PojoSimpleInner[] { null };
-        doTest(OBJECT_51, object);
+        doTest(SerializeTestUtils.OBJECT_51, object);
     }
 
     private static final String OBJECT_52 = "{\r" + //
@@ -701,7 +701,7 @@ public class ObjectsUnserializeTest {
         PojoSimpleOuter2 object = new PojoSimpleOuter2();
         object.int1 = 13;
         object.object = new PojoSimpleInner[] { null };
-        doTest(OBJECT_52, object);
+        doTest(SerializeTestUtils.OBJECT_52, object);
     }
 
     private static final String OBJECT_53 = "{\r" + //
@@ -714,7 +714,7 @@ public class ObjectsUnserializeTest {
         PojoSimpleOuter2 object = new PojoSimpleOuter2();
         object.int1 = 13;
         object.object = new PojoSimpleInner();
-        doTest(OBJECT_53, object);
+        doTest(SerializeTestUtils.OBJECT_53, object);
     }
 
     private static final String OBJECT_54 = "{\r" + //
@@ -727,7 +727,7 @@ public class ObjectsUnserializeTest {
         PojoSimpleOuter2 object = new PojoSimpleOuter2();
         object.int1 = 13;
         object.object = Integer.valueOf(1);
-        doTest(OBJECT_54, object);
+        doTest(SerializeTestUtils.OBJECT_54, object);
     }
 
 }

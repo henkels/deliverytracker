@@ -300,49 +300,49 @@ public class SerializeTestUtils {
                                            "\"object\":\"1\"\r" + //
                                            "}";
 
-    public static final String CONST_1 = "{\r" + //
+    public static final String CONST_001 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoString\"\r" + //
                                          "}";
-    public static final String CONST_2 = "{\r" + //
+    public static final String CONST_002 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoString\",\r" + //
                                          "\"st1\":\"A\"\r" + //
                                          "}";
-    public static final String CONST_3 = "{\r" + //
+    public static final String CONST_003 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoString\",\r" + //
                                          "\"st1\":\"A\"\"A\"\r" + //
                                          "}";
-    public static final String CONST_4 = "{\r" + //
+    public static final String CONST_004 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoString\",\r" + //
                                          "\"st1\":\"A\"\"B\"\"C\"\r" + //
                                          "}";
-    public static final String CONST_5 = "{\r" + //
+    public static final String CONST_005 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoStrings\",\r" + //
                                          "\"st1\":\"A\"\r" + //
                                          "}";
-    public static final String CONST_6 = "{\r" + //
+    public static final String CONST_006 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoStrings\",\r" + //
                                          "\"st1\":\"A\",\r" + //
                                          "\"st2\":\"B\"\r" + //
                                          "}";
-    public static final String CONST_7 = "{\r" + //
+    public static final String CONST_007 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveBoolean\"\r" + //
                                          "}";
-    public static final String CONST_8 = "{\r" + //
+    public static final String CONST_008 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveBoolean\",\r" + //
                                          "\"bool1\":\"1\"\r" + //
                                          "}";
-    public static final String CONST_9 = "{\r" + //
+    public static final String CONST_009 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoBoolean\"\r" + //
                                          "}";
-    public static final String CONST_10 = "{\r" + //
+    public static final String CONST_010 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoBoolean\",\r" + //
                                           "\"bool1\":\"1\"\r" + //
                                           "}";
-    public static final String CONST_11 = "{\r" + //
+    public static final String CONST_011 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoBoolean\",\r" + //
                                           "\"bool1\":\"0\"\r" + //
                                           "}";
-    public static final String CONST_12 = "{\r" + //
+    public static final String CONST_012 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByte\"\r" + //
                                           "}";
     public static final String CONST_13 = "{\r" + //
@@ -680,7 +680,7 @@ public class SerializeTestUtils {
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"-1.2345678901234567\"\r" + //
                                           "}";
-    public static final String CONST_99 = "{\r" + //
+    public static final String CONST_099 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"-1.2345678901234567\"\r" + //
                                           "}";
