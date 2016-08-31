@@ -88,10 +88,14 @@ public final class ToMapSerializer {
             if (notSerializedYet) {
                 objCtx = ctxBuilder.getNewObjCtx(object);
             }
-            data.put(ctx.toString(), objCtx.toString());
+            if (objCtx.length() != 0){
+                data.put(ctx.toString(), objCtx.toString());
+                ctx.append('.');
+                objCtx.append('.');
+            }
             if (notSerializedYet) {
-                serializeMainContextData(object, data, ctx.append('.'), ctxBuilder);
-                serializeObjectContextData(object, data, objCtx.append('.'), ctxBuilder);
+                serializeMainContextData(object, data, ctx, ctxBuilder);
+                serializeObjectContextData(object, data, objCtx, ctxBuilder);
             }
         }
     }
@@ -619,7 +623,7 @@ public final class ToMapSerializer {
     }
 
     private static void serializeTo(Object object, Map<String, String> data, ObjCtxBuilder ctxBuilder) {
-        serializeTo(object, data, ctxBuilder.getNewObjCtx(object), ctxBuilder);
+        serializeTo(object, data, new StringBuilder(), ctxBuilder);
     }
 
     public static Map<String, String> serialize(Object object) {

@@ -10,14 +10,21 @@ public class ObjectsSerializeTest {
 
     private void doTest(String expected, Object object) {
         String actual = ToMapSerializer.toJson(object);
-        assertEquals(expected, actual);
+        try {
+            assertEquals(expected, actual);
+        } catch (Throwable e) {
+            actual = actual.replaceAll("\"", "\\\\\"");
+            actual = actual.replaceAll("\r", "\\\\r\" + //\r\"");
+            System.out.println(actual);
+            throw e;
+        }
     }
 
     //////////////////////////////////////////// Object ///////////////////////////////////////
 
     //    private static final String EMPTY_OBJECT = "{}";
 
-    private static final String OBJECT_01 = "{\r\".C\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter\",\r\"int1\":\"11\"\r}";
+    private static final String OBJECT_01 = "{\r\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter\",\r\"int1\":\"11\"\r}";
 
     @Test
     public void test001() {
@@ -26,7 +33,7 @@ public class ObjectsSerializeTest {
         doTest(OBJECT_01, object);
     }
 
-    private static final String OBJECT_02 = "{\r\"int1\":\"12\",\r\"object\":\"REF_1\"\r}";
+    private static final String OBJECT_02 = "{\r\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter\",\r\"int1\":\"12\",\r\"object\":\"REF_1\"\r}";
 
     @Test
     public void test002() {
@@ -36,7 +43,7 @@ public class ObjectsSerializeTest {
         doTest(OBJECT_02, object);
     }
 
-    private static final String OBJECT_03 = "{\r\"int1\":\"13\",\r\"object\":\"REF_1\",\r\"REF_1.int1\":\"14\"\r}";
+    private static final String OBJECT_03 = "{\r\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter\",\r\"int1\":\"13\",\r\"object\":\"REF_1\",\r\"REF_1.int1\":\"14\"\r}";
 
     @Test
     public void test003() {
@@ -47,12 +54,7 @@ public class ObjectsSerializeTest {
         doTest(OBJECT_03, object);
     }
 
-    private static final String OBJECT_04 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
-                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"REF_3\",\r" + //
-                                            "\"REF_3.int1\":\"16\"\r" + //
-                                            "}";
+    private static final String OBJECT_04 = "{\r\"class\":\"br.com.deliverytracker.commom.test.PojoHierarquical\",\r" + "\"int1\":\"13\",\r" + "\"object\":\"REF_1\",\r" + "\"REF_1.int1\":\"14\",\r" + "\"REF_1.object\":\"REF_2\",\r" + "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"REF_3\",\r\"REF_3.int1\":\"16\"\r}";
 
     @Test
     public void test004() {
@@ -68,7 +70,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_05 = "{\r" + //
-                                            "\"int1\":\"13\",\r" + "\"object1\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoCrossRef\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"object1\":\"REF_1\",\r" + //
                                             "\"REF_1.int1\":\"14\",\r" + //
                                             "\"object2\":\"REF_1\"\r" + //
                                             "}";
@@ -84,9 +88,12 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_06 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
-                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"\"\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoHierarquical\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"object\":\"REF_1\",\r" + //
+                                            "\"REF_1.int1\":\"14\",\r" + //
+                                            "\"REF_1.object\":\"REF_2\",\r" + //
+                                            "\"REF_2.int1\":\"15\"\r" + //
                                             "}";
 
     @Test
@@ -103,6 +110,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_07 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByteArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -115,7 +123,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_08 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByteArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"0,0\"\r" + //
                                             "}";
 
@@ -128,7 +138,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_09 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByteArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -143,6 +155,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_10 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoByteArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -155,7 +168,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_11 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoByteArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"N,N\"\r" + //
                                             "}";
 
@@ -168,7 +183,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_12 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoByteArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -183,6 +200,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_13 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveShortArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -195,7 +213,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_14 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveShortArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"0,0\"\r" + //
                                             "}";
 
@@ -208,7 +228,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_15 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveShortArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -223,6 +245,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_16 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoShortArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -235,7 +258,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_17 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoShortArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"N,N\"\r" + //
                                             "}";
 
@@ -248,7 +273,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_18 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoShortArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -263,6 +290,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_19 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveIntArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -275,7 +303,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_20 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveIntArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"0,0\"\r" + //
                                             "}";
 
@@ -288,7 +318,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_21 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveIntArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -303,6 +335,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_22 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoIntegerArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -315,7 +348,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_23 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoIntegerArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"N,N\"\r" + //
                                             "}";
 
@@ -328,7 +363,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_24 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoIntegerArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -343,6 +380,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_25 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveLongArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -355,7 +393,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_26 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveLongArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"0,0\"\r" + //
                                             "}";
 
@@ -368,7 +408,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_27 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveLongArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -383,6 +425,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_28 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoLongArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -395,7 +438,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_29 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoLongArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"N,N\"\r" + //
                                             "}";
 
@@ -408,7 +453,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_30 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoLongArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1,-1\"\r" + //
                                             "}";
 
@@ -423,6 +470,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_31 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloatArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -435,7 +483,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_32 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloatArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"0,0\"\r" + //
                                             "}";
 
@@ -448,7 +498,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_33 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloatArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"3.4028235E38,-1.4E-45\"\r" + //
                                             "}";
 
@@ -463,6 +515,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_34 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoFloatArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -475,7 +528,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_35 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoFloatArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"N,N\"\r" + //
                                             "}";
 
@@ -488,7 +543,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_36 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoFloatArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"3.4028235E38,-1.4E-45\"\r" + //
                                             "}";
 
@@ -503,6 +560,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_38 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDoubleArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -515,7 +573,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_39 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDoubleArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"0,0\"\r" + //
                                             "}";
 
@@ -528,7 +588,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_40 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDoubleArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1.7976931348623157E308,-4.9E-324\"\r" + //
                                             "}";
 
@@ -543,6 +605,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_41 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoDoubleArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -555,7 +618,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_42 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoDoubleArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"N,N\"\r" + //
                                             "}";
 
@@ -568,7 +633,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_43 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoDoubleArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"1.7976931348623157E308,-4.9E-324\"\r" + //
                                             "}";
 
@@ -583,6 +650,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_44 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoStringArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -594,7 +662,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_45 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"\\,\"\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoStringArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"\\,\"\r" + //
                                             "}";
 
     @Test
@@ -606,6 +676,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_46 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoStringArray\",\r" + //
                                             "\"int1\":\"13\",\r\"arrayData\":\"A,N,A A,\\,B\\,b\\,N\\,,\\,,\\\\,a,A\"A,A\rA\"\r" + //
                                             "}";
 
@@ -618,6 +689,7 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_47 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray\",\r" + //
                                             "\"int1\":\"13\"\r" + //
                                             "}";
 
@@ -629,9 +701,11 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_48 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_2.int1\":\"11\",\r" + //
-                                            "\"REF_1\":\"REF_2\"\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
+                                            "\"REF_1\":\"REF_2\",\r" + //
+                                            "\"REF_2.int1\":\"11\"\r" + //
                                             "}";
 
     @Test
@@ -645,10 +719,12 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_49 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1.C\":\"br.com.deliverytracker.commom.test.PojoSimpleInner[]\",\r" + //
-                                            "\"REF_2.int1\":\"11\",\r" + //
-                                            "\"REF_1\":\"REF_2\"\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
+                                            "\"REF_1\":\"REF_2\",\r" + //
+                                            "\"REF_1.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\",\r" + //
+                                            "\"REF_2.int1\":\"11\"\r" + //
                                             "}";
 
     @Test
@@ -662,9 +738,11 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_50 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_2.int1\":\"11\",\r" + //
-                                            "\"REF_1\":\"REF_2\"\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray2\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
+                                            "\"REF_1\":\"REF_2\",\r" + //
+                                            "\"REF_2.int1\":\"11\"\r" + //
                                             "}";
 
     @Test
@@ -677,7 +755,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_51 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray2\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"arrayData\":\"REF_1\",\r" + //
                                             "\"REF_1\":\"N\"\r" + //
                                             "}";
 
@@ -690,9 +770,9 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_52 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter2\",\r" + //
                                             "\"int1\":\"13\",\r" + //
                                             "\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.C\":\"br.com.deliverytracker.commom.test.PojoSimpleInner[]\",\r" + //
                                             "\"REF_1\":\"N\"\r" + //
                                             "}";
 
@@ -705,8 +785,10 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_53 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"object.C\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\"\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter2\",\r" + //
+                                            "\"int1\":\"13\",\r" + //
+                                            "\"object\":\"REF_1\",\r" + //
+                                            "\"object.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\"\r" + //
                                             "}";
 
     @Test
@@ -718,8 +800,10 @@ public class ObjectsSerializeTest {
     }
 
     private static final String OBJECT_54 = "{\r" + //
+                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter2\",\r" + //
                                             "\"int1\":\"13\",\r" + //
-                                            "\"object.C\":\"java.lang.Integer\",\r\"object\":\"1\"\r" + //
+                                            "\"objectclass\":\"java.lang.Integer\",\r" + //
+                                            "\"object\":\"1\"\r" + //
                                             "}";
 
     @Test
