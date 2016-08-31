@@ -9,8 +9,7 @@ import br.com.deliverytracker.commom.ToMapSerializer;
 public class PrimitivesSerializeTest {
 
     private void doTest(String expected, Object object) {
-        String actual = ToMapSerializer.toJson(object);
-        assertEquals(expected, actual);
+        SerializeTestUtils.doTest(expected, object);
     }
 
     private static final String EMPTY_OBJECT = "{}";
