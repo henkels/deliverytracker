@@ -252,9 +252,12 @@ public class SerializeTestUtils {
                                            "\"arrayData\":\"\\,\"\r" + //
                                            "}";
     public static final String OBJECT_46 = "{\r" + //
-                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoStringArray\",\r" + //
-                                           "\"int1\":\"13\",\r\"arrayData\":\"A,N,A A,\\,B\\,b\\,N\\,,\\,,\\\\,a,A\"A,A\rA\"\r" + //
-                                           "}";
+            "\"class\":\"br.com.deliverytracker.commom.test.PojoStringArray\",\r" + //
+            "\"int1\":\"13\",\r" + //
+            "\"arrayData\":\"A,N,A A,\,B\,b\,N\,,\,,\\,a,A\\"A,A\r" + //
+            "A\"\r" + //
+            "}";
+
     public static final String OBJECT_47 = "{\r" + //
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray\",\r" + //
                                            "\"int1\":\"13\"\r" + //
