@@ -5,7 +5,7 @@ import org.junit.Test;
 public class ObjectsSerializeTest {
 
     private void doTest(String expected, Object object) {
-        SerializeTestUtils.doTest(expected, object);
+        SerializeTestUtils.doSerializeTest(expected, object);
     }
 
     //////////////////////////////////////////// Object ///////////////////////////////////////

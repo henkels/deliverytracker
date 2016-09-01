@@ -8,7 +8,7 @@ public class SerializeTestUtils {
 
     private static int c = 0;
 
-    public static void doTest(String expected, Object object) {
+    public static void doSerializeTest(String expected, Object object) {
         c++;
         String actual = ToMapSerializer.toJson(object);
         try {
@@ -24,6 +24,12 @@ public class SerializeTestUtils {
             throw e;
         }
     }
+    
+    public static void doUnserializeTest(String tested) {
+        Object actual =  ToMapSerializer.fromJson(tested);
+        assertEquals(tested, ToMapSerializer.toJson(actual));
+    }
+
 
     public static final String OBJECT_01 = "{\r\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter\",\r\"int1\":\"11\"\r}";
     public static final String OBJECT_02 = "{\r\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter\",\r\"int1\":\"12\",\r\"object\":\"REF_1\"\r}";
@@ -345,338 +351,338 @@ public class SerializeTestUtils {
     public static final String CONST_012 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByte\"\r" + //
                                           "}";
-    public static final String CONST_13 = "{\r" + //
+    public static final String CONST_013 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByte\",\r" + //
                                           "\"byte1\":\"1\"\r" + //
                                           "}";
-    public static final String CONST_14 = "{\r" + //
+    public static final String CONST_014 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByte\",\r" + //
                                           "\"byte1\":\"-128\"\r" + //
                                           "}";
-    public static final String CONST_15 = "{\r" + //
+    public static final String CONST_015 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByte\",\r" + //
                                           "\"byte1\":\"127\"\r" + //
                                           "}";
-    public static final String CONST_16 = "{\r" + //
+    public static final String CONST_016 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoByte\"\r" + //
                                           "}";
-    public static final String CONST_17 = "{\r" + //
+    public static final String CONST_017 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoByte\",\r" + //
                                           "\"byte1\":\"0\"\r" + //
                                           "}";
-    public static final String CONST_18 = "{\r" + //
+    public static final String CONST_018 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoByte\",\r" + //
                                           "\"byte1\":\"-128\"\r" + //
                                           "}";
-    public static final String CONST_19 = "{\r" + //
+    public static final String CONST_019 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoByte\",\r" + //
                                           "\"byte1\":\"127\"\r" + //
                                           "}";
-    public static final String CONST_20 = "{\r" + //
+    public static final String CONST_020 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveShort\"\r" + //
                                           "}";
-    public static final String CONST_21 = "{\r" + //
+    public static final String CONST_021 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveShort\",\r" + //
                                           "\"short1\":\"1\"\r" + //
                                           "}";
-    public static final String CONST_22 = "{\r" + //
+    public static final String CONST_022 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveShort\",\r" + //
                                           "\"short1\":\"-32768\"\r" + //
                                           "}";
-    public static final String CONST_23 = "{\r" + //
+    public static final String CONST_023 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveShort\",\r" + //
                                           "\"short1\":\"32767\"\r" + //
                                           "}";
-    public static final String CONST_24 = "{\r" + //
+    public static final String CONST_024 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoShort\"\r" + //
                                           "}";
-    public static final String CONST_25 = "{\r" + //
+    public static final String CONST_025 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoShort\",\r" + //
                                           "\"short1\":\"0\"\r" + //
                                           "}";
-    public static final String CONST_26 = "{\r" + //
+    public static final String CONST_026 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoShort\",\r" + //
                                           "\"short1\":\"-32768\"\r" + //
                                           "}";
-    public static final String CONST_27 = "{\r" + //
+    public static final String CONST_027 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoShort\",\r" + //
                                           "\"short1\":\"32767\"\r" + //
                                           "}";
-    public static final String CONST_28 = "{\r" + //
+    public static final String CONST_028 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveInt\"\r" + //
                                           "}";
-    public static final String CONST_29 = "{\r" + //
+    public static final String CONST_029 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveInt\",\r" + //
                                           "\"int1\":\"1\"\r" + //
                                           "}";
-    public static final String CONST_30 = "{\r" + //
+    public static final String CONST_030 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveInt\",\r" + //
                                           "\"int1\":\"-2147483648\"\r" + //
                                           "}";
-    public static final String CONST_31 = "{\r" + //
+    public static final String CONST_031 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveInt\",\r" + //
                                           "\"int1\":\"2147483647\"\r" + //
                                           "}";
-    public static final String CONST_32 = "{\r" + //
+    public static final String CONST_032 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoInteger\"\r" + //
                                           "}";
-    public static final String CONST_33 = "{\r" + //
+    public static final String CONST_033 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoInteger\",\r" + //
                                           "\"int1\":\"0\"\r" + //
                                           "}";
-    public static final String CONST_34 = "{\r" + //
+    public static final String CONST_034 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoInteger\",\r" + //
                                           "\"int1\":\"-2147483648\"\r" + //
                                           "}";
-    public static final String CONST_35 = "{\r" + //
+    public static final String CONST_035 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoInteger\",\r" + //
                                           "\"int1\":\"2147483647\"\r" + //
                                           "}";
-    public static final String CONST_36 = "{\r" + //
+    public static final String CONST_036 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveLong\"\r" + //
                                           "}";
-    public static final String CONST_37 = "{\r" + //
+    public static final String CONST_037 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveLong\",\r" + //
                                           "\"long1\":\"1\"\r" + //
                                           "}";
-    public static final String CONST_38 = "{\r" + //
+    public static final String CONST_038 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveLong\",\r" + //
                                           "\"long1\":\"-9223372036854775808\"\r" + //
                                           "}";
-    public static final String CONST_39 = "{\r" + //
+    public static final String CONST_039 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveLong\",\r" + //
                                           "\"long1\":\"9223372036854775807\"\r" + //
                                           "}";
-    public static final String CONST_40 = "{\r" + //
+    public static final String CONST_040 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoLong\"\r" + //
                                           "}";
-    public static final String CONST_41 = "{\r" + //
+    public static final String CONST_041 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoLong\",\r" + //
                                           "\"long1\":\"0\"\r" + //
                                           "}";
-    public static final String CONST_42 = "{\r" + //
+    public static final String CONST_042 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoLong\",\r" + //
                                           "\"long1\":\"-9223372036854775808\"\r" + //
                                           "}";
-    public static final String CONST_43 = "{\r" + //
+    public static final String CONST_043 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoLong\",\r" + //
                                           "\"long1\":\"9223372036854775807\"\r" + //
                                           "}";
-    public static final String CONST_44 = "{\r" + //
+    public static final String CONST_044 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\"\r" + //
                                           "}";
-    public static final String CONST_45 = "{\r" + //
+    public static final String CONST_045 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1\"\r" + //
                                           "}";
-    public static final String CONST_46 = "{\r" + //
+    public static final String CONST_046 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.4E-45\"\r" + //
                                           "}";
-    public static final String CONST_47 = "{\r" + //
+    public static final String CONST_047 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.17549435E-38\"\r" + //
                                           "}";
-    public static final String CONST_48 = "{\r" + //
+    public static final String CONST_048 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"3.4028235E38\"\r" + //
                                           "}";
-    public static final String CONST_49 = "{\r" + //
+    public static final String CONST_049 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.234567\"\r" + //
                                           "}";
-    public static final String CONST_50 = "{\r" + //
+    public static final String CONST_050 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.2345678\"\r" + //
                                           "}";
-    public static final String CONST_51 = "{\r" + //
+    public static final String CONST_051 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.2345679\"\r" + //
                                           "}";
-    public static final String CONST_52 = "{\r" + //
+    public static final String CONST_052 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"0.001\"\r" + //
                                           "}";
-    public static final String CONST_53 = "{\r" + //
+    public static final String CONST_053 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.0E-4\"\r" + //
                                           "}";
-    public static final String CONST_54 = "{\r" + //
+    public static final String CONST_054 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.2345678E-9\"\r" + //
                                           "}";
-    public static final String CONST_55 = "{\r" + //
+    public static final String CONST_055 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1234567\"\r" + //
                                           "}";
-    public static final String CONST_56 = "{\r" + //
+    public static final String CONST_056 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.2345678E7\"\r" + //
                                           "}";
-    public static final String CONST_57 = "{\r" + //
+    public static final String CONST_057 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.23456792E8\"\r" + //
                                           "}";
-    public static final String CONST_58 = "{\r" + //
+    public static final String CONST_058 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1000\"\r" + //
                                           "}";
-    public static final String CONST_59 = "{\r" + //
+    public static final String CONST_059 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"10000\"\r" + //
                                           "}";
-    public static final String CONST_60 = "{\r" + //
+    public static final String CONST_060 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"1.23456784E16\"\r" + //
                                           "}";
-    public static final String CONST_61 = "{\r" + //
+    public static final String CONST_061 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1\"\r" + //
                                           "}";
-    public static final String CONST_62 = "{\r" + //
+    public static final String CONST_062 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.4E-45\"\r" + //
                                           "}";
-    public static final String CONST_63 = "{\r" + //
+    public static final String CONST_063 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.17549435E-38\"\r" + //
                                           "}";
-    public static final String CONST_64 = "{\r" + //
+    public static final String CONST_064 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-3.4028235E38\"\r" + //
                                           "}";
-    public static final String CONST_65 = "{\r" + //
+    public static final String CONST_065 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.234567\"\r" + //
                                           "}";
-    public static final String CONST_66 = "{\r" + //
+    public static final String CONST_066 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.2345678\"\r" + //
                                           "}";
-    public static final String CONST_67 = "{\r" + //
+    public static final String CONST_067 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.2345679\"\r" + //
                                           "}";
-    public static final String CONST_68 = "{\r" + //
+    public static final String CONST_068 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-0.001\"\r" + //
                                           "}";
-    public static final String CONST_69 = "{\r" + //
+    public static final String CONST_069 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.0E-4\"\r" + //
                                           "}";
-    public static final String CONST_70 = "{\r" + //
+    public static final String CONST_070 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.2345678E-9\"\r" + //
                                           "}";
-    public static final String CONST_71 = "{\r" + //
+    public static final String CONST_071 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1234567\"\r" + //
                                           "}";
-    public static final String CONST_72 = "{\r" + //
+    public static final String CONST_072 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.2345678E7\"\r" + //
                                           "}";
-    public static final String CONST_73 = "{\r" + //
+    public static final String CONST_073 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.23456792E8\"\r" + //
                                           "}";
-    public static final String CONST_74 = "{\r" + //
+    public static final String CONST_074 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1000\"\r" + //
                                           "}";
-    public static final String CONST_75 = "{\r" + //
+    public static final String CONST_075 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-10000\"\r" + //
                                           "}";
-    public static final String CONST_76 = "{\r" + //
+    public static final String CONST_076 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveFloat\",\r" + //
                                           "\"float1\":\"-1.23456784E16\"\r" + //
                                           "}";
-    public static final String CONST_77 = "{\r" + //
+    public static final String CONST_077 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\"\r" + //
                                           "}";
-    public static final String CONST_78 = "{\r" + //
+    public static final String CONST_078 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1\"\r" + //
                                           "}";
-    public static final String CONST_79 = "{\r" + //
+    public static final String CONST_079 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"4.9E-324\"\r" + //
                                           "}";
-    public static final String CONST_80 = "{\r" + //
+    public static final String CONST_080 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"2.2250738585072014E-308\"\r" + //
                                           "}";
-    public static final String CONST_81 = "{\r" + //
+    public static final String CONST_081 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.7976931348623157E308\"\r" + //
                                           "}";
-    public static final String CONST_82 = "{\r" + //
+    public static final String CONST_082 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.2345678901234567\"\r" + //
                                           "}";
-    public static final String CONST_83 = "{\r" + //
+    public static final String CONST_083 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.2345678901234567\"\r" + //
                                           "}";
-    public static final String CONST_84 = "{\r" + //
+    public static final String CONST_084 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.234567890123457\"\r" + //
                                           "}";
-    public static final String CONST_85 = "{\r" + //
+    public static final String CONST_085 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"0.001\"\r" + //
                                           "}";
-    public static final String CONST_86 = "{\r" + //
+    public static final String CONST_086 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.0E-4\"\r" + //
                                           "}";
-    public static final String CONST_87 = "{\r" + //
+    public static final String CONST_087 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.2345678901234567E-17\"\r" + //
                                           "}";
-    public static final String CONST_88 = "{\r" + //
+    public static final String CONST_088 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1234567\"\r" + //
                                           "}";
-    public static final String CONST_89 = "{\r" + //
+    public static final String CONST_089 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.234567890123456E15\"\r" + //
                                           "}";
-    public static final String CONST_90 = "{\r" + //
+    public static final String CONST_090 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.2345678901234568E17\"\r" + //
                                           "}";
-    public static final String CONST_91 = "{\r" + //
+    public static final String CONST_091 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1000000\"\r" + //
                                           "}";
-    public static final String CONST_92 = "{\r" + //
+    public static final String CONST_092 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.0E7\"\r" + //
                                           "}";
-    public static final String CONST_93 = "{\r" + //
+    public static final String CONST_093 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"1.234567890123456E32\"\r" + //
                                           "}";
-    public static final String CONST_94 = "{\r" + //
+    public static final String CONST_094 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"-1\"\r" + //
                                           "}";
-    public static final String CONST_95 = "{\r" + //
+    public static final String CONST_095 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"-4.9E-324\"\r" + //
                                           "}";
-    public static final String CONST_96 = "{\r" + //
+    public static final String CONST_096 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"-2.2250738585072014E-308\"\r" + //
                                           "}";
-    public static final String CONST_97 = "{\r" + //
+    public static final String CONST_097 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"-1.7976931348623157E308\"\r" + //
                                           "}";
-    public static final String CONST_98 = "{\r" + //
+    public static final String CONST_098 = "{\r" + //
                                           "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveDouble\",\r" + //
                                           "\"double1\":\"-1.2345678901234567\"\r" + //
                                           "}";

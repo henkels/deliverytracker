@@ -1,733 +1,278 @@
 package br.com.deliverytracker.commom.test;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
-
-import br.com.deliverytracker.commom.ToMapSerializer;
 
 public class ObjectsUnserializeTest {
 
-    private void doTest(String expected, Object object) {
-        String actual = ToMapSerializer.toJson(object);
-        assertEquals(expected, actual);
+    private void doTest(String expected) {
+        SerializeTestUtils.doUnserializeTest(expected);
     }
 
     //////////////////////////////////////////// Object ///////////////////////////////////////
 
-    //    private static final String EMPTY_OBJECT = "{}";
-
-    private static final String OBJECT_01 = "{\r\"int1\":\"11\"\r}";
-
     @Test
     public void test001() {
-        PojoSimpleOuter object = new PojoSimpleOuter();
-        object.int1 = 11;
-        doTest(SerializeTestUtils.OBJECT_01, object);
+        doTest(SerializeTestUtils.OBJECT_01);
     }
-
-    private static final String OBJECT_02 = "{\r\"int1\":\"12\",\r\"object\":\"REF_1\"\r}";
 
     @Test
     public void test002() {
-        PojoSimpleOuter object = new PojoSimpleOuter();
-        object.int1 = 12;
-        object.object = new PojoSimpleInner();
-        doTest(SerializeTestUtils.OBJECT_02, object);
+        doTest(SerializeTestUtils.OBJECT_02);
     }
-
-    private static final String OBJECT_03 = "{\r\"int1\":\"13\",\r\"object\":\"REF_1\",\r\"REF_1.int1\":\"14\"\r}";
 
     @Test
     public void test003() {
-        PojoSimpleOuter object = new PojoSimpleOuter();
-        object.int1 = 13;
-        object.object = new PojoSimpleInner();
-        object.object.int1 = 14;
-        doTest(SerializeTestUtils.OBJECT_03, object);
+        doTest(SerializeTestUtils.OBJECT_03);
     }
-
-    private static final String OBJECT_04 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
-                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"REF_3\",\r" + //
-                                            "\"REF_3.int1\":\"16\"\r" + //
-                                            "}";
 
     @Test
     public void test004() {
-        PojoHierarquical object = new PojoHierarquical();
-        object.int1 = 13;
-        object.object = new PojoHierarquical();
-        object.object.int1 = 14;
-        object.object.object = new PojoHierarquical();
-        object.object.object.int1 = 15;
-        object.object.object.object = new PojoHierarquical();
-        object.object.object.object.int1 = 16;
-        doTest(SerializeTestUtils.OBJECT_04, object);
+        doTest(SerializeTestUtils.OBJECT_04);
     }
-
-    private static final String OBJECT_05 = "{\r" + //
-                                            "\"int1\":\"13\",\r" + "\"object1\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r" + //
-                                            "\"object2\":\"REF_1\"\r" + //
-                                            "}";
 
     @Test
     public void test005() {
-        PojoCrossRef object = new PojoCrossRef();
-        object.int1 = 13;
-        object.object1 = new PojoSimpleInner();
-        object.object1.int1 = 14;
-        object.object2 = object.object1;
-        doTest(SerializeTestUtils.OBJECT_05, object);
+        doTest(SerializeTestUtils.OBJECT_05);
     }
-
-    private static final String OBJECT_06 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.int1\":\"14\",\r\"REF_1.object\":\"REF_2\",\r" + //
-                                            "\"REF_2.int1\":\"15\",\r\"REF_2.object\":\"\"\r" + //
-                                            "}";
 
     @Test
     public void test006() {
-        PojoHierarquical object = new PojoHierarquical();
-        object.int1 = 13;
-        object.object = new PojoHierarquical();
-        object.object.int1 = 14;
-        object.object.object = new PojoHierarquical();
-        object.object.object.int1 = 15;
-        //referencia circular
-        object.object.object.object = object;
-        doTest(SerializeTestUtils.OBJECT_06, object);
+        doTest(SerializeTestUtils.OBJECT_06);
     }
-
-    private static final String OBJECT_07 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test007() {
-        PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_07, object);
+        doTest(SerializeTestUtils.OBJECT_07);
     }
-
-    private static final String OBJECT_08 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"0,0\"\r" + //
-                                            "}";
 
     @Test
     public void test008() {
-        PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
-        object.int1 = 13;
-        object.arrayData = new byte[2];
-        doTest(SerializeTestUtils.OBJECT_08, object);
+        doTest(SerializeTestUtils.OBJECT_08);
     }
-
-    private static final String OBJECT_09 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test009() {
-        PojoPrimitiveByteArray object = new PojoPrimitiveByteArray();
-        object.int1 = 13;
-        object.arrayData = new byte[2];
-        object.arrayData[0] = 1;
-        object.arrayData[1] = -1;
-        doTest(SerializeTestUtils.OBJECT_09, object);
+        doTest(SerializeTestUtils.OBJECT_09);
     }
-
-    private static final String OBJECT_10 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test010() {
-        PojoByteArray object = new PojoByteArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_10, object);
+        doTest(SerializeTestUtils.OBJECT_10);
     }
-
-    private static final String OBJECT_11 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"N,N\"\r" + //
-                                            "}";
 
     @Test
     public void test011() {
-        PojoByteArray object = new PojoByteArray();
-        object.int1 = 13;
-        object.arrayData = new Byte[2];
-        doTest(SerializeTestUtils.OBJECT_11, object);
+        doTest(SerializeTestUtils.OBJECT_11);
     }
-
-    private static final String OBJECT_12 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test012() {
-        PojoByteArray object = new PojoByteArray();
-        object.int1 = 13;
-        object.arrayData = new Byte[2];
-        object.arrayData[0] = 1;
-        object.arrayData[1] = -1;
-        doTest(SerializeTestUtils.OBJECT_12, object);
+        doTest(SerializeTestUtils.OBJECT_12);
     }
-
-    private static final String OBJECT_13 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test013() {
-        PojoPrimitiveShortArray object = new PojoPrimitiveShortArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_13, object);
+        doTest(SerializeTestUtils.OBJECT_13);
     }
-
-    private static final String OBJECT_14 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"0,0\"\r" + //
-                                            "}";
 
     @Test
     public void test014() {
-        PojoPrimitiveShortArray object = new PojoPrimitiveShortArray();
-        object.int1 = 13;
-        object.arrayData = new short[2];
-        doTest(SerializeTestUtils.OBJECT_14, object);
+        doTest(SerializeTestUtils.OBJECT_14);
     }
-
-    private static final String OBJECT_15 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test015() {
-        PojoPrimitiveShortArray object = new PojoPrimitiveShortArray();
-        object.int1 = 13;
-        object.arrayData = new short[2];
-        object.arrayData[0] = 1;
-        object.arrayData[1] = -1;
-        doTest(SerializeTestUtils.OBJECT_15, object);
+        doTest(SerializeTestUtils.OBJECT_15);
     }
-
-    private static final String OBJECT_16 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test016() {
-        PojoShortArray object = new PojoShortArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_16, object);
+        doTest(SerializeTestUtils.OBJECT_16);
     }
-
-    private static final String OBJECT_17 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"N,N\"\r" + //
-                                            "}";
 
     @Test
     public void test017() {
-        PojoShortArray object = new PojoShortArray();
-        object.int1 = 13;
-        object.arrayData = new Short[2];
-        doTest(SerializeTestUtils.OBJECT_17, object);
+        doTest(SerializeTestUtils.OBJECT_17);
     }
-
-    private static final String OBJECT_18 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test018() {
-        PojoShortArray object = new PojoShortArray();
-        object.int1 = 13;
-        object.arrayData = new Short[2];
-        object.arrayData[0] = 1;
-        object.arrayData[1] = -1;
-        doTest(SerializeTestUtils.OBJECT_18, object);
+        doTest(SerializeTestUtils.OBJECT_18);
     }
-
-    private static final String OBJECT_19 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test019() {
-        PojoPrimitiveIntArray object = new PojoPrimitiveIntArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_19, object);
+        doTest(SerializeTestUtils.OBJECT_19);
     }
-
-    private static final String OBJECT_20 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"0,0\"\r" + //
-                                            "}";
 
     @Test
     public void test020() {
-        PojoPrimitiveIntArray object = new PojoPrimitiveIntArray();
-        object.int1 = 13;
-        object.arrayData = new int[2];
-        doTest(SerializeTestUtils.OBJECT_20, object);
+        doTest(SerializeTestUtils.OBJECT_20);
     }
-
-    private static final String OBJECT_21 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test021() {
-        PojoPrimitiveIntArray object = new PojoPrimitiveIntArray();
-        object.int1 = 13;
-        object.arrayData = new int[2];
-        object.arrayData[0] = 1;
-        object.arrayData[1] = -1;
-        doTest(SerializeTestUtils.OBJECT_21, object);
+        doTest(SerializeTestUtils.OBJECT_21);
     }
-
-    private static final String OBJECT_22 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test022() {
-        PojoIntegerArray object = new PojoIntegerArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_22, object);
+        doTest(SerializeTestUtils.OBJECT_22);
     }
-
-    private static final String OBJECT_23 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"N,N\"\r" + //
-                                            "}";
 
     @Test
     public void test023() {
-        PojoIntegerArray object = new PojoIntegerArray();
-        object.int1 = 13;
-        object.arrayData = new Integer[2];
-        doTest(SerializeTestUtils.OBJECT_23, object);
+        doTest(SerializeTestUtils.OBJECT_23);
     }
-
-    private static final String OBJECT_24 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test024() {
-        PojoIntegerArray object = new PojoIntegerArray();
-        object.int1 = 13;
-        object.arrayData = new Integer[2];
-        object.arrayData[0] = 1;
-        object.arrayData[1] = -1;
-        doTest(SerializeTestUtils.OBJECT_24, object);
+        doTest(SerializeTestUtils.OBJECT_24);
     }
-
-    private static final String OBJECT_25 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test025() {
-        PojoPrimitiveLongArray object = new PojoPrimitiveLongArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_25, object);
+        doTest(SerializeTestUtils.OBJECT_25);
     }
-
-    private static final String OBJECT_26 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"0,0\"\r" + //
-                                            "}";
 
     @Test
     public void test026() {
-        PojoPrimitiveLongArray object = new PojoPrimitiveLongArray();
-        object.int1 = 13;
-        object.arrayData = new long[2];
-        doTest(SerializeTestUtils.OBJECT_26, object);
+        doTest(SerializeTestUtils.OBJECT_26);
     }
-
-    private static final String OBJECT_27 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test027() {
-        PojoPrimitiveLongArray object = new PojoPrimitiveLongArray();
-        object.int1 = 13;
-        object.arrayData = new long[2];
-        object.arrayData[0] = 1;
-        object.arrayData[1] = -1;
-        doTest(SerializeTestUtils.OBJECT_27, object);
+        doTest(SerializeTestUtils.OBJECT_27);
     }
-
-    private static final String OBJECT_28 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test028() {
-        PojoLongArray object = new PojoLongArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_28, object);
+        doTest(SerializeTestUtils.OBJECT_28);
     }
-
-    private static final String OBJECT_29 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"N,N\"\r" + //
-                                            "}";
 
     @Test
     public void test029() {
-        PojoLongArray object = new PojoLongArray();
-        object.int1 = 13;
-        object.arrayData = new Long[2];
-        doTest(SerializeTestUtils.OBJECT_29, object);
+        doTest(SerializeTestUtils.OBJECT_29);
     }
-
-    private static final String OBJECT_30 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1,-1\"\r" + //
-                                            "}";
 
     @Test
     public void test030() {
-        PojoLongArray object = new PojoLongArray();
-        object.int1 = 13;
-        object.arrayData = new Long[2];
-        object.arrayData[0] = 1l;
-        object.arrayData[1] = -1l;
-        doTest(SerializeTestUtils.OBJECT_30, object);
+        doTest(SerializeTestUtils.OBJECT_30);
     }
-
-    private static final String OBJECT_31 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test031() {
-        PojoPrimitiveFloatArray object = new PojoPrimitiveFloatArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_31, object);
+        doTest(SerializeTestUtils.OBJECT_31);
     }
-
-    private static final String OBJECT_32 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"0,0\"\r" + //
-                                            "}";
 
     @Test
     public void test032() {
-        PojoPrimitiveFloatArray object = new PojoPrimitiveFloatArray();
-        object.int1 = 13;
-        object.arrayData = new float[2];
-        doTest(SerializeTestUtils.OBJECT_32, object);
+        doTest(SerializeTestUtils.OBJECT_32);
     }
-
-    private static final String OBJECT_33 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"3.4028235E38,-1.4E-45\"\r" + //
-                                            "}";
 
     @Test
     public void test033() {
-        PojoPrimitiveFloatArray object = new PojoPrimitiveFloatArray();
-        object.int1 = 13;
-        object.arrayData = new float[2];
-        object.arrayData[0] = Float.MAX_VALUE;
-        object.arrayData[1] = Float.MIN_VALUE * -1f;
-        doTest(SerializeTestUtils.OBJECT_33, object);
+        doTest(SerializeTestUtils.OBJECT_33);
     }
-
-    private static final String OBJECT_34 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test034() {
-        PojoFloatArray object = new PojoFloatArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_34, object);
+        doTest(SerializeTestUtils.OBJECT_34);
     }
-
-    private static final String OBJECT_35 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"N,N\"\r" + //
-                                            "}";
 
     @Test
     public void test035() {
-        PojoFloatArray object = new PojoFloatArray();
-        object.int1 = 13;
-        object.arrayData = new Float[2];
-        doTest(SerializeTestUtils.OBJECT_35, object);
+        doTest(SerializeTestUtils.OBJECT_35);
     }
-
-    private static final String OBJECT_36 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"3.4028235E38,-1.4E-45\"\r" + //
-                                            "}";
 
     @Test
     public void test037() {
-        PojoFloatArray object = new PojoFloatArray();
-        object.int1 = 13;
-        object.arrayData = new Float[2];
-        object.arrayData[0] = Float.MAX_VALUE;
-        object.arrayData[1] = Float.MIN_VALUE * -1f;
-        doTest(SerializeTestUtils.OBJECT_36, object);
+        doTest(SerializeTestUtils.OBJECT_36);
     }
-
-    private static final String OBJECT_38 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test038() {
-        PojoPrimitiveDoubleArray object = new PojoPrimitiveDoubleArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_38, object);
+        doTest(SerializeTestUtils.OBJECT_38);
     }
-
-    private static final String OBJECT_39 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"0,0\"\r" + //
-                                            "}";
 
     @Test
     public void test039() {
-        PojoPrimitiveDoubleArray object = new PojoPrimitiveDoubleArray();
-        object.int1 = 13;
-        object.arrayData = new double[2];
-        doTest(SerializeTestUtils.OBJECT_39, object);
+        doTest(SerializeTestUtils.OBJECT_39);
     }
-
-    private static final String OBJECT_40 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1.7976931348623157E308,-4.9E-324\"\r" + //
-                                            "}";
 
     @Test
     public void test040() {
-        PojoPrimitiveDoubleArray object = new PojoPrimitiveDoubleArray();
-        object.int1 = 13;
-        object.arrayData = new double[2];
-        object.arrayData[0] = Double.MAX_VALUE;
-        object.arrayData[1] = Double.MIN_VALUE * -1d;
-        doTest(SerializeTestUtils.OBJECT_40, object);
+        doTest(SerializeTestUtils.OBJECT_40);
     }
-
-    private static final String OBJECT_41 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test041() {
-        PojoDoubleArray object = new PojoDoubleArray();
-        object.int1 = 13;
-        object.arrayData = null;
-        doTest(SerializeTestUtils.OBJECT_41, object);
+        doTest(SerializeTestUtils.OBJECT_41);
     }
-
-    private static final String OBJECT_42 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"N,N\"\r" + //
-                                            "}";
 
     @Test
     public void test042() {
-        PojoDoubleArray object = new PojoDoubleArray();
-        object.int1 = 13;
-        object.arrayData = new Double[2];
-        doTest(SerializeTestUtils.OBJECT_42, object);
+        doTest(SerializeTestUtils.OBJECT_42);
     }
-
-    private static final String OBJECT_43 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"1.7976931348623157E308,-4.9E-324\"\r" + //
-                                            "}";
 
     @Test
     public void test043() {
-        PojoDoubleArray object = new PojoDoubleArray();
-        object.int1 = 13;
-        object.arrayData = new Double[2];
-        object.arrayData[0] = Double.MAX_VALUE;
-        object.arrayData[1] = Double.MIN_VALUE * -1d;
-        doTest(SerializeTestUtils.OBJECT_43, object);
+        doTest(SerializeTestUtils.OBJECT_43);
     }
-
-    private static final String OBJECT_44 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test044() {
-        PojoStringArray object = new PojoStringArray();
-        object.int1 = 13;
-        doTest(SerializeTestUtils.OBJECT_44, object);
+        doTest(SerializeTestUtils.OBJECT_44);
     }
-
-    private static final String OBJECT_45 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"\\,\"\r" + //
-                                            "}";
 
     @Test
     public void test045() {
-        PojoStringArray object = new PojoStringArray();
-        object.int1 = 13;
-        object.arrayData = new String[] { "," };
-        doTest(SerializeTestUtils.OBJECT_45, object);
+        doTest(SerializeTestUtils.OBJECT_45);
     }
-
-    private static final String OBJECT_46 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"A,N,A A,\\,B\\,b\\,N\\,,\\,,\\\\,a,A\"A,A\rA\"\r" + //
-                                            "}";
 
     @Test
     public void test046() {
-        PojoStringArray object = new PojoStringArray();
-        object.int1 = 13;
-        object.arrayData = new String[] { "A", null, "A A", ",B,b,N,", ",", "\\,a", "A\"A", "A\rA" };
-        doTest(SerializeTestUtils.OBJECT_46, object);
+        doTest(SerializeTestUtils.OBJECT_46);
     }
-
-    private static final String OBJECT_47 = "{\r" + //
-                                            "\"int1\":\"13\"\r" + //
-                                            "}";
 
     @Test
     public void test047() {
-        PojoObjectArray object = new PojoObjectArray();
-        object.int1 = 13;
-        doTest(SerializeTestUtils.OBJECT_47, object);
+        doTest(SerializeTestUtils.OBJECT_47);
     }
-
-    private static final String OBJECT_48 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_2.int1\":\"11\",\r" + //
-                                            "\"REF_1\":\"REF_2\"\r" + //
-                                            "}";
 
     @Test
     public void test048() {
-        PojoObjectArray object = new PojoObjectArray();
-        object.int1 = 13;
-        // array do tipo do campo
-        object.arrayData = new Object[] { new PojoSimpleInner() };
-        ((PojoSimpleInner) object.arrayData[0]).int1 = 11;
-        doTest(SerializeTestUtils.OBJECT_48, object);
+        doTest(SerializeTestUtils.OBJECT_48);
     }
-
-    private static final String OBJECT_49 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1.C\":\"br.com.deliverytracker.commom.test.PojoSimpleInner[]\",\r" + //
-                                            "\"REF_2.int1\":\"11\",\r" + //
-                                            "\"REF_1\":\"REF_2\"\r" + //
-                                            "}";
 
     @Test
     public void test049() {
-        PojoObjectArray object = new PojoObjectArray();
-        object.int1 = 13;
-        // array do tipo do campo
-        object.arrayData = new PojoSimpleInner[] { new PojoSimpleInner() };
-        ((PojoSimpleInner) object.arrayData[0]).int1 = 11;
-        doTest(SerializeTestUtils.OBJECT_49, object);
+        doTest(SerializeTestUtils.OBJECT_49);
     }
-
-    private static final String OBJECT_50 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_2.int1\":\"11\",\r" + //
-                                            "\"REF_1\":\"REF_2\"\r" + //
-                                            "}";
 
     @Test
     public void test050() {
-        PojoObjectArray2 object = new PojoObjectArray2();
-        object.int1 = 13;
-        object.arrayData = new PojoSimpleInner[] { new PojoSimpleInner() };
-        object.arrayData[0].int1 = 11;
-        doTest(SerializeTestUtils.OBJECT_50, object);
+        doTest(SerializeTestUtils.OBJECT_50);
     }
-
-    private static final String OBJECT_51 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"arrayData\":\"REF_1\",\r" + //
-                                            "\"REF_1\":\"N\"\r" + //
-                                            "}";
 
     @Test
     public void test051() {
-        PojoObjectArray2 object = new PojoObjectArray2();
-        object.int1 = 13;
-        object.arrayData = new PojoSimpleInner[] { null };
-        doTest(SerializeTestUtils.OBJECT_51, object);
+        doTest(SerializeTestUtils.OBJECT_51);
     }
-
-    private static final String OBJECT_52 = "{\r" + //
-                                            "\"int1\":\"13\",\r" + //
-                                            "\"object\":\"REF_1\",\r" + //
-                                            "\"REF_1.C\":\"br.com.deliverytracker.commom.test.PojoSimpleInner[]\",\r" + //
-                                            "\"REF_1\":\"N\"\r" + //
-                                            "}";
 
     @Test
     public void test052() {
-        PojoSimpleOuter2 object = new PojoSimpleOuter2();
-        object.int1 = 13;
-        object.object = new PojoSimpleInner[] { null };
-        doTest(SerializeTestUtils.OBJECT_52, object);
+        doTest(SerializeTestUtils.OBJECT_52);
     }
-
-    private static final String OBJECT_53 = "{\r" + //
-                                            "\"int1\":\"13\",\r\"object\":\"REF_1\",\r" + //
-                                            "\"object.C\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\"\r" + //
-                                            "}";
 
     @Test
     public void test053() {
-        PojoSimpleOuter2 object = new PojoSimpleOuter2();
-        object.int1 = 13;
-        object.object = new PojoSimpleInner();
-        doTest(SerializeTestUtils.OBJECT_53, object);
+        doTest(SerializeTestUtils.OBJECT_53);
     }
-
-    private static final String OBJECT_54 = "{\r" + //
-                                            "\"int1\":\"13\",\r" + //
-                                            "\"object.C\":\"java.lang.Integer\",\r\"object\":\"1\"\r" + //
-                                            "}";
 
     @Test
     public void test054() {
-        PojoSimpleOuter2 object = new PojoSimpleOuter2();
-        object.int1 = 13;
-        object.object = Integer.valueOf(1);
-        doTest(SerializeTestUtils.OBJECT_54, object);
+        doTest(SerializeTestUtils.OBJECT_54);
     }
 
 }

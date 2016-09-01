@@ -88,7 +88,7 @@ public final class ToMapSerializer {
             if (notSerializedYet) {
                 objCtx = ctxBuilder.getNewObjCtx(object);
             }
-            if (objCtx.length() != 0){
+            if (objCtx.length() != 0) {
                 data.put(ctx.toString(), objCtx.toString());
                 ctx.append('.');
                 objCtx.append('.');
@@ -797,6 +797,9 @@ public final class ToMapSerializer {
         int len = ctx.length();
         ctx.append(CLASS_CONTEXT_ID);
         String className = data.get(ctx.toString());
+        if (className == null) {
+            return null;
+        }
         ctx.setLength(len);
         try {
             Class<?> clazz = ToMapSerializer.class.getClassLoader().loadClass(className);
