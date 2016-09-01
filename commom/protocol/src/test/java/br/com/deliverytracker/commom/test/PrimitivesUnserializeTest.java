@@ -29,6 +29,7 @@ public class PrimitivesUnserializeTest {
      */
     @Test
     public void test003() {
+        System.out.println(SerializeTestUtils.CONST_003);
         doTest(SerializeTestUtils.CONST_003);
     }
 

@@ -332,9 +332,7 @@ public final class ToMapSerializer {
 
         @Override
         public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
-            String val = object.toString();
-            val = val.replaceAll("\"", "\"\"");
-            serializeTo(val, data, ctx);
+            serializeTo(object.toString(), data, ctx);
         }
     }
 
@@ -638,7 +636,9 @@ public final class ToMapSerializer {
         for (Entry<String, String> entry : map.entrySet()) {
             sb.append(entry.getKey());
             sb.append("\":\"");
-            sb.append(entry.getValue());
+            String value = entry.getValue();
+            value = value.replace("\"", "\\\"");
+            sb.append(value);
             sb.append("\",\r\"");
         }
         int len = sb.length();
@@ -667,11 +667,7 @@ public final class ToMapSerializer {
 
         @Override
         public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap) {
-            String val = data.get(ctx.toString());
-            if (val != null) {
-                val = val.replaceAll("\"\"", "\"");
-            }
-            return val;
+            return data.get(ctx.toString());
         }
         //
         //        @Override

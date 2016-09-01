@@ -315,7 +315,7 @@ public class SerializeTestUtils {
                                          "}";
     public static final String CONST_003 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoString\",\r" + //
-                                         "\"st1\":\"A\"\"A\"\r" + //
+                                         "\"st1\":\"A\\\"A\"\r" + //
                                          "}";
     public static final String CONST_004 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoString\",\r" + //
