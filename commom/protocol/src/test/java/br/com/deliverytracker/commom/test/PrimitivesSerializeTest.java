@@ -42,7 +42,7 @@ public class PrimitivesSerializeTest {
     @Test
     public void test004() {
         PojoString object = new PojoString();
-        object.st1 = "A\"B\"C";
+        object.st1 = "A\"B\"\"C";
         doTest(SerializeTestUtils.CONST_004, object);
     }
 

@@ -26,8 +26,13 @@ public class SerializeTestUtils {
     }
     
     public static void doUnserializeTest(String tested) {
-        Object actual =  ToMapSerializer.fromJson(tested);
-        assertEquals(tested, ToMapSerializer.toJson(actual));
+        try {
+            Object actual =  ToMapSerializer.fromJson(tested);
+            assertEquals(tested, ToMapSerializer.toJson(actual));
+        } catch (Throwable e) {
+            System.out.println(tested);
+            throw e;
+        }
     }
 
 
@@ -254,7 +259,7 @@ public class SerializeTestUtils {
     public static final String OBJECT_46 = "{\r" + //
             "\"class\":\"br.com.deliverytracker.commom.test.PojoStringArray\",\r" + //
             "\"int1\":\"13\",\r" + //
-            "\"arrayData\":\"A,N,A A,\,B\,b\,N\,,\,,\\,a,A\\"A,A\r" + //
+            "\"arrayData\":\"A,N,A A,\\,B\\,b\\,N\\,,\\,,\\\\,a,A\\\"A,A\r" + //
             "A\"\r" + //
             "}";
 
@@ -322,7 +327,7 @@ public class SerializeTestUtils {
                                          "}";
     public static final String CONST_004 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoString\",\r" + //
-                                         "\"st1\":\"A\"\"B\"\"C\"\r" + //
+                                         "\"st1\":\"A\\\"B\\\"\\\"C\"\r" + //
                                          "}";
     public static final String CONST_005 = "{\r" + //
                                          "\"class\":\"br.com.deliverytracker.commom.test.PojoStrings\",\r" + //

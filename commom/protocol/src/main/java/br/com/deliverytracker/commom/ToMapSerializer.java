@@ -56,12 +56,18 @@ public final class ToMapSerializer {
 
     private interface IMapSerializer {
 
-        void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder);
+        void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType);
     }
 
-    private static class ObjectSerializer implements IMapSerializer {
+    private static final class ObjectSerializer implements IMapSerializer {
 
-        protected void serializeMainContextData(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        protected void serializeMainContextData(Object object, Map<String, String> data, StringBuilder ctx, Class<?> defaultType) {
+            Class<?> clazz = object.getClass();
+            if (clazz != defaultType) {
+                ctx.append(CLASS_CONTEXT_ID);
+                // Salve a classe em questão
+                data.put(ctx.toString(), clazz.getCanonicalName());
+            }
         }
 
         protected void serializeObjectContextData(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
@@ -73,8 +79,9 @@ public final class ToMapSerializer {
                 try {
                     Object value = field.get(object);
                     if (value != null) {
-                        IMapSerializer serializer = getSerializer(field, value);
-                        serializer.serializeTo(value, data, ctx, ctxBuilder);
+                        Class<?> defaultType = field.getType();
+                        IMapSerializer serializer = getSerializer(defaultType, value);
+                        serializer.serializeTo(value, data, ctx, ctxBuilder, defaultType);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -82,7 +89,7 @@ public final class ToMapSerializer {
             }
         }
 
-        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
             boolean notSerializedYet = objCtx == null;
             if (notSerializedYet) {
@@ -94,20 +101,9 @@ public final class ToMapSerializer {
                 objCtx.append('.');
             }
             if (notSerializedYet) {
-                serializeMainContextData(object, data, ctx, ctxBuilder);
+                serializeMainContextData(object, data, ctx, defaultType);
                 serializeObjectContextData(object, data, objCtx, ctxBuilder);
             }
-        }
-    }
-
-    private static class ClassAndObjectSerializer extends ObjectSerializer {
-
-        protected void serializeMainContextData(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
-            ctx.append(CLASS_CONTEXT_ID);
-            Class<? extends Object> clazz = object.getClass();
-            // Salve a classe em questão
-            data.put(ctx.toString(), clazz.getCanonicalName());
-            super.serializeMainContextData(object, data, ctx, ctxBuilder);
         }
     }
 
@@ -117,7 +113,7 @@ public final class ToMapSerializer {
             return OBJECT_SERIALIZER;
         }
 
-        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
             boolean notSerializedYet = objCtx == null;
             if (notSerializedYet) {
@@ -133,7 +129,7 @@ public final class ToMapSerializer {
                     if (inner == null) {
                         val.append(ARRAY_NULL_FLAG);
                     } else {
-                        getSerializer().serializeTo(inner, data, objCtx, ctxBuilder);
+                        getSerializer().serializeTo(inner, data, objCtx, ctxBuilder, defaultType); //TODO
                         StringBuilder innerCtx = ctxBuilder.getExistingObjCtx(inner);
                         val.append(innerCtx.toString());
                     }
@@ -155,7 +151,7 @@ public final class ToMapSerializer {
     private static class ClassAndObjectArraySerializer extends ObjectArraySerializer {
 
         protected IMapSerializer getSerializer() {
-            return CLASS_OBJECT_SERIALIZER;
+            return OBJECT_SERIALIZER;
         }
     }
 
@@ -168,12 +164,12 @@ public final class ToMapSerializer {
         }
 
         @Override
-        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             int length = ctx.length();
             ctx.append(CLASS_CONTEXT_ID);
             data.put(ctx.toString(), object.getClass().getCanonicalName());
             ctx.setLength(length);
-            primitiveSerializer.serializeTo(object, data, ctx, ctxBuilder);
+            primitiveSerializer.serializeTo(object, data, ctx, ctxBuilder, defaultType);
         }
     }
 
@@ -191,7 +187,7 @@ public final class ToMapSerializer {
     private static class BooleanPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             Boolean b = (Boolean) value;
             if (b) {
                 serializeTo(BOOL_TRUE, data, ctx);
@@ -202,7 +198,7 @@ public final class ToMapSerializer {
     private static class BooleanSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo((Boolean) value ? BOOL_TRUE : BOOL_FASE, data, ctx);
         }
     }
@@ -210,7 +206,7 @@ public final class ToMapSerializer {
     private static class BytePrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             Byte i = (Byte) value;
             if (i != 0) {
                 serializeTo(i.toString(), data, ctx);
@@ -221,7 +217,7 @@ public final class ToMapSerializer {
     private static class ByteSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo(((Byte) value).toString(), data, ctx);
         }
     }
@@ -229,7 +225,7 @@ public final class ToMapSerializer {
     private static class ShortPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             Short i = (Short) value;
             if (i != 0) {
                 serializeTo(i.toString(), data, ctx);
@@ -240,7 +236,7 @@ public final class ToMapSerializer {
     private static class ShortSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo(((Short) value).toString(), data, ctx);
         }
     }
@@ -248,7 +244,7 @@ public final class ToMapSerializer {
     private static class IntPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             Integer i = (Integer) value;
             if (i != 0) {
                 serializeTo(i.toString(), data, ctx);
@@ -259,7 +255,7 @@ public final class ToMapSerializer {
     private static class IntegerSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo(((Integer) value).toString(), data, ctx);
         }
     }
@@ -267,7 +263,7 @@ public final class ToMapSerializer {
     private static class LongPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             Long i = (Long) value;
             if (i != 0) {
                 serializeTo(i.toString(), data, ctx);
@@ -278,7 +274,7 @@ public final class ToMapSerializer {
     private static class LongSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo(((Long) value).toString(), data, ctx);
         }
     }
@@ -293,7 +289,7 @@ public final class ToMapSerializer {
     private static class FloatPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             Float i = (Float) value;
             if (i != 0f) {
                 serializeTo(prepareFloat(i.toString()), data, ctx);
@@ -304,7 +300,7 @@ public final class ToMapSerializer {
     private static class FloatSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo(prepareFloat(((Float) value).toString()), data, ctx);
         }
     }
@@ -312,7 +308,7 @@ public final class ToMapSerializer {
     private static class DoublePrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             Double i = (Double) value;
             if (i != 0d) {
                 serializeTo(prepareFloat(i.toString()), data, ctx);
@@ -323,7 +319,7 @@ public final class ToMapSerializer {
     private static class DoubleSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object value, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo(prepareFloat(((Double) value).toString()), data, ctx);
         }
     }
@@ -331,7 +327,7 @@ public final class ToMapSerializer {
     private static class StringPrimitiveSerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             serializeTo(object.toString(), data, ctx);
         }
     }
@@ -344,7 +340,7 @@ public final class ToMapSerializer {
 
     private static abstract class AbstractPrimitiveArraySerializer extends AbstractBasicSerializer {
 
-        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
             boolean notSerializedYet = objCtx == null;
             if (notSerializedYet) {
@@ -376,7 +372,7 @@ public final class ToMapSerializer {
 
     private static abstract class AbstractArraySerializer<T extends Number> extends AbstractBasicSerializer {
 
-        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
             boolean notSerializedYet = objCtx == null;
             if (notSerializedYet) {
@@ -518,7 +514,7 @@ public final class ToMapSerializer {
     private static class StringArraySerializer extends AbstractBasicSerializer {
 
         @Override
-        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> defaultType) {
             StringBuilder val = new StringBuilder();
             for (String currValue : ((String[]) object)) {
                 if (currValue == null) {
@@ -539,10 +535,9 @@ public final class ToMapSerializer {
 
     private static final IMapSerializer OBJECT_SERIALIZER = new ObjectSerializer();
 
-    private static final IMapSerializer CLASS_OBJECT_SERIALIZER = new ClassAndObjectSerializer();
-
     private static final IMapSerializer OBJECT_ARRAY_SERIALIZER = new ObjectArraySerializer();
 
+    //TODO remover
     private static final IMapSerializer CLASS_OBJECT_ARRAY_SERIALIZER = new ClassAndObjectArraySerializer();
 
     private static final Map<Class<?>, IMapSerializer> PRIMITIVE_SERIALIZERS = buildPrimitiveSerilizers();
@@ -589,8 +584,7 @@ public final class ToMapSerializer {
         return ret;
     }
 
-    private static final IMapSerializer getSerializer(Field field, Object currentValue) {
-        Class<?> fieldType = field.getType();
+    private static final IMapSerializer getSerializer(Class<?> fieldType, Object currentValue) {
         // é primitivo?
         IMapSerializer serializer = PRIMITIVE_SERIALIZERS.get(fieldType);
         if (serializer != null) {
@@ -609,15 +603,11 @@ public final class ToMapSerializer {
             return CLASS_OBJECT_ARRAY_SERIALIZER;
         }
 
-        if (valueType.equals(fieldType)) {
             return OBJECT_SERIALIZER;
-        }
-        return CLASS_OBJECT_SERIALIZER;
-
     }
 
     private static void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
-        CLASS_OBJECT_SERIALIZER.serializeTo(object, data, ctx, ctxBuilder);
+        OBJECT_SERIALIZER.serializeTo(object, data, ctx, ctxBuilder, null);
     }
 
     private static void serializeTo(Object object, Map<String, String> data, ObjCtxBuilder ctxBuilder) {
@@ -653,34 +643,164 @@ public final class ToMapSerializer {
 
     private interface IMapUnserializer {
 
-        Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap);
+        Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType);
     }
 
-    //    private static abstract class AbstractBasicUnserializer implements IMapUnserializer {
-    //
-    //        protected Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap) {
-    //            data.put(ctx.toString(), value);
-    //        }
-    //    }
+    private static class BooleanUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String str = data.get(ctx.toString());
+            if (str == null) {
+                return null;
+            }
+            return BOOL_TRUE.equals(str);
+        }
+    }
+
+    private static class ByteUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String str = data.get(ctx.toString());
+            if (str == null) {
+                return null;
+            }
+            return Byte.valueOf(str);
+        }
+    }
+
+    private static class ShortUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String str = data.get(ctx.toString());
+            if (str == null) {
+                return null;
+            }
+            return Short.valueOf(str);
+        }
+    }
+
+    private static class IntegerUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String str = data.get(ctx.toString());
+            if (str == null) {
+                return null;
+            }
+            return Integer.valueOf(str);
+        }
+    }
+
+    private static class LongUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String str = data.get(ctx.toString());
+            if (str == null) {
+                return null;
+            }
+            return Long.valueOf(str);
+        }
+    }
+
+    private static class FloatUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String str = data.get(ctx.toString());
+            if (str == null) {
+                return null;
+            }
+            return Float.valueOf(str);
+        }
+    }
+
+    private static class DoubleUnserializer implements IMapUnserializer {
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String str = data.get(ctx.toString());
+            if (str == null) {
+                return null;
+            }
+            return Double.valueOf(str);
+        }
+    }
 
     private static class StringPrimitiveUnserializer implements IMapUnserializer {
 
         @Override
-        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap) {
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
             return data.get(ctx.toString());
         }
-        //
-        //        @Override
-        //        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
-        //            String val = object.toString();
-        //            val = val.replaceAll("\"", "\"\"");
-        //            serializeTo(val, data, ctx);
-        //        }
     }
 
-    private static final IMapUnserializer OBJECT_UNSERIALIZER = null;//new ObjectSerializer();
+    private static class ObjectUnserializer implements IMapUnserializer {
 
-    private static final IMapUnserializer CLASS_OBJECT_UNSERIALIZER = null;// = new ClassAndObjectSerializer();
+        private static Class<?> loadClass(String clazzName) {
+            try {
+                return ToMapSerializer.class.getClassLoader().loadClass(clazzName);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private Object unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> clazz) {
+            try {
+                Object ret = clazz.newInstance();
+                int len = ctx.length();
+                Field[] fields = clazz.getFields();
+                for (Field field : fields) {
+                    ctx.setLength(len);
+                    ctx.append(field.getName());
+                    Class<?> type = field.getType();
+                    IMapUnserializer unserializer = getUnserializer(type, data, ctx);
+                    Object value = unserializer.unserializeFrom(data, ctx, objectMap, type);
+                    if (value == null) {
+                        continue;
+                    }
+                    field.set(ret, value);
+                }
+                return ret;
+            } catch (IllegalArgumentException | IllegalAccessException | InstantiationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> defaultType) {
+            String currentCtx = ctx.toString();
+            String refId = data.get(currentCtx);
+            Object ret = objectMap.get(refId);
+            if (ret != null) {
+                return ret;
+            }
+            boolean isRootObject = "".equals(currentCtx);
+
+            String innerObjectCtx = isRootObject ? "" : refId;
+            if (innerObjectCtx != null) {
+                StringBuilder newCtx = new StringBuilder(innerObjectCtx);
+                if (!isRootObject) {
+                    ctx.append('.');
+                    newCtx.append('.');
+                }
+                Class<?> type = defaultType;
+                ctx.append(CLASS_CONTEXT_ID);
+                String className = data.get(ctx.toString());
+                if (className != null) {
+                    type = loadClass(className);
+                }
+                ret = unserialize(data, newCtx, objectMap, type);
+                objectMap.put(innerObjectCtx, ret);
+            }
+            return ret;
+        }
+    }
+
+    private static final IMapUnserializer OBJECT_UNSERIALIZER = new ObjectUnserializer();
 
     private static final IMapUnserializer OBJECT_ARRAY_UNSERIALIZER = null;// = new ObjectArraySerializer();
 
@@ -690,37 +810,37 @@ public final class ToMapSerializer {
 
     private static Map<Class<?>, IMapUnserializer> buildPrimitiveUnserilizers() {
         Map<Class<?>, IMapUnserializer> ret = new HashMap<>();
-        //
-        //        ret.put(boolean.class, new BooleanPrimitiveSerializer());
-        //        ret.put(Boolean.class, new BooleanSerializer());
-        //
-        //        ret.put(byte.class, new BytePrimitiveSerializer());
-        //        ret.put(Byte.class, new ByteSerializer());
+
+        ret.put(boolean.class, new BooleanUnserializer());
+        ret.put(Boolean.class, new BooleanUnserializer());
+
+        ret.put(byte.class, new ByteUnserializer());
+        ret.put(Byte.class, new ByteUnserializer());
         //        ret.put(byte[].class, new PrimitiveByteArraySerializer());
         //        ret.put(Byte[].class, new ByteArraySerializer());
-        //
-        //        ret.put(short.class, new ShortPrimitiveSerializer());
-        //        ret.put(Short.class, new ShortSerializer());
+
+        ret.put(short.class, new ShortUnserializer());
+        ret.put(Short.class, new ShortUnserializer());
         //        ret.put(short[].class, new PrimitiveShortArraySerializer());
         //        ret.put(Short[].class, new ShortArraySerializer());
-        //
-        //        ret.put(int.class, new IntPrimitiveSerializer());
-        //        ret.put(Integer.class, new IntegerSerializer());
+
+        ret.put(int.class, new IntegerUnserializer());
+        ret.put(Integer.class, new IntegerUnserializer());
         //        ret.put(int[].class, new PrimitiveIntArraySerializer());
         //        ret.put(Integer[].class, new IntegerArraySerializer());
-        //
-        //        ret.put(long.class, new LongPrimitiveSerializer());
-        //        ret.put(Long.class, new LongSerializer());
+
+        ret.put(long.class, new LongUnserializer());
+        ret.put(Long.class, new LongUnserializer());
         //        ret.put(long[].class, new PrimitiveLongArraySerializer());
         //        ret.put(Long[].class, new LongArraySerializer());
-        //
-        //        ret.put(float.class, new FloatPrimitiveSerializer());
-        //        ret.put(Float.class, new FloatSerializer());
+
+        ret.put(float.class, new FloatUnserializer());
+        ret.put(Float.class, new FloatUnserializer());
         //        ret.put(float[].class, new PrimitiveFloatArraySerializer());
         //        ret.put(Float[].class, new FloatArraySerializer());
-        //
-        //        ret.put(double.class, new DoublePrimitiveSerializer());
-        //        ret.put(Double.class, new DoubleSerializer());
+
+        ret.put(double.class, new DoubleUnserializer());
+        ret.put(Double.class, new DoubleUnserializer());
         //        ret.put(double[].class, new PrimitiveDoubleArraySerializer());
         //        ret.put(Double[].class, new DoubleArraySerializer());
         //
@@ -730,15 +850,24 @@ public final class ToMapSerializer {
         return ret;
     }
 
-    private static IMapUnserializer getUnserializer(Field field/*, Map<String, String> data, StringBuilder ctx*/) {
-        Class<?> fieldType = field.getType();
+    private static IMapUnserializer getUnserializer(Class<?> fieldType, Map<String, String> data, StringBuilder ctx) {
         // é primitivo?
         IMapUnserializer unserializer = PRIMITIVE_UNSERIALIZERS.get(fieldType);
         if (unserializer != null) {
             return unserializer;
         }
-
-        throw new RuntimeException("Tipo não suportado:" + fieldType.getCanonicalName());
+        //        int i = ctx.length();
+        //        try {
+        //            ctx.append(CLASS_CONTEXT_ID);
+        //            String className = data.get(ctx.toString());
+        //            if (className != null) {
+        //                return new ObjectUnserializer(className);
+        //            }
+        return OBJECT_UNSERIALIZER;
+        //        } finally {
+        //            ctx.setLength(i);
+        //        }
+        //throw new RuntimeException("Tipo não suportado:" + fieldType.getCanonicalName());
         //        ctx.append(CLASS_CONTEXT_SUFFIX);
         //        
         //        data.get(key)
@@ -762,52 +891,13 @@ public final class ToMapSerializer {
         //
     }
 
-    private static void unserialize(Map<String, String> data, StringBuilder ctx, Object object) {
-        int len = ctx.length();
-        Field[] fields = object.getClass().getFields();
-        for (Field field : fields) {
-            ctx.setLength(len);
-            ctx.append(field.getName());
-            IMapUnserializer unserializer = getUnserializer(field);
-            Object value = unserializer.unserializeFrom(data, ctx, null);
-            try {
-                field.set(object, value);
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    private static Object unserialize(Map<String, String> data) {
+        return OBJECT_UNSERIALIZER.unserializeFrom(data, new StringBuilder(), new HashMap<String, Object>(), null);
     }
 
-    private static Object unserialize(Map<String, String> data, StringBuilder ctx, Class<?> clazz) {
-        Object object;
-        try {
-            object = clazz.newInstance();
-            unserialize(data, ctx, object);
-            return object;
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Object unserialize(Map<String, String> data, StringBuilder ctx) {
-        int len = ctx.length();
-        ctx.append(CLASS_CONTEXT_ID);
-        String className = data.get(ctx.toString());
-        if (className == null) {
-            return null;
-        }
-        ctx.setLength(len);
-        try {
-            Class<?> clazz = ToMapSerializer.class.getClassLoader().loadClass(className);
-            return unserialize(data, ctx, clazz);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Object unserialize(Map<String, String> map) {
-        return unserialize(map, new StringBuilder());
-    }
+    //    public static Object unserialize(Map<String, String> map) {
+    //        return unserialize(map, new StringBuilder());
+    //    }
 
     public static Object fromJson(String json) {
         Gson gson = new GsonBuilder().create();
