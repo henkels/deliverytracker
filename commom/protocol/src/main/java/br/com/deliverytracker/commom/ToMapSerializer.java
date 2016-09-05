@@ -123,7 +123,7 @@ public final class ToMapSerializer {
                 if (!arrayClass.equals(fieldType)) {
                     objCtx.append(".");
                     objCtx.append(CLASS_CONTEXT_ID);
-                    data.put(objCtx.toString(), arrayClass.getCanonicalName());
+                    data.put(objCtx.toString(), String.format("%s[]", arrayClass.getCanonicalName()));
                     objCtx.setLength(objCtxLen);
                 }
                 Object[] aux = (Object[]) object;
