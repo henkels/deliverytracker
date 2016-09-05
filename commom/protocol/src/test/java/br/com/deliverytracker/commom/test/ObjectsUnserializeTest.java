@@ -1,8 +1,20 @@
 package br.com.deliverytracker.commom.test;
 
+import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ObjectsUnserializeTest {
+    
+    @BeforeClass
+    public static void beforeClass(){
+        SerializeTestUtils.reset();
+    }
+
+    @After
+    public void after(){
+        SerializeTestUtils.nextCase();
+    }
 
     private void doTest(String expected) {
         SerializeTestUtils.doUnserializeTest(expected);
@@ -227,7 +239,8 @@ public class ObjectsUnserializeTest {
 
     @Test
     public void test045() {
-        doTest(SerializeTestUtils.OBJECT_45);
+        doTest(SerializeTestUtils.OBJECT_45A);
+        doTest(SerializeTestUtils.OBJECT_45B);
     }
 
     @Test

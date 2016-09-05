@@ -1,8 +1,20 @@
 package br.com.deliverytracker.commom.test;
 
+import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ObjectsSerializeTest {
+
+    @BeforeClass
+    public static void beforeClass() {
+        SerializeTestUtils.reset();
+    }
+
+    @After
+    public void after() {
+        SerializeTestUtils.nextCase();
+    }
 
     private void doTest(String expected, Object object) {
         SerializeTestUtils.doSerializeTest(expected, object);
@@ -394,7 +406,9 @@ public class ObjectsSerializeTest {
         PojoStringArray object = new PojoStringArray();
         object.int1 = 13;
         object.arrayData = new String[] { "," };
-        doTest(SerializeTestUtils.OBJECT_45, object);
+        doTest(SerializeTestUtils.OBJECT_45A, object);
+        object.arrayData = new String[] { "N" };
+        doTest(SerializeTestUtils.OBJECT_45B, object);
     }
 
     @Test

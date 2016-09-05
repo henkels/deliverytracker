@@ -1,8 +1,20 @@
 package br.com.deliverytracker.commom.test;
 
+import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class PrimitivesUnserializeTest {
+    
+    @BeforeClass
+    public static void beforeClass(){
+        SerializeTestUtils.reset();
+    }
+
+    @After
+    public void after(){
+        SerializeTestUtils.nextCase();
+    }
 
     private void doTest(String value) {
         SerializeTestUtils.doUnserializeTest(value);
