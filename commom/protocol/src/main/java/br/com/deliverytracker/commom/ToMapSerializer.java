@@ -1,10 +1,6 @@
 package br.com.deliverytracker.commom;
 
-import java.awt.HeadlessException;
 import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.nio.charset.Charset;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,6 +8,8 @@ import java.util.Map.Entry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import br.com.deliverytracker.utils.Base64Utils;
 
 public final class ToMapSerializer {
 
@@ -123,8 +121,10 @@ public final class ToMapSerializer {
                 int objCtxLen = objCtx.length();
                 Class<?> arrayClass = object.getClass();
                 if (!arrayClass.equals(fieldType)) {
+                    objCtx.append(".");
                     objCtx.append(CLASS_CONTEXT_ID);
                     data.put(objCtx.toString(), arrayClass.getCanonicalName());
+                    objCtx.setLength(objCtxLen);
                 }
                 Object[] aux = (Object[]) object;
                 StringBuilder val = new StringBuilder();
@@ -497,8 +497,6 @@ public final class ToMapSerializer {
         }
     }
 
-    private static final Charset BASE_64_CHARSET = Charset.forName("UTF-8");
-
     private static final String BASE_64_STRING_CTX = ".b64";
 
     private static class StringArraySerializer extends AbstractBasicSerializer {
@@ -526,8 +524,7 @@ public final class ToMapSerializer {
                 if (currValue == null) {
                     val.append(ARRAY_NULL_FLAG);
                 } else {
-                    byte[] encoded = Base64.getEncoder().encode(currValue.getBytes(BASE_64_CHARSET));
-                    val.append(new String(encoded, BASE_64_CHARSET));
+                    val.append(Base64Utils.encode(currValue));
                 }
                 val.append(ARRAY_VALUE_SEPARATOR);
             }
@@ -625,7 +622,8 @@ public final class ToMapSerializer {
 
     public static Map<String, String> serialize(Object object) {
         Map<String, String> ret = new LinkedHashMap<>();
-        serializeTo(object, ret, new ObjCtxBuilder());
+        ObjCtxBuilder objCtxBuilder = new ObjCtxBuilder();
+        serializeTo(object, ret, objCtxBuilder);
         return ret;
     }
 
@@ -995,8 +993,7 @@ public final class ToMapSerializer {
                     ret[i] = null;
                     continue;
                 }
-                byte[] decoded = Base64.getDecoder().decode(ret[i].getBytes(BASE_64_CHARSET));
-                ret[i] = new String(decoded, BASE_64_CHARSET);
+                ret[i] = Base64Utils.decode(ret[i]);
 
             }
             return ret;
