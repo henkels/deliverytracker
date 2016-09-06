@@ -13,6 +13,8 @@ import br.com.deliverytracker.utils.Base64Utils;
 
 public final class ToMapSerializer {
 
+    private static final String ROOT_CONTEXT = "ROOT";
+
     private static final String OBJECT_CONTEXT_PREFIX = "REF_";
 
     private static final String CLASS_CONTEXT_ID = "class";
@@ -60,18 +62,47 @@ public final class ToMapSerializer {
         void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> fieldType);
     }
 
-    private static final class ObjectSerializer implements IMapSerializer {
+    private static abstract class ReferenceSerializer implements IMapSerializer {
 
-        protected void serializeMainContextData(Object object, Map<String, String> data, StringBuilder ctx, Class<?> fieldType) {
-            Class<?> clazz = object.getClass();
-            if (clazz != fieldType) {
-                ctx.append(CLASS_CONTEXT_ID);
-                // Salve a classe em questão
-                data.put(ctx.toString(), clazz.getCanonicalName());
+        protected abstract void innerSerializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder);
+
+        @Override
+        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> fieldType) {
+            //Esta referencia já foi serializada?
+            StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
+            boolean notSerializedYet = objCtx == null;
+            // se não foi cria um novo contexto
+            if (notSerializedYet) {
+                objCtx = ctxBuilder.getNewObjCtx(object);
+            }
+            // se o contexto não for do objeto root, ou seja, tem contexto, salva a referência
+            if (ctx != null) {
+                String val = objCtx.length() == 0 ? ROOT_CONTEXT : objCtx.toString();
+                data.put(ctx.toString(), val);
+            }
+            if (notSerializedYet) {
+                // se o contexto não for do objeto root, ou seja, tem contexto, adiciona '.' no contexto de serialização da referencia
+                if (ctx != null) {
+                    objCtx.append('.');
+                }
+                // se o tipo do objeto é diferente do tipo do campo, salve a classe
+                Class<?> clazz = object.getClass();
+                if (clazz != fieldType) {
+                    int len = objCtx.length();
+                    objCtx.append(CLASS_CONTEXT_ID);
+                    // Salve a classe em questão
+                    data.put(objCtx.toString(), clazz.getCanonicalName());
+                    objCtx.setLength(len);
+                }
+                innerSerializeTo(object, data, objCtx, ctxBuilder);
             }
         }
+    }
 
-        protected void serializeObjectContextData(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+    private static final class ObjectSerializer extends ReferenceSerializer {
+
+        @Override
+        protected void innerSerializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
             int len = ctx.length();
             Field[] fields = object.getClass().getFields();
             for (Field field : fields) {
@@ -89,76 +120,43 @@ public final class ToMapSerializer {
                 }
             }
         }
-
-        public final void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> fieldType) {
-            StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
-            boolean notSerializedYet = objCtx == null;
-            if (notSerializedYet) {
-                objCtx = ctxBuilder.getNewObjCtx(object);
-            }
-            if (objCtx.length() != 0) {
-                data.put(ctx.toString(), objCtx.toString());
-                ctx.append('.');
-                objCtx.append('.');
-            }
-            if (notSerializedYet) {
-                serializeMainContextData(object, data, ctx, fieldType);
-                serializeObjectContextData(object, data, objCtx, ctxBuilder);
-            }
-        }
     }
 
-    private static class ObjectArraySerializer implements IMapSerializer {
-
-        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> fieldType) {
-            StringBuilder objCtx = ctxBuilder.getExistingObjCtx(object);
-            boolean notSerializedYet = objCtx == null;
-            if (notSerializedYet) {
-                objCtx = ctxBuilder.getNewObjCtx(object);
-            }
-            data.put(ctx.toString(), objCtx.toString());
-            if (notSerializedYet) {
-                int objCtxLen = objCtx.length();
-                Class<?> arrayClass = object.getClass();
-                if (!arrayClass.equals(fieldType)) {
-                    objCtx.append(".");
-                    objCtx.append(CLASS_CONTEXT_ID);
-                    data.put(objCtx.toString(), String.format("%s[]", arrayClass.getCanonicalName()));
-                    objCtx.setLength(objCtxLen);
-                }
-                Object[] aux = (Object[]) object;
-                StringBuilder val = new StringBuilder();
-                for (Object inner : aux) {
-                    if (inner == null) {
-                        val.append(ARRAY_NULL_FLAG);
-                    } else {
-                        IMapSerializer serializer = getSerializer(fieldType, inner.getClass());
-                        serializer.serializeTo(inner, data, objCtx, ctxBuilder, fieldType.getComponentType());
-                        StringBuilder innerCtx = ctxBuilder.getExistingObjCtx(inner);
-                        val.append(innerCtx.toString());
-                    }
-                    val.append(ARRAY_VALUE_SEPARATOR);
-                }
-                int valLen = val.length();
-                if (valLen > 1) {
-                    val.setLength(valLen - 1);
-                }
-                objCtx.setLength(objCtxLen);
-                data.put(objCtx.toString(), val.toString());
-            }
-        }
-    }
-
-    private static class PrimitiveInObjectSerializer implements IMapSerializer {
+    private static class ObjectArraySerializer extends ReferenceSerializer {
 
         @Override
-        public void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder, Class<?> fieldType) {
-            int length = ctx.length();
-            ctx.append(CLASS_CONTEXT_ID);
-            data.put(ctx.toString(), object.getClass().getCanonicalName());
-            ctx.setLength(length);
-            IMapSerializer innerSerializer = getSerializer(fieldType, object.getClass());
-            innerSerializer.serializeTo(object, data, ctx, ctxBuilder, fieldType);
+        protected void innerSerializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            Object[] aux = (Object[]) object;
+            Class<?> componentFieldType = aux.getClass().getComponentType();
+            StringBuilder val = new StringBuilder();
+            for (Object inner : aux) {
+                if (inner == null) {
+                    val.append(ARRAY_NULL_FLAG);
+                } else {
+                    IMapSerializer serializer = getSerializer(componentFieldType, inner.getClass());
+                    serializer.serializeTo(inner, data, ctx, ctxBuilder, componentFieldType);
+                    StringBuilder innerCtx = ctxBuilder.getExistingObjCtx(inner);
+                    val.append(innerCtx.toString());
+                }
+                val.append(ARRAY_VALUE_SEPARATOR);
+            }
+            int valLen = val.length();
+            if (valLen > 1) {
+                val.setLength(valLen - 1);
+            }
+//            ctx.append(ARRAY_VALUE_CONTEXT_ID);
+//            data.put(ctx.toString(), val.toString());
+        }
+
+    }
+
+    private static class PrimitiveInObjectSerializer extends ReferenceSerializer {
+
+        @Override
+        protected void innerSerializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            Class<?> clazz = object.getClass();
+            IMapSerializer innerSerializer = getSerializer(clazz, clazz);
+            innerSerializer.serializeTo(object, data, ctx, ctxBuilder, clazz);
         }
     }
 
@@ -612,18 +610,10 @@ public final class ToMapSerializer {
         return OBJECT_SERIALIZER;
     }
 
-    private static void serializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
-        OBJECT_SERIALIZER.serializeTo(object, data, ctx, ctxBuilder, null);
-    }
-
-    private static void serializeTo(Object object, Map<String, String> data, ObjCtxBuilder ctxBuilder) {
-        serializeTo(object, data, new StringBuilder(), ctxBuilder);
-    }
-
     public static Map<String, String> serialize(Object object) {
         Map<String, String> ret = new LinkedHashMap<>();
         ObjCtxBuilder objCtxBuilder = new ObjCtxBuilder();
-        serializeTo(object, ret, objCtxBuilder);
+        OBJECT_SERIALIZER.serializeTo(object, ret, null, objCtxBuilder, null);
         return ret;
     }
 

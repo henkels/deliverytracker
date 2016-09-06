@@ -430,8 +430,8 @@ public class ObjectsSerializeTest {
     public void test048() {
         PojoObjectArray object = new PojoObjectArray();
         object.int1 = 13;
-        // array do tipo do campo
-        object.arrayData = new Object[] { new PojoSimpleInner() };
+        // array do tipo igual ao campo e elementos de tipo diferente do array
+        object.arrayData = new Object[] { new PojoSimpleInner(), new PojoSimpleInner() };
         ((PojoSimpleInner) object.arrayData[0]).int1 = 11;
         doTest(SerializeTestUtils.OBJECT_48, object);
     }
@@ -440,7 +440,7 @@ public class ObjectsSerializeTest {
     public void test049() {
         PojoObjectArray object = new PojoObjectArray();
         object.int1 = 13;
-        // array do tipo do campo
+        // array do tipo do diferente do campo, e elementos de tipo iguais ao do array
         object.arrayData = new PojoSimpleInner[] { new PojoSimpleInner() };
         ((PojoSimpleInner) object.arrayData[0]).int1 = 11;
         doTest(SerializeTestUtils.OBJECT_49, object);

@@ -59,7 +59,8 @@ public class SerializeTestUtils {
                                            "\"object\":\"REF_1\",\r" + //
                                            "\"REF_1.int1\":\"14\",\r" + //
                                            "\"REF_1.object\":\"REF_2\",\r" + //
-                                           "\"REF_2.int1\":\"15\"\r" + //
+                                           "\"REF_2.int1\":\"15\",\r" + //
+                                           "\"REF_2.object\":\"ROOT\"\r" + //
                                            "}";
     public static final String OBJECT_07 = "{\r" + //
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoPrimitiveByteArray\",\r" + //
@@ -276,20 +277,26 @@ public class SerializeTestUtils {
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray\",\r" + //
                                            "\"int1\":\"13\"\r" + //
                                            "}";
+    /**
+     * array do tipo igual ao campo e elementos de tipo diferente do array
+     */
     public static final String OBJECT_48 = "{\r" + //
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray\",\r" + //
                                            "\"int1\":\"13\",\r" + //
                                            "\"arrayData\":\"REF_1\",\r" + //
                                            "\"REF_1\":\"REF_2\",\r" + //
-                                           "\"REF_1.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\",\r" + //
+                                           "\"REF_2.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\",\r" + //
                                            "\"REF_2.int1\":\"11\"\r" + //
                                            "}";
+    /**
+     * array do tipo do diferente do campo, e elementos de tipo iguais ao do array
+     */
     public static final String OBJECT_49 = "{\r" + //
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoObjectArray\",\r" + //
                                            "\"int1\":\"13\",\r" + //
                                            "\"arrayData\":\"REF_1\",\r" + //
+                                           "\"REF_1.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner[]\",\r" + //
                                            "\"REF_1\":\"REF_2\",\r" + //
-                                           "\"REF_1.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\",\r" + //
                                            "\"REF_2.int1\":\"11\"\r" + //
                                            "}";
     public static final String OBJECT_50 = "{\r" + //
@@ -309,13 +316,14 @@ public class SerializeTestUtils {
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter2\",\r" + //
                                            "\"int1\":\"13\",\r" + //
                                            "\"object\":\"REF_1\",\r" + //
+                                           "\"REF_1.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner[]\",\r" + //
                                            "\"REF_1\":\"N\"\r" + //
                                            "}";
     public static final String OBJECT_53 = "{\r" + //
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter2\",\r" + //
                                            "\"int1\":\"13\",\r" + //
                                            "\"object\":\"REF_1\",\r" + //
-                                           "\"object.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\"\r" + //
+                                           "\"REF_1.class\":\"br.com.deliverytracker.commom.test.PojoSimpleInner\"\r" + //
                                            "}";
     public static final String OBJECT_54 = "{\r" + //
                                            "\"class\":\"br.com.deliverytracker.commom.test.PojoSimpleOuter2\",\r" + //
