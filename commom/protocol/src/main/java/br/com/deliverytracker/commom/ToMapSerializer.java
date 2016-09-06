@@ -81,14 +81,14 @@ public final class ToMapSerializer {
                 data.put(ctx.toString(), val);
             }
             if (notSerializedYet) {
-                // se o contexto não for do objeto root, ou seja, tem contexto, adiciona '.' no contexto de serialização da referencia
-                if (ctx != null) {
-                    objCtx.append('.');
-                }
                 // se o tipo do objeto é diferente do tipo do campo, salve a classe
                 Class<?> clazz = object.getClass();
                 if (clazz != fieldType) {
                     int len = objCtx.length();
+                    // se o contexto não for do objeto root, ou seja, tem contexto, adiciona '.' no contexto de serialização da referencia
+                    if (objCtx.length() > 0) {
+                        objCtx.append('.');
+                    }
                     objCtx.append(CLASS_CONTEXT_ID);
                     // Salve a classe em questão
                     data.put(objCtx.toString(), clazz.getCanonicalName());
@@ -103,6 +103,9 @@ public final class ToMapSerializer {
 
         @Override
         protected void innerSerializeTo(Object object, Map<String, String> data, StringBuilder ctx, ObjCtxBuilder ctxBuilder) {
+            if (ctx.length() > 0) {
+                ctx.append('.');
+            }
             int len = ctx.length();
             Field[] fields = object.getClass().getFields();
             for (Field field : fields) {
@@ -134,7 +137,7 @@ public final class ToMapSerializer {
                     val.append(ARRAY_NULL_FLAG);
                 } else {
                     IMapSerializer serializer = getSerializer(componentFieldType, inner.getClass());
-                    serializer.serializeTo(inner, data, ctx, ctxBuilder, componentFieldType);
+                    serializer.serializeTo(inner, data, null, ctxBuilder, componentFieldType);
                     StringBuilder innerCtx = ctxBuilder.getExistingObjCtx(inner);
                     val.append(innerCtx.toString());
                 }
@@ -144,8 +147,7 @@ public final class ToMapSerializer {
             if (valLen > 1) {
                 val.setLength(valLen - 1);
             }
-//            ctx.append(ARRAY_VALUE_CONTEXT_ID);
-//            data.put(ctx.toString(), val.toString());
+            data.put(ctx.toString(), val.toString());
         }
 
     }
@@ -1004,8 +1006,9 @@ public final class ToMapSerializer {
         }
 
     }
-
-    private static class ObjectUnserializer implements IMapUnserializer {
+    
+    private static abstract class ReferenceUnserializer implements IMapUnserializer { 
+        //TODO
 
         private static Class<?> loadClass(String clazzName) {
             try {
@@ -1018,6 +1021,7 @@ public final class ToMapSerializer {
         private Object unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> clazz) {
             try {
                 Object ret = clazz.newInstance();
+                
                 int len = ctx.length();
                 Field[] fields = clazz.getFields();
                 for (Field field : fields) {
@@ -1067,7 +1071,71 @@ public final class ToMapSerializer {
         }
     }
 
-    private static class ObjectArrayUnserializer implements IMapUnserializer {
+
+    private static class ObjectUnserializer extends ReferenceUnserializer {//TODO
+
+        private static Class<?> loadClass(String clazzName) {
+            try {
+                return ToMapSerializer.class.getClassLoader().loadClass(clazzName);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private Object unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> clazz) {
+            try {
+                Object ret = clazz.newInstance();
+                
+                int len = ctx.length();
+                Field[] fields = clazz.getFields();
+                for (Field field : fields) {
+                    ctx.setLength(len);
+                    ctx.append(field.getName());
+                    Class<?> type = field.getType();
+                    IMapUnserializer unserializer = getUnserializer(type, data, ctx);
+                    Object value = unserializer.unserializeFrom(data, ctx, objectMap, type);
+                    if (value == null) {
+                        continue;
+                    }
+                    field.set(ret, value);
+                }
+                return ret;
+            } catch (IllegalArgumentException | IllegalAccessException | InstantiationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> fieldType) {
+            String currentCtx = ctx.toString();
+            String refId = data.get(currentCtx);
+            Object ret = objectMap.get(refId);
+            if (ret != null) {
+                return ret;
+            }
+            boolean isRootObject = "".equals(currentCtx);
+
+            String innerObjectCtx = isRootObject ? "" : refId;
+            if (innerObjectCtx != null) {
+                StringBuilder newCtx = new StringBuilder(innerObjectCtx);
+                if (!isRootObject) {
+                    ctx.append('.');
+                    newCtx.append('.');
+                }
+                Class<?> type = fieldType;
+                ctx.append(CLASS_CONTEXT_ID);
+                String className = data.get(ctx.toString());
+                if (className != null) {
+                    type = loadClass(className);
+                }
+                ret = unserialize(data, newCtx, objectMap, type);
+                objectMap.put(innerObjectCtx, ret);
+            }
+            return ret;
+        }
+    }
+
+    private static class ObjectArrayUnserializer extends ReferenceUnserializer { //TODO
 
         private static Class<?> loadClass(String clazzName) {
             try {
