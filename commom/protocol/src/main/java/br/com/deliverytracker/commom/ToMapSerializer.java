@@ -1008,13 +1008,12 @@ public final class ToMapSerializer {
 
     }
 
-    private static class CreateInfo {
+    private static class AbstractCreateInfo {
 
-        private Object newInstance;
+        public Object newInstance;
     }
 
-    private static abstract class ReferenceUnserializer implements IMapUnserializer {
-        //TODO
+    private static abstract class ReferenceUnserializer<T extends AbstractCreateInfo> implements IMapUnserializer {
 
         private Class<?> loadClass(String clazzName) {
             try {
@@ -1024,48 +1023,63 @@ public final class ToMapSerializer {
             }
         }
 
-        protected abstract CreateInfo createInstance(Class<?> clazz);
+        protected Class<?> getIntanceClass(Map<String, String> data, StringBuilder ctx, Class<?> fieldType) {
+            Class<?> type = fieldType;
+            int len = ctx.length();
+            if (len > 0) {
+                ctx.append('.');
+            }
+            ctx.append(CLASS_CONTEXT_ID);
+            String className = data.get(ctx.toString());
+            if (className != null) {
+                type = loadClass(className);
+            }
+            ctx.setLength(len);
+            return type;
+        }
 
-        protected abstract void unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Object instance);
+        protected abstract T createInstance(Map<String, String> data, StringBuilder ctx, Class<?> fieldType);
+
+        protected abstract void unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, T info);
 
         @Override
         public Object unserializeFrom(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Class<?> fieldType) {
-            String currentCtx = ctx.toString();
-            String refId = data.get(currentCtx);
-            Object ret = objectMap.get(refId);
-            if (ret != null) {
-                return ret;
+            boolean isRootObject = ctx == null;
+            String refId = "";
+            if (!isRootObject) {
+                refId = data.get(ctx.toString());
+                if (refId == null) {
+                    return null;
+                }
+                Object ret = objectMap.get(refId);
+                if (ret != null) {
+                    return ret;
+                }
             }
-            boolean isRootObject = "".equals(currentCtx);
 
-            String innerObjectCtx = isRootObject ? "" : refId;
-            if (innerObjectCtx != null) {
-                StringBuilder newCtx = new StringBuilder(innerObjectCtx);
-                if (!isRootObject) {
-                    ctx.append('.');
-                    newCtx.append('.');
-                }
-                Class<?> type = fieldType;
-                ctx.append(CLASS_CONTEXT_ID);
-                String className = data.get(ctx.toString());
-                if (className != null) {
-                    type = loadClass(className);
-                }
-                CreateInfo info = createInstance(type);
-                ret = info.newInstance;
-                objectMap.put(innerObjectCtx, ret);
-                unserialize(data, newCtx, objectMap, info);
+            StringBuilder newCtx = new StringBuilder(refId);
+            T info = createInstance(data, newCtx, fieldType);
+            Object ret = info.newInstance;
+            if (isRootObject) {
+                refId = ROOT_CONTEXT;
             }
+            objectMap.put(refId, ret);
+            unserialize(data, newCtx, objectMap, info);
             return ret;
         }
+
     }
 
-    private static class ObjectUnserializer extends ReferenceUnserializer {
+    private static class SimpleCreateInfo extends AbstractCreateInfo {
+    };
+
+    private static class ObjectUnserializer extends ReferenceUnserializer<SimpleCreateInfo> {
 
         @Override
-        protected CreateInfo createInstance(Class<?> clazz) {
+        protected SimpleCreateInfo createInstance(Map<String, String> data, StringBuilder ctx, Class<?> fieldType) {
             try {
-                CreateInfo ret = new CreateInfo();
+                Class<?> clazz = getIntanceClass(data, ctx, fieldType);
+                SimpleCreateInfo ret = new SimpleCreateInfo();
                 ret.newInstance = clazz.newInstance();
                 return ret;
             } catch (InstantiationException | IllegalAccessException e) {
@@ -1073,11 +1087,16 @@ public final class ToMapSerializer {
             }
         }
 
-        protected void unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Object instance) {
+        protected void unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, SimpleCreateInfo info) {
             try {
+                Object instance = info.newInstance;
                 Class<?> clazz = instance.getClass();
 
                 int len = ctx.length();
+                if (len > 0) {
+                    ctx.append('.');
+                    len++;
+                }
                 Field[] fields = clazz.getFields();
                 for (Field field : fields) {
                     ctx.setLength(len);
@@ -1096,36 +1115,35 @@ public final class ToMapSerializer {
         }
     }
 
-    private static class ObjectArrayUnserializer extends ReferenceUnserializer {
+    private static class ArrayCreateInfo extends AbstractCreateInfo {
+
+        public String[] objectRefs;
+    };
+
+    private static class ObjectArrayUnserializer extends ReferenceUnserializer<ArrayCreateInfo> {
 
         @Override
-        protected Object createInstance(Class<?> clazz) {
-            try {
-                return Array.newInstance(clazz.getComponentType(), n);
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
+        protected ArrayCreateInfo createInstance(Map<String, String> data, StringBuilder ctx, Class<?> fieldType) {
+            ArrayCreateInfo info = new ArrayCreateInfo();
+            Class<?> arrayIntanceClass = getIntanceClass(data, ctx, fieldType);
+            String str = data.get(ctx.toString());
+            if (str != null) {
+                info.objectRefs = str.split(ARRAY_VALUE_SEPARATOR);
+            } else {
+                info.objectRefs = new String[0];
             }
+            info.newInstance = Array.newInstance(arrayIntanceClass.getComponentType(), info.objectRefs.length);
+            return info;
         }
 
         @Override
-        protected void unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, Object instance) {
-            try {
-                Object ret = clazz.newInstance();
-                int len = ctx.length();
-                Field[] fields = clazz.getFields();
-                for (Field field : fields) {
-                    ctx.setLength(len);
-                    ctx.append(field.getName());
-                    Class<?> type = field.getType();
-                    IMapUnserializer unserializer = getUnserializer(type, data, ctx);
-                    Object value = unserializer.unserializeFrom(data, ctx, objectMap, type);
-                    if (value == null) {
-                        continue;
-                    }
-                    field.set(ret, value);
-                }
-            } catch (IllegalArgumentException | IllegalAccessException | InstantiationException e) {
-                throw new RuntimeException(e);
+        protected void unserialize(Map<String, String> data, StringBuilder ctx, Map<String, Object> objectMap, ArrayCreateInfo info) {
+            Object[] value = (Object[]) info.newInstance;
+            Class<?> innerType = value.getClass().getComponentType();
+            for (int i = 0; i < info.objectRefs.length; i++) {
+                StringBuilder innerCtx = new StringBuilder(info.objectRefs[i]);
+                IMapUnserializer unserializer = getUnserializer(innerType, data, innerCtx);
+                value[i] = unserializer.unserializeFrom(data, innerCtx, objectMap, innerType);
             }
         }
     }
@@ -1191,7 +1209,7 @@ public final class ToMapSerializer {
     }
 
     private static Object unserialize(Map<String, String> data) {
-        return OBJECT_UNSERIALIZER.unserializeFrom(data, new StringBuilder(), new HashMap<String, Object>(), null);
+        return OBJECT_UNSERIALIZER.unserializeFrom(data, null, new HashMap<String, Object>(), null);
     }
 
     public static Object fromJson(String json) {
