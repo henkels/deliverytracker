@@ -2,11 +2,13 @@ package br.com.deliverytracker.receivingmanager;
 
 import android.util.Log;
 
+import com.google.android.gms.auth.api.credentials.PasswordSpecification;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.util.HashMap;
 
+import br.com.deliverytracker.commom.TokenData;
 import br.com.deliverytracker.commom.XMPPMessage;
 import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
@@ -50,11 +52,9 @@ public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceId
      */
     private void sendRegistrationToServer(String token) {
         XMPPMessage msg = new XMPPMessage();
-        msg.
-        HashMap<String, String> msg = new HashMap<>();
-        msg.put("Token", token);
-        msg.put("key1", "data1");
-        msg.put("key2", "data2");
+        TokenData data = new TokenData();
+        data.token = token;
+        msg.data = data;
         MessageSender.SendMessage(msg);
     }
 
