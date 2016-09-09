@@ -27,6 +27,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.deliverytracker.commom.TokenData;
+import br.com.deliverytracker.commom.XMPPMessage;
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
 import br.com.deliverytracker.receivingmanager.dao.DataloaderFacory;
 import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
@@ -77,11 +79,11 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                String val = FirebaseInstanceId.getInstance().getToken();
-                Map<String, String> msg = new HashMap<>();
-                msg.put("TOKEN", val);
-                msg.put("DATA1", "VALUE1");
-                MessageSender.SendMessage(msg);
+                XMPPMessage message = new XMPPMessage();
+                TokenData tokenData = new TokenData();
+                tokenData.token = FirebaseInstanceId.getInstance().getToken();
+                message.data = tokenData;
+                MessageSender.SendMessage(message);
             }
         });
 
