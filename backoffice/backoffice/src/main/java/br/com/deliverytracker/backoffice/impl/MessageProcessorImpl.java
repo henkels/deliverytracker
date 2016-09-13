@@ -8,6 +8,7 @@ public class MessageProcessorImpl implements MessageProcessor {
 
 	@Override
 	public void processMessage(XMPPMessage message, MessageSender messageSender) {
+	    //TODO aqui
 		System.out.println(message);
 	}
 

@@ -1227,7 +1227,7 @@ public final class ToMapSerializer {
         return OBJECT_UNSERIALIZER;
     }
 
-    private static Object unserialize(Map<String, String> data) {
+    public static Object unserialize(Map<String, String> data) {
         return OBJECT_UNSERIALIZER.unserializeFrom(data, new StringBuilder(), new HashMap<String, Object>(), null);
     }
 

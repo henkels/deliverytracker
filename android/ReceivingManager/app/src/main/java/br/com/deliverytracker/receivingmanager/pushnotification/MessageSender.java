@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import br.com.deliverytracker.commom.MapSerializer;
+import br.com.deliverytracker.commom.ToMapSerializer;
 import br.com.deliverytracker.commom.XMPPMessage;
 
 /**
@@ -21,9 +22,11 @@ public class MessageSender {
     public static void SendMessage(XMPPMessage message) {
         RemoteMessage.Builder builder = new RemoteMessage.Builder(SENDER_ID) //
                 .setMessageId(Integer.toString(msgId.incrementAndGet()));
-        Map<String, String> msgData = MapSerializer.serialize(message);
-        for (Map.Entry<String, String> entry : msgData.entrySet()) {
-            builder = builder.addData(entry.getKey(), entry.getValue());
+        if (message.data != null) {
+            Map<String, String> msgData = ToMapSerializer.serialize(message.data);
+            for (Map.Entry<String, String> entry : msgData.entrySet()) {
+                builder = builder.addData(entry.getKey(), entry.getValue());
+            }
         }
         FirebaseMessaging fm = FirebaseMessaging.getInstance();
         fm.send(builder.build());
