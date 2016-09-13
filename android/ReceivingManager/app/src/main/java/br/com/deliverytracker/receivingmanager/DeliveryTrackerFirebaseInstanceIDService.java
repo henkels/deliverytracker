@@ -1,14 +1,25 @@
-package br.com.deliverytracker.receivingmanager.pushnotification;
+package br.com.deliverytracker.receivingmanager;
 
 import android.util.Log;
 
+import com.google.android.gms.auth.api.credentials.PasswordSpecification;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+
+import java.util.HashMap;
+
+import br.com.deliverytracker.commom.TokenData;
+import br.com.deliverytracker.commom.XMPPMessage;
+import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
 /**
  * Created by tarcisio on 28/07/16.
  */
 public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceIdService {
+
+    public DeliveryTrackerFirebaseInstanceIDService() {
+        super();
+    }
 
     private static final String TAG = "MyFirebaseIIDService";
 
@@ -33,14 +44,18 @@ public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceId
 
     /**
      * Persist token to third-party servers.
-     *
+     * <p/>
      * Modify this method to associate the user's FCM InstanceID token with any server-side account
      * maintained by your application.
      *
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // TODO: Implement this method to send token to your app server.
+        XMPPMessage msg = new XMPPMessage();
+        TokenData data = new TokenData();
+        data.token = token;
+        msg.data = data;
+        MessageSender.SendMessage(msg);
     }
 
 }

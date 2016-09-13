@@ -1,4 +1,4 @@
-package br.com.deliverytracker.receivingmanager.pushnotification;
+package br.com.deliverytracker.receivingmanager;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +19,10 @@ import br.com.deliverytracker.receivingmanager.R;
  * Created by tarcisio on 28/07/16.
  */
 public class DeliveryTrackerFirebaseMessagingService extends FirebaseMessagingService {
+
+    public DeliveryTrackerFirebaseMessagingService(){
+        super();
+    }
 
     private static final String TAG = "MyFirebaseMsgService";
 
@@ -72,7 +76,7 @@ public class DeliveryTrackerFirebaseMessagingService extends FirebaseMessagingSe
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_late_img)
+                .setSmallIcon(R.drawable.ic_late)
                 .setContentTitle("FCM Message")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
