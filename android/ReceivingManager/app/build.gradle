@@ -25,6 +25,7 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/maven/br.com.deliverytracker.commom/protocol/pom.properties'
+        exclude 'META-INF/maven/br.com.deliverytracker.commom/protocol/pom.xml'
     }
 }
 
