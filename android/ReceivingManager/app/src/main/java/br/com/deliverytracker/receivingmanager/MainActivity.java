@@ -19,9 +19,11 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
@@ -38,6 +40,8 @@ import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnL
 import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
+
+    private static final int RC_SIGN_IN = 9001;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -87,6 +91,18 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             }
         });
 
+        startActivityForResult(
+                // Get an instance of AuthUI based on the default app
+                AuthUI.getInstance()//
+                 .createSignInIntentBuilder().build(),
+                RC_SIGN_IN);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            // already signed in
+        } else {
+            // not signed in
+        }
     }
 
     private void checkGoolePlayServicesApi() {
