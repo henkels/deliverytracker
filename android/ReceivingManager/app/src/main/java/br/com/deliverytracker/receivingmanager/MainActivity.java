@@ -91,17 +91,15 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             }
         });
 
-        startActivityForResult(
-                // Get an instance of AuthUI based on the default app
-                AuthUI.getInstance()//
-                 .createSignInIntentBuilder().build(),
-                RC_SIGN_IN);
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             // already signed in
         } else {
             // not signed in
+            startActivityForResult(
+                    // Get an instance of AuthUI based on the default app
+                    AuthUI.getInstance().createSignInIntentBuilder().build(),
+                    RC_SIGN_IN);
         }
     }
 
