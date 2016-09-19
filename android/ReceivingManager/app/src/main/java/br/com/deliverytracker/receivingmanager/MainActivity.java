@@ -98,7 +98,13 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             // not signed in
             startActivityForResult(
                     // Get an instance of AuthUI based on the default app
-                    AuthUI.getInstance().createSignInIntentBuilder().build(),
+                    AuthUI.getInstance().//
+                            createSignInIntentBuilder().//
+                            setProviders(
+                            AuthUI.EMAIL_PROVIDER,
+                            AuthUI.GOOGLE_PROVIDER,
+                            AuthUI.FACEBOOK_PROVIDER).
+                            build(),
                     RC_SIGN_IN);
         }
     }
