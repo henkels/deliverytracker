@@ -1,5 +1,6 @@
 package br.com.deliverytracker.receivingmanager;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,6 +25,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
@@ -91,22 +93,27 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             }
         });
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            // already signed in
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            setCurrentUser();
         } else {
             // not signed in
             startActivityForResult(
                     // Get an instance of AuthUI based on the default app
-                    AuthUI.getInstance().//
-                            createSignInIntentBuilder().//
-                            setProviders(
-                            AuthUI.EMAIL_PROVIDER,
-                            AuthUI.GOOGLE_PROVIDER,
-                            AuthUI.FACEBOOK_PROVIDER).
-                            build(),
+                    AuthUI.getInstance() //
+                            .createSignInIntentBuilder() //
+                            .setProviders(
+                                    AuthUI.EMAIL_PROVIDER,
+                                    AuthUI.GOOGLE_PROVIDER//,AuthUI.FACEBOOK_PROVIDER
+                            )//
+                            .build(),
                     RC_SIGN_IN);
         }
+    }
+
+    private void setCurrentUser() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
     }
 
     private void checkGoolePlayServicesApi() {
@@ -151,6 +158,22 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
     public void onListFragmentInteraction(IncommingPackage item) {
         //
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in!
+                setCurrentUser();
+                AuthUI.getInstance().
+                //startActivity(new Intent(this, WelcomeBackActivity.class));
+                //finish();
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                // "sign in" again, or show a message
+            }
+        }
     }
 
     /**
