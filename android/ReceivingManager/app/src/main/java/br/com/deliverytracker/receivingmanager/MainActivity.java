@@ -98,16 +98,16 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             setCurrentUser();
         } else {
             // not signed in
-            startActivityForResult(
-                    // Get an instance of AuthUI based on the default app
-                    AuthUI.getInstance() //
-                            .createSignInIntentBuilder() //
-                            .setProviders(
-                                    AuthUI.EMAIL_PROVIDER,
-                                    AuthUI.GOOGLE_PROVIDER//,AuthUI.FACEBOOK_PROVIDER
-                            )//
-                            .build(),
-                    RC_SIGN_IN);
+
+            // Get an instance of AuthUI based on the default app
+            Intent intent = AuthUI.getInstance() //
+                    .createSignInIntentBuilder() //
+                    .setProviders(
+                            AuthUI.EMAIL_PROVIDER,
+                            AuthUI.GOOGLE_PROVIDER//,AuthUI.FACEBOOK_PROVIDER
+                    )//
+                    .build();
+            startActivityForResult(intent, RC_SIGN_IN);
         }
     }
 
@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             if (resultCode == RESULT_OK) {
                 // user is signed in!
                 setCurrentUser();
+                data.
                 //AuthUI.getInstance().
                 //startActivity(new Intent(this, WelcomeBackActivity.class));
                 //finish();
