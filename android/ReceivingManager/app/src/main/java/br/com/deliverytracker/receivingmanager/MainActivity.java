@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             }
         });
 
+        FirebaseAuth.getInstance().signOut();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             setCurrentUser();
         } else {
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             if (resultCode == RESULT_OK) {
                 // user is signed in!
                 setCurrentUser();
-                AuthUI.getInstance().
+                //AuthUI.getInstance().
                 //startActivity(new Intent(this, WelcomeBackActivity.class));
                 //finish();
             } else {
