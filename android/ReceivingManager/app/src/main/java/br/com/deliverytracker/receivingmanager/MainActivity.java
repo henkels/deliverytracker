@@ -31,7 +31,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.deliverytracker.commom.TokenData;
 import br.com.deliverytracker.commom.XMPPMessage;
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
 import br.com.deliverytracker.receivingmanager.dao.DataloaderFacory;
@@ -85,11 +84,11 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                XMPPMessage message = new XMPPMessage();
-                TokenData tokenData = new TokenData();
-                tokenData.token = FirebaseInstanceId.getInstance().getToken();
-                message.data = tokenData;
-                MessageSender.SendMessage(message);
+//                XMPPMessage message = new XMPPMessage();
+//                TokenData tokenData = new TokenData();
+//                tokenData.token = FirebaseInstanceId.getInstance().getToken();
+//                message.data = tokenData;
+//                MessageSender.SendMessage(message);
             }
         });
 
@@ -167,10 +166,6 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             if (resultCode == RESULT_OK) {
                 // user is signed in!
                 setCurrentUser();
-                data.
-                //AuthUI.getInstance().
-                //startActivity(new Intent(this, WelcomeBackActivity.class));
-                //finish();
             } else {
                 // user is not signed in. Maybe just wait for the user to press
                 // "sign in" again, or show a message

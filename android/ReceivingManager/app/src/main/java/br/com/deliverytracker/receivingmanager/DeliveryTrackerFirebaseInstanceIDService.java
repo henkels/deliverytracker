@@ -3,13 +3,15 @@ package br.com.deliverytracker.receivingmanager;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.credentials.PasswordSpecification;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.util.HashMap;
 
-import br.com.deliverytracker.commom.TokenData;
 import br.com.deliverytracker.commom.XMPPMessage;
+import br.com.deliverytracker.commom.server.LinkUserToDevice;
 import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
 /**
@@ -17,11 +19,10 @@ import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
  */
 public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
-    public DeliveryTrackerFirebaseInstanceIDService() {
+    private DeliveryTrackerFirebaseInstanceIDService() {
         super();
+        onTokenRefresh();
     }
-
-    private static final String TAG = "MyFirebaseIIDService";
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -32,30 +33,8 @@ public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceId
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
-        sendRegistrationToServer(refreshedToken);
+        DeviceManager.INSTANCE.linkDevice();
     }
     // [END refresh_token]
-
-    /**
-     * Persist token to third-party servers.
-     * <p/>
-     * Modify this method to associate the user's FCM InstanceID token with any server-side account
-     * maintained by your application.
-     *
-     * @param token The new token.
-     */
-    private void sendRegistrationToServer(String token) {
-        XMPPMessage msg = new XMPPMessage();
-        TokenData data = new TokenData();
-        data.token = token;
-        msg.data = data;
-        MessageSender.SendMessage(msg);
-    }
 
 }
