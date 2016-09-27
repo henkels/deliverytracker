@@ -111,9 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     }
 
     private void setCurrentUser() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-
+        DeviceManager.INSTANCE.linkDevice();
     }
 
     private void checkGoolePlayServicesApi() {
@@ -163,7 +161,8 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
+            //if (resultCode == RESULT_OK) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 // user is signed in!
                 setCurrentUser();
             } else {
