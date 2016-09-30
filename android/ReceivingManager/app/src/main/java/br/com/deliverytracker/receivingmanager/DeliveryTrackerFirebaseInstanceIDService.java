@@ -19,7 +19,7 @@ import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
  */
 public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
-    private DeliveryTrackerFirebaseInstanceIDService() {
+    public DeliveryTrackerFirebaseInstanceIDService() {
         super();
         onTokenRefresh();
     }
