@@ -22,7 +22,8 @@ public class DataLoaderImpl extends SQLiteOpenHelper implements DataLoader {
 
     private static int V20160717 = 20160717;
     private static int V20160721 = 20160721;
-    private static int VCURRENT = V20160721;
+    private static int V20161001 = 20161001;
+    private static int VCURRENT = V20161001;
 
     private static final String DATABASE_NAME = "DeliveryTracker.Receiver";
 
@@ -68,7 +69,11 @@ public class DataLoaderImpl extends SQLiteOpenHelper implements DataLoader {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("drop table incomminPackages");
+        try {
+            db.execSQL("drop table incomminPackages");
+        } catch (Exception e){
+
+        }
         db.execSQL(
                 "create table incomminPackages " +
                         "(id integer primary key, description text, sender text, transporter text, senddate INTEGER, initialeta INTEGER,  currenteta INTEGER, currentlocation blob, lastatualizationtime INTEGER)"

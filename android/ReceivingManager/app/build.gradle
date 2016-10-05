@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release_sign {
+            storeFile file('/home/tarcisio/git/deliverytracker/keystore/deliverytracker.keystore')
+            keyAlias 'deliverytracker'
+            keyPassword 'deliverytracker'
+            storePassword 'deliverytracker'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
-
     defaultConfig {
         applicationId "br.com.deliverytracker.receivingmanager"
         minSdkVersion 16
@@ -15,9 +22,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release_sign
+        }
+        debug {
+            signingConfig signingConfigs.release_sign
         }
     }
-
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
