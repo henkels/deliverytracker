@@ -18,6 +18,7 @@ public class MessageProcessorImpl implements MessageProcessor, ServerMessageVisi
     @Override
     public void visit(LinkUserToDevice msg) {
         System.out.println(String.format("User %s linked to device %s", msg.userMail, msg.deviceID));
+        new 
     }
 
 }
