@@ -15,7 +15,8 @@ import br.com.deliverytracker.commom.XMPPMessage;
  */
 public class MessageSender {
 
-    private static final String SENDER_ID = "497175095084@gcm.googleapis.com";
+    private static final String FIREBASE_SENDER_ID = "611076071574";
+    private static final String SENDER_ID = FIREBASE_SENDER_ID + "@gcm.googleapis.com";
 
     private static final AtomicInteger msgId = new AtomicInteger();
 

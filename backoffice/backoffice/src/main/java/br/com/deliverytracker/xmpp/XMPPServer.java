@@ -55,8 +55,10 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
     private static final String SERVICE_NAME = "gcm.googleapis.com";
 
-    private static final String USER_NAME = "497175095084@gcm.googleapis.com";
-    private static final String PASSWORD = "AIzaSyD4P94m9lVzUG73GI7Q5dRqZVgxg4Tq-Qo";
+    private static final String FIREBASE_SENDER_ID = "611076071574";
+    private static final String FIREBASE_SERVER_KEY = "AIzaSyB6AqOLfP4YkfgMW75YVvSzNGRuy95f-Fw";
+    private static final String USER_NAME = FIREBASE_SENDER_ID + "@gcm.googleapis.com";
+    private static final String PASSWORD = FIREBASE_SERVER_KEY;
 
     private final Map<String, XMPPMessage> pendingMessages = new ConcurrentHashMap<>();
 
@@ -288,18 +290,18 @@ public class XMPPServer implements StanzaListener, MessageSender {
             @SuppressWarnings("unchecked")
             Map<String, Object> map = gson.fromJson(json, LinkedHashMap.class);
             XMPPMessage message = new XMPPMessage();
-            message.message_id = fromObject( map.get(XMPPMessage.MESSAGE_ID));
-            message.message_type = fromObject( map.get(XMPPMessage.MESSAGE_TYPE));
-            message.from = fromObject( map.get(XMPPMessage.FROM));
-            String str = fromObject( map.get(XMPPMessage.TIME_TO_LIVE));
-            if (str!=null){
-                message.time_to_live = (int)Double.parseDouble(str);
+            message.message_id = fromObject(map.get(XMPPMessage.MESSAGE_ID));
+            message.message_type = fromObject(map.get(XMPPMessage.MESSAGE_TYPE));
+            message.from = fromObject(map.get(XMPPMessage.FROM));
+            String str = fromObject(map.get(XMPPMessage.TIME_TO_LIVE));
+            if (str != null) {
+                message.time_to_live = (int) Double.parseDouble(str);
             }
-            message.error = fromObject( map.get(XMPPMessage.ERROR));
-            message.control_type = fromObject( map.get(XMPPMessage.CONTROL_TYPE));
+            message.error = fromObject(map.get(XMPPMessage.ERROR));
+            message.control_type = fromObject(map.get(XMPPMessage.CONTROL_TYPE));
             @SuppressWarnings("unchecked")
             Map<String, String> dataMap = (Map<String, String>) map.get(XMPPMessage.DATA);
-            message.data =ToMapSerializer.unserialize(dataMap);
+            message.data = ToMapSerializer.unserialize(dataMap);
             return new GcmPacketExtension(message);
         }
     }

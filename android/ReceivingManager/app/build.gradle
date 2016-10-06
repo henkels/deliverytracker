@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         release_sign {
-            storeFile file('/home/tarcisio/git/deliverytracker/keystore/deliverytracker.keystore')
+            storeFile file('/home/tarcisio/git/deliverytracker/keystore/deliverytracker.jks')
             keyAlias 'deliverytracker'
             keyPassword 'deliverytracker'
             storePassword 'deliverytracker'
@@ -17,6 +17,7 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.release_sign
     }
     buildTypes {
         release {
@@ -37,6 +38,8 @@ android {
         exclude 'META-INF/maven/br.com.deliverytracker.commom/protocol/pom.properties'
         exclude 'META-INF/maven/br.com.deliverytracker.commom/protocol/pom.xml'
     }
+    productFlavors {
+    }
 }
 
 repositories {
@@ -55,8 +58,8 @@ dependencies {
     compile 'br.com.deliverytracker.commom:protocol:1.0.0.0'
     /* google services */
     compile 'com.google.android.gms:play-services:9.6.1'
-    compile 'com.google.firebase:firebase-messaging:9.6.0'
-    compile 'com.google.firebase:firebase-auth:9.6.0'
+    compile 'com.google.firebase:firebase-messaging:9.6.1'
+    compile 'com.google.firebase:firebase-auth:9.6.1'
     compile 'com.firebaseui:firebase-ui-auth:0.6.0'
 }
 
