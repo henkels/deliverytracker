@@ -323,7 +323,37 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
         @Override
         public String toXML() {
-            return String.format("<%s xmlns=\"%s\">%s</%s>", GCM_ELEMENT_NAME, GCM_NAMESPACE, StringUtils.escapeForXML(ToMapSerializer.toJson(message)), GCM_ELEMENT_NAME);
+            return String.format("<%s xmlns=\"%s\">%s</%s>", GCM_ELEMENT_NAME, GCM_NAMESPACE, StringUtils.escapeForXML(buildGoogleMobileDataJson()), GCM_ELEMENT_NAME);
+        }
+
+        private String buildGoogleMobileDataJson() {
+            StringBuilder sb = new StringBuilder();
+            //{
+            sb.append("{\n");
+            //"to":"REGISTRATION_ID"
+            sb.append("  \"to\": \"");
+            sb.append(message.to);
+            sb.append("\",\n");
+            //"message_id":"m-1366082849205" 
+            sb.append("  \"message_id\": \"");
+            sb.append(message.message_id);
+            sb.append("\",\n");
+            //"data":
+            //{
+            //      "hello":"world",
+            //}
+            sb.append("  \"data\": \n");
+            sb.append(ToMapSerializer.toJson(message.data));
+            sb.append(",\n");
+            //"time_to_live":"600",
+            sb.append("  \"time_to_live\": \"");
+            sb.append(message.time_to_live);
+            sb.append("\",\n");
+            //"delay_while_idle": true/false,
+            sb.append("  \"delay_while_idle\": \"false\",\n");
+            //"delivery_receipt_requested": true/false
+            sb.append("  \"delivery_receipt_requested\": \"false\"\n}");
+            return sb.toString();
         }
 
         public Stanza toStanza() {
