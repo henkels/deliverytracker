@@ -301,7 +301,9 @@ public class XMPPServer implements StanzaListener, MessageSender {
             message.control_type = fromObject(map.get(XMPPMessage.CONTROL_TYPE));
             @SuppressWarnings("unchecked")
             Map<String, String> dataMap = (Map<String, String>) map.get(XMPPMessage.DATA);
-            message.data = ToMapSerializer.unserialize(dataMap);
+            if (dataMap != null) {
+                message.data = ToMapSerializer.unserialize(dataMap);
+            }
             return new GcmPacketExtension(message);
         }
     }

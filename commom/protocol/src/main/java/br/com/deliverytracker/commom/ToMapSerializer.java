@@ -2,6 +2,7 @@ package br.com.deliverytracker.commom;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -110,6 +111,9 @@ public final class ToMapSerializer {
             int len = ctx.length();
             Field[] fields = object.getClass().getFields();
             for (Field field : fields) {
+                if (Modifier.isStatic(field.getModifiers()) | Modifier.isFinal(field.getModifiers())) {
+                    continue;
+                }
                 ctx.setLength(len);
                 ctx.append(field.getName());
                 try {

@@ -6,7 +6,10 @@ public class XMPPMessage {
     public String message_id;
     public static final String MESSAGE_TYPE = "message_type";
     public String message_type;
-    //	public String to;
+
+    public static final String TO = "to";
+    public String to;
+
     public static final String FROM = "from";
     public String from;
     public static final String TIME_TO_LIVE = "time_to_live";
