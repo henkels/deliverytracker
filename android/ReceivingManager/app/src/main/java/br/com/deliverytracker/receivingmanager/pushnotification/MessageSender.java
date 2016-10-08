@@ -6,7 +6,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import br.com.deliverytracker.commom.MapSerializer;
 import br.com.deliverytracker.commom.ToMapSerializer;
 import br.com.deliverytracker.commom.XMPPMessage;
 

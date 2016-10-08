@@ -342,17 +342,19 @@ public class XMPPServer implements StanzaListener, MessageSender {
             //{
             //      "hello":"world",
             //}
-            sb.append("  \"data\": \n");
-            sb.append(ToMapSerializer.toJson(message.data));
-            sb.append(",\n");
+            if (message.data != null) {
+                sb.append("  \"data\": \n");
+                sb.append(ToMapSerializer.toJson(message.data));
+                sb.append(",\n");
+            }
             //"time_to_live":"600",
-            sb.append("  \"time_to_live\": \"");
+            sb.append("  \"time_to_live\": ");
             sb.append(message.time_to_live);
-            sb.append("\",\n");
+            sb.append(",\n");
             //"delay_while_idle": true/false,
-            sb.append("  \"delay_while_idle\": \"false\",\n");
+            sb.append("  \"delay_while_idle\": false,\n");
             //"delivery_receipt_requested": true/false
-            sb.append("  \"delivery_receipt_requested\": \"false\"\n}");
+            sb.append("  \"delivery_receipt_requested\": true\n}");
             return sb.toString();
         }
 
