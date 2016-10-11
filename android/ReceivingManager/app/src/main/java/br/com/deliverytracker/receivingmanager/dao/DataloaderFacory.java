@@ -2,7 +2,9 @@ package br.com.deliverytracker.receivingmanager.dao;
 
 import android.content.Context;
 
-import br.com.deliverytracker.receivingmanager.dao.SqlLite.DataLoaderImpl;
+import br.com.deliverytracker.receivingmanager.dao.Firebase.DataLoaderImpl;
+
+//import br.com.deliverytracker.receivingmanager.dao.SqlLite.DataLoaderImpl;
 
 /**
  * Created by tarcisio on 24/07/16.
@@ -10,6 +12,6 @@ import br.com.deliverytracker.receivingmanager.dao.SqlLite.DataLoaderImpl;
 public class DataloaderFacory {
 
     public static DataLoader getInstance(Context context) {
-        return new DataLoaderImpl(context);
+        return new DataLoaderImpl();
     }
 }
