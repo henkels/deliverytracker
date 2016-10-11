@@ -1,8 +1,13 @@
 package br.com.deliverytracker.receivingmanager;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -18,16 +23,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.deliverytracker.commom.TokenData;
 import br.com.deliverytracker.commom.XMPPMessage;
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
 import br.com.deliverytracker.receivingmanager.dao.DataloaderFacory;
@@ -39,13 +51,15 @@ import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
 
+    private static final int RC_SIGN_IN = 9001;
+
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -53,6 +67,11 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +98,48 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                XMPPMessage message = new XMPPMessage();
-                TokenData tokenData = new TokenData();
-                tokenData.token = FirebaseInstanceId.getInstance().getToken();
-                message.data = tokenData;
-                MessageSender.SendMessage(message);
+//                XMPPMessage message = new XMPPMessage();
+//                TokenData tokenData = new TokenData();
+//                tokenData.token = FirebaseInstanceId.getInstance().getToken();
+//                message.data = tokenData;
+//                MessageSender.SendMessage(message);
             }
         });
 
+//        FirebaseAuth.getInstance().signOut();
+        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                if (currentUser != null) {
+                    Toast.makeText(getApplicationContext(), currentUser.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            setCurrentUser();
+        } else {
+            // not signed in
+
+            // Get an instance of AuthUI based on the default app
+            Intent intent = AuthUI.getInstance() //
+                    .createSignInIntentBuilder() //
+                    .setProviders(
+                            AuthUI.EMAIL_PROVIDER,
+                            AuthUI.GOOGLE_PROVIDER//,AuthUI.FACEBOOK_PROVIDER
+                    )//
+                    .setIsSmartLockEnabled(!BuildConfig.DEBUG)//
+                    .build();
+            startActivityForResult(intent, RC_SIGN_IN);
+        }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void setCurrentUser() {
+        DeviceManager.INSTANCE.linkDevice();
     }
 
     private void checkGoolePlayServicesApi() {
@@ -131,6 +184,56 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
     public void onListFragmentInteraction(IncommingPackage item) {
         //
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            //if (resultCode == RESULT_OK) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                // user is signed in!
+                setCurrentUser();
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                // "sign in" again, or show a message
+            }
+        }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
     /**

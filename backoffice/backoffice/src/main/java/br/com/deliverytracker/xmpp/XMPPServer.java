@@ -55,8 +55,10 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
     private static final String SERVICE_NAME = "gcm.googleapis.com";
 
-    private static final String USER_NAME = "497175095084@gcm.googleapis.com";
-    private static final String PASSWORD = "AIzaSyD4P94m9lVzUG73GI7Q5dRqZVgxg4Tq-Qo";
+    private static final String FIREBASE_SENDER_ID = "611076071574";
+    private static final String FIREBASE_SERVER_KEY = "AIzaSyB6AqOLfP4YkfgMW75YVvSzNGRuy95f-Fw";
+    private static final String USER_NAME = FIREBASE_SENDER_ID + "@gcm.googleapis.com";
+    private static final String PASSWORD = FIREBASE_SERVER_KEY;
 
     private final Map<String, XMPPMessage> pendingMessages = new ConcurrentHashMap<>();
 
@@ -288,18 +290,20 @@ public class XMPPServer implements StanzaListener, MessageSender {
             @SuppressWarnings("unchecked")
             Map<String, Object> map = gson.fromJson(json, LinkedHashMap.class);
             XMPPMessage message = new XMPPMessage();
-            message.message_id = fromObject( map.get(XMPPMessage.MESSAGE_ID));
-            message.message_type = fromObject( map.get(XMPPMessage.MESSAGE_TYPE));
-            message.from = fromObject( map.get(XMPPMessage.FROM));
-            String str = fromObject( map.get(XMPPMessage.TIME_TO_LIVE));
-            if (str!=null){
-                message.time_to_live = (int)Double.parseDouble(str);
+            message.message_id = fromObject(map.get(XMPPMessage.MESSAGE_ID));
+            message.message_type = fromObject(map.get(XMPPMessage.MESSAGE_TYPE));
+            message.from = fromObject(map.get(XMPPMessage.FROM));
+            String str = fromObject(map.get(XMPPMessage.TIME_TO_LIVE));
+            if (str != null) {
+                message.time_to_live = (int) Double.parseDouble(str);
             }
-            message.error = fromObject( map.get(XMPPMessage.ERROR));
-            message.control_type = fromObject( map.get(XMPPMessage.CONTROL_TYPE));
+            message.error = fromObject(map.get(XMPPMessage.ERROR));
+            message.control_type = fromObject(map.get(XMPPMessage.CONTROL_TYPE));
             @SuppressWarnings("unchecked")
             Map<String, String> dataMap = (Map<String, String>) map.get(XMPPMessage.DATA);
-            message.data =ToMapSerializer.unserialize(dataMap);
+            if (dataMap != null) {
+                message.data = ToMapSerializer.unserialize(dataMap);
+            }
             return new GcmPacketExtension(message);
         }
     }
@@ -319,7 +323,39 @@ public class XMPPServer implements StanzaListener, MessageSender {
 
         @Override
         public String toXML() {
-            return String.format("<%s xmlns=\"%s\">%s</%s>", GCM_ELEMENT_NAME, GCM_NAMESPACE, StringUtils.escapeForXML(ToMapSerializer.toJson(message)), GCM_ELEMENT_NAME);
+            return String.format("<%s xmlns=\"%s\">%s</%s>", GCM_ELEMENT_NAME, GCM_NAMESPACE, StringUtils.escapeForXML(buildGoogleMobileDataJson()), GCM_ELEMENT_NAME);
+        }
+
+        private String buildGoogleMobileDataJson() {
+            StringBuilder sb = new StringBuilder();
+            //{
+            sb.append("{\n");
+            //"to":"REGISTRATION_ID"
+            sb.append("  \"to\": \"");
+            sb.append(message.to);
+            sb.append("\",\n");
+            //"message_id":"m-1366082849205" 
+            sb.append("  \"message_id\": \"");
+            sb.append(message.message_id);
+            sb.append("\",\n");
+            //"data":
+            //{
+            //      "hello":"world",
+            //}
+            if (message.data != null) {
+                sb.append("  \"data\": \n");
+                sb.append(ToMapSerializer.toJson(message.data));
+                sb.append(",\n");
+            }
+            //"time_to_live":"600",
+            sb.append("  \"time_to_live\": ");
+            sb.append(message.time_to_live);
+            sb.append(",\n");
+            //"delay_while_idle": true/false,
+            sb.append("  \"delay_while_idle\": false,\n");
+            //"delivery_receipt_requested": true/false
+            sb.append("  \"delivery_receipt_requested\": true\n}");
+            return sb.toString();
         }
 
         public Stanza toStanza() {

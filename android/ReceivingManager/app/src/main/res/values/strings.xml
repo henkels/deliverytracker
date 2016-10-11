@@ -2,4 +2,9 @@
     <string name="app_name">Receiving Manager</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string-array name="google_permissions">
+        <!-- Request permission to read the user's Google Drive files -->
+        <item>profile</item>
+        <item>email</item>
+    </string-array>
 </resources>
