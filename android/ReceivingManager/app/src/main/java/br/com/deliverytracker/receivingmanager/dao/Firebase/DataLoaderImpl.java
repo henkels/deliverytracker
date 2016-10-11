@@ -1,11 +1,14 @@
 package br.com.deliverytracker.receivingmanager.dao.Firebase;
 
+import android.location.Location;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,14 +37,14 @@ public class DataLoaderImpl implements DataLoader {
         //String key = mDatabase.child(PACKAGES_NODE).push().getKey();
         Package _package = new Package();
 
-                _package. description="desc";
+        _package.description = "desc";
         _package.sender = "sender1";
-        _package.transporter="tr1";
-        _package.senddate=0;
-        _package.initialEta=1;
-        _package. currentEta=2;
-        _package. location=new LocationData();
-        _package. lastAtualizationTime=3;
+        _package.transporter = "tr1";
+        _package.senddate = 0;
+        _package.initialEta = 1;
+        _package.currentEta = 2;
+        _package.location = new LocationData();
+        _package.lastAtualizationTime = 3;
 
         //Map<String, Object> postValues = post.toMap();
 
@@ -49,26 +52,67 @@ public class DataLoaderImpl implements DataLoader {
         //childUpdates.put("/posts/" + key, postValues);
         childUpdates.put(PACKAGES_NODE, _package);
 
-        mDatabase.updateChildren(childUpdates);    }
+        mDatabase.updateChildren(childUpdates);
+    }
 
     public List<IncommingPackage> loadIncommingPackages(int count) {
+        List<IncommingPackage> ret = new ArrayList<>();
         Query query = mDatabase.child(PACKAGES_NODE)//
-                .limitToFirst(count)//
+                .limitToFirst(count);//
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+             final  Package _package = dataSnapshot.getValue(Package.class);
+                IncommingPackage incommingPackage = new IncommingPackage() {
+                    @Override
+                    public String getDescription() {
+                        return _package.description;
+                    }
 
-         .addListenerForSingleValueEvent(new ChildEventListener() {
-             public void onChildAdded(DataSnapshot var1, String var2){};
+                    @Override
+                    public String getSender() {
+                        return _package.sender;
+                    }
 
-             public void onChildChanged(DataSnapshot var1, String var2){};
+                    @Override
+                    public String getTransporter() {
+                        return _package.transporter;
+                    }
 
-             public void onChildRemoved(DataSnapshot var1){};
+                    @Override
+                    public long getSenddate() {
+                        return _package.senddate;
+                    }
 
-             public void onChildMoved(DataSnapshot var1, String var2){};
+                    @Override
+                    public long getInitialEta() {
+                        return _package.initialEta;
+                    }
 
-             public void onCancelled(DatabaseError var1){};
+                    @Override
+                    public long getCurrentEta() {
+                        return _package.currentEta;
+                    }
 
-         });
+                    @Override
+                    public Location getCurrentLocation() {
+                        return null;
+                    }
 
-        return new ArrayList<>();
+                    @Override
+                    public long getLastAtualizationTime() {
+                        return _package.lastAtualizationTime;
+                    }
+                };
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return ret;
 
     }
 
