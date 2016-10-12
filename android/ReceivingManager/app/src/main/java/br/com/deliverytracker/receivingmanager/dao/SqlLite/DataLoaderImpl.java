@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import br.com.deliverytracker.receivingmanager.dao.DataBinder;
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
 import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 
@@ -71,7 +72,7 @@ public class DataLoaderImpl extends SQLiteOpenHelper implements DataLoader {
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         try {
             db.execSQL("drop table incomminPackages");
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
         db.execSQL(
@@ -169,6 +170,9 @@ public class DataLoaderImpl extends SQLiteOpenHelper implements DataLoader {
             c.close();
         }
         return ret;
+    }
+
+    public void bind(DataBinder<IncommingPackage> dataBinder, int count) {
     }
 
 

@@ -1,6 +1,5 @@
 package br.com.deliverytracker.commom.data;
 
-
 public class Package {
 
     public String description;
@@ -18,8 +17,8 @@ public class Package {
     public LocationData location;
 
     public long lastAtualizationTime;
-    
-    public Package(){
-        
+
+    public Package() {
+
     }
 }

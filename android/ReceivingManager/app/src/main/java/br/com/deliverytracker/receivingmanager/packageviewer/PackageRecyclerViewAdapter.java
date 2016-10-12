@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import br.com.deliverytracker.receivingmanager.R;
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
-import br.com.deliverytracker.receivingmanager.dao.DataloaderFacory;
+import br.com.deliverytracker.receivingmanager.dao.DataloaderFactory;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
 import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 
@@ -25,7 +25,7 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecyclerViewAdapter.ViewHolder> {
+public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecyclerViewAdapter.ViewHolder> implements ViewAdapterDataBinder.OnDataChangeListner {
 
     private final Context context;
     private final OnListFragmentInteractionListener listener;
@@ -37,7 +37,8 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
 
     private List<IncommingPackage> getValues() {
         if (values == null) {
-            values = DataloaderFacory.getInstance(context).loadIncommingPackages(NUM_ITENS);
+            values = new ArrayList<>();
+            DataloaderFactory.getInstance(context).bind(new ViewAdapterDataBinder<IncommingPackage>(values, this), NUM_ITENS);
             hasMore = values.size() == NUM_ITENS;
         }
         return values;
@@ -97,6 +98,11 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
     @Override
     public int getItemCount() {
         return getValues().size();
+    }
+
+    @Override
+    public void changed() {
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

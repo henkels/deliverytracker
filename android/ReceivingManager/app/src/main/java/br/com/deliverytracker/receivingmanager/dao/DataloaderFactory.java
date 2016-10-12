@@ -9,7 +9,7 @@ import br.com.deliverytracker.receivingmanager.dao.Firebase.DataLoaderImpl;
 /**
  * Created by tarcisio on 24/07/16.
  */
-public class DataloaderFacory {
+public class DataloaderFactory {
 
     public static DataLoader getInstance(Context context) {
         return new DataLoaderImpl();
