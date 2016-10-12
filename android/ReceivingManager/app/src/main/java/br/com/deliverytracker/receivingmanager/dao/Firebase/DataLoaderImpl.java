@@ -17,6 +17,7 @@ import java.util.Map;
 
 import br.com.deliverytracker.commom.data.LocationData;
 import br.com.deliverytracker.commom.data.Package;
+import br.com.deliverytracker.receivingmanager.dao.DataBinder;
 import br.com.deliverytracker.receivingmanager.dao.DataLoader;
 import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 
@@ -49,8 +50,10 @@ public class DataLoaderImpl implements DataLoader {
         //Map<String, Object> postValues = post.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
+        List<Package> packages = new ArrayList<>();
+        packages.add(_package);
         //childUpdates.put("/posts/" + key, postValues);
-        childUpdates.put(PACKAGES_NODE, _package);
+        childUpdates.put(PACKAGES_NODE, packages);
 
         mDatabase.updateChildren(childUpdates);
     }
@@ -62,7 +65,7 @@ public class DataLoaderImpl implements DataLoader {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-             final  Package _package = dataSnapshot.getValue(Package.class);
+                final Package _package = dataSnapshot.getValue(Package.class);
                 IncommingPackage incommingPackage = new IncommingPackage() {
                     @Override
                     public String getDescription() {
@@ -115,5 +118,12 @@ public class DataLoaderImpl implements DataLoader {
         return ret;
 
     }
+
+    public void bind(DataBinder<IncommingPackage> dataBinder, int count) {
+        Query query = mDatabase.child(PACKAGES_NODE)//
+                .limitToFirst(count);//
+        new DataBinderAdapter(query, Package.class, PackageToIncommingPackageDataMapper.INSTANCE, dataBinder);
+    }
+
 
 }
