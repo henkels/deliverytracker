@@ -28,6 +28,7 @@ public class MessageProcessorImpl implements MessageProcessor, ServerMessageVisi
         DeliveryInfo info = new DeliveryInfo();
         info.id = "01";
         info.description = "dx";
+        
         info.sender = "sd";
         info.transporter = "ti";
         info.senddate = 0;
