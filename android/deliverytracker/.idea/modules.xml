@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/deliverytracker.iml" filepath="$PROJECT_DIR$/deliverytracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/deliverytrackerlibrary/deliverytrackerlibrary.iml" filepath="$PROJECT_DIR$/deliverytrackerlibrary/deliverytrackerlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/receivingmanager/receivingmanager.iml" filepath="$PROJECT_DIR$/receivingmanager/receivingmanager.iml" />
+    </modules>
+  </component>
+</project>
