@@ -10,4 +10,5 @@ public interface DataLoader {
 
     void bind(DataBinder<IncommingPackage> dataBinder, int count);
 
+    void newSender(Sender sender);
 }

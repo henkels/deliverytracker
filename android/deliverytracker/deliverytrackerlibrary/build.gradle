@@ -39,3 +39,5 @@ dependencies {
     compile 'br.com.deliverytracker.commom:protocol:1.0.1'
 
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -19,6 +19,7 @@ import br.com.deliverytracker.commom.data.Package;
 import br.com.deliverytracker.dao.DataBinder;
 import br.com.deliverytracker.dao.DataLoader;
 import br.com.deliverytracker.dao.IncommingPackage;
+import br.com.deliverytracker.dao.Sender;
 
 /**
  * Created by tarcisio on 10/10/16.
@@ -129,6 +130,25 @@ public class DataLoaderImpl implements DataLoader {
                 .limitToFirst(count);//
         new DataBinderAdapter(query, Package.class, PackageToIncommingPackageDataMapper.INSTANCE, dataBinder);
     }
+
+    ;
+
+    // Sender
+    public void newSender(Sender sender) {
+        String key = mDatabase.child("senders").push().getKey();
+        Map<String, Object> postValues = sender.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/senders/" + key, postValues);
+
+        mDatabase.updateChildren(childUpdates);
+    }
+
+//    <T> public void bind(DataBinder<T> dataBinder, Class<T> clazz, int count) {
+//        Query query = mDatabase.child(PACKAGES_NODE)//
+//                .limitToFirst(count);//
+//        new DataBinderAdapter(query, Package.class, PackageToIncommingPackageDataMapper.INSTANCE, dataBinder);
+//    }
 
 
 }

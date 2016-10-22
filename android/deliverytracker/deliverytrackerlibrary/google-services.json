@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "611076071574",
+    "firebase_url": "https://delivery-tracker-cb0fc.firebaseio.com",
+    "project_id": "delivery-tracker-cb0fc",
+    "storage_bucket": "delivery-tracker-cb0fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611076071574:android:81dee141dce518e6",
+        "android_client_info": {
+          "package_name": "br.com.deliverytracker.receivingmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611076071574-vsm3sg4dmpjivgqcl5m3f8i5o0uepmg8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.deliverytracker.receivingmanager",
+            "certificate_hash": "426D94AED1F2981B5C09A6BCA055BDEFF991A37E"
+          }
+        },
+        {
+          "client_id": "611076071574-uugh4hhb9p02f8tp8kohj6j14s2m7a7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB29xT0fCUMy_VsMuHGlsfn3T-COgm23jU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611076071574-uugh4hhb9p02f8tp8kohj6j14s2m7a7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611076071574:android:7cd28d3e19369ad6",
+        "android_client_info": {
+          "package_name": "br.com.deliverytracker.deliverytrackerlibrary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611076071574-5k51srqp08bufgbe3oebrakb0dju85b1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.deliverytracker.deliverytrackerlibrary",
+            "certificate_hash": "426D94AED1F2981B5C09A6BCA055BDEFF991A37E"
+          }
+        },
+        {
+          "client_id": "611076071574-uugh4hhb9p02f8tp8kohj6j14s2m7a7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB29xT0fCUMy_VsMuHGlsfn3T-COgm23jU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611076071574-uugh4hhb9p02f8tp8kohj6j14s2m7a7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
