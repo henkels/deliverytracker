@@ -62,6 +62,7 @@ public abstract class AbstractDataLoadTest {
                         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (user != null) {
+                                Log.i("login", "done!");
                                 aint.set(1);
                             } else {
                                 aint.set(-1);
@@ -79,6 +80,7 @@ public abstract class AbstractDataLoadTest {
             if (val == -1) {
                 Assert.fail("We cant login in service!");
             }
+            Log.i("initilization", "done!");
             this.loader = buildDataLoader(InstrumentationRegistry.getContext());
         } catch (Exception e) {
             Log.d(">>>>>", ">>>>", e);
