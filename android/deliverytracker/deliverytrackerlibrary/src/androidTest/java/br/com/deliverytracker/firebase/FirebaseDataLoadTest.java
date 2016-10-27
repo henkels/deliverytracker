@@ -12,6 +12,7 @@ import org.junit.Test;
 import br.com.deliverytracker.AbstractDataLoadTest;
 import br.com.deliverytracker.dao.DataLoader;
 import br.com.deliverytracker.dao.Firebase.DataLoaderImpl;
+import br.com.deliverytracker.deliverytrackerlibrary.R;
 
 /**
  * Created by tarcisio on 14/10/16.
@@ -21,6 +22,9 @@ public class FirebaseDataLoadTest extends AbstractDataLoadTest {
 
     protected DataLoader buildDataLoader(Context ctx) {
         FirebaseApp.initializeApp(ctx);
-        return new DataLoaderImpl();
+        String fb_ctx = ctx.getString(R.string.fb_ctx);
+        DataLoaderImpl ret = new DataLoaderImpl(fb_ctx + "/");
+        ret.cleanNode(fb_ctx);
+        return ret;
     }
 }

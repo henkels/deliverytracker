@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Delivery Tracker Library</string>
+    <string name="fb_ctx">test</string>
 </resources>

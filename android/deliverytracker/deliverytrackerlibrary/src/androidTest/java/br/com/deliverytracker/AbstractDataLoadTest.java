@@ -2,15 +2,26 @@ package br.com.deliverytracker;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ApplicationTestCase;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import br.com.deliverytracker.dao.DataBindOperation;
 import br.com.deliverytracker.dao.DataBinder;
@@ -28,6 +39,11 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public abstract class AbstractDataLoadTest {
 
+    private static final String SENDER1_USER = "sender1test@deliverytracker.com";
+    private static final String SENDER1_PSWD = "sender1test_@deliverytracker.com";
+    private static final String SENDER2_USER = "sender2test@deliverytracker.com";
+    private static final String SENDER2_PSWD = "sender2test@deliverytracker.com";
+
     private DataLoader loader;
 
     protected AbstractDataLoadTest() {
@@ -37,6 +53,31 @@ public abstract class AbstractDataLoadTest {
     @Before
     public void before() {
         try {
+            final AtomicInteger aint = new AtomicInteger();
+            aint.set(0);
+            final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.addAuthStateListener(
+                    new FirebaseAuth.AuthStateListener() {
+                        @Override
+                        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (user != null) {
+                                aint.set(1);
+                            } else {
+                                aint.set(-1);
+                            }
+                        }
+                    });
+            mAuth.signInWithEmailAndPassword(SENDER1_USER, SENDER1_PSWD);
+
+            int val = aint.get();
+            while (val == 0) {
+                Thread.sleep(200);
+                Log.i("wait", "wait");
+            }
+            if (val == -1) {
+                Assert.fail("We cant login in service!");
+            }
             this.loader = buildDataLoader(InstrumentationRegistry.getContext());
         } catch (Exception e) {
             Log.d(">>>>>", ">>>>", e);
@@ -55,7 +96,9 @@ public abstract class AbstractDataLoadTest {
             }
         }, 10);
         Sender s = new Sender();
-        s.email = "madrugao@h.com.br";
+        s.email = SENDER1_USER;
+        loader.newSender(s);
+        s.email = SENDER2_USER;
         loader.newSender(s);
 //        // Context of the app under test.
 //        Context ctx = InstrumentationRegistry.getTargetContext();

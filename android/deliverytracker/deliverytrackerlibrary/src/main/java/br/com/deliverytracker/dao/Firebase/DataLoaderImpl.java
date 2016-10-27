@@ -27,41 +27,52 @@ import br.com.deliverytracker.dao.Sender;
 
 public class DataLoaderImpl implements DataLoader {
 
-    private static final String PACKAGES_NODE = "packages";
+    private static final String PACKAGES_SUFFIX = "packages";
+    private final String PACKAGES_NODE;
+
+    private static final String SENDERS_SUFFIX = "senders";
+    private final String SENDERS_NODE;
+
 
     private DatabaseReference mDatabase;
 
-    public DataLoaderImpl() {
+    public DataLoaderImpl(String ctx) {
+        PACKAGES_NODE = ctx + PACKAGES_SUFFIX;
+        SENDERS_NODE = ctx + SENDERS_SUFFIX;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        //pubulate the database
-        //String key = mDatabase.child(PACKAGES_NODE).push().getKey();
-        Package _package = new Package();
+//        //populate the database
+//        //String key = mDatabase.child(PACKAGES_NODE).push().getKey();
+//        Package _package = new Package();
+//
+//        _package.description = "desc";
+//        _package.sender = "sender1";
+//        _package.transporter = "tr1";
+//        _package.senddate = 0;
+//        _package.initialEta = 1;
+//        _package.currentEta = 2;
+//        _package.location = new LocationData();
+//        _package.lastAtualizationTime = 3;
+//
+//        //Map<String, Object> postValues = post.toMap();
+//
+//        Map<String, Object> childUpdates = new HashMap<>();
+//        List<Package> packages = new ArrayList<>();
+//        packages.add(_package);
+//        //childUpdates.put("/posts/" + key, postValues);
+//        childUpdates.put(PACKAGES_NODE, packages);
+//
+//        mDatabase.updateChildren(childUpdates);
+//
+//        String key = mDatabase.child(PACKAGES_NODE).push().getKey();
+//        childUpdates.clear();
+//        childUpdates.put(PACKAGES_NODE + "/" + key, _package);
+//        mDatabase.updateChildren(childUpdates);
+//
+    }
 
-        _package.description = "desc";
-        _package.sender = "sender1";
-        _package.transporter = "tr1";
-        _package.senddate = 0;
-        _package.initialEta = 1;
-        _package.currentEta = 2;
-        _package.location = new LocationData();
-        _package.lastAtualizationTime = 3;
-
-        //Map<String, Object> postValues = post.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        List<Package> packages = new ArrayList<>();
-        packages.add(_package);
-        //childUpdates.put("/posts/" + key, postValues);
-        childUpdates.put(PACKAGES_NODE, packages);
-
-        mDatabase.updateChildren(childUpdates);
-
-        String key = mDatabase.child(PACKAGES_NODE).push().getKey();
-        childUpdates.clear();
-        childUpdates.put(PACKAGES_NODE + "/" + key, _package);
-        mDatabase.updateChildren(childUpdates);
-
+    public DataLoaderImpl() {
+        this("");
     }
 
     public List<IncommingPackage> loadIncommingPackages(int count) {
@@ -131,16 +142,20 @@ public class DataLoaderImpl implements DataLoader {
         new DataBinderAdapter(query, Package.class, PackageToIncommingPackageDataMapper.INSTANCE, dataBinder);
     }
 
-    ;
-
     // Sender
     public void newSender(Sender sender) {
-        String key = mDatabase.child("senders").push().getKey();
+        String key = mDatabase.child(SENDERS_NODE).push().getKey();
         Map<String, Object> postValues = sender.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/senders/" + key, postValues);
+        childUpdates.put("/" + SENDERS_NODE + "/" + key, postValues);
 
+        mDatabase.updateChildren(childUpdates);
+    }
+
+    public void cleanNode(String node) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/" + node, new HashMap<>());
         mDatabase.updateChildren(childUpdates);
     }
 
