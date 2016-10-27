@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
 public abstract class AbstractDataLoadTest {
 
     private static final String SENDER1_USER = "sender1test@deliverytracker.com";
-    private static final String SENDER1_PSWD = "sender1test_@deliverytracker.com";
+    private static final String SENDER1_PSWD = "sender1test@deliverytracker.com";
     private static final String SENDER2_USER = "sender2test@deliverytracker.com";
     private static final String SENDER2_PSWD = "sender2test@deliverytracker.com";
 
@@ -51,7 +51,7 @@ public abstract class AbstractDataLoadTest {
     }
 
     @Before
-    public void before() {
+    public void before() throws Exception {
         try {
             final AtomicInteger aint = new AtomicInteger();
             aint.set(0);
@@ -74,6 +74,7 @@ public abstract class AbstractDataLoadTest {
             while (val == 0) {
                 Thread.sleep(200);
                 Log.i("wait", "wait");
+                val = aint.get();
             }
             if (val == -1) {
                 Assert.fail("We cant login in service!");
@@ -81,6 +82,7 @@ public abstract class AbstractDataLoadTest {
             this.loader = buildDataLoader(InstrumentationRegistry.getContext());
         } catch (Exception e) {
             Log.d(">>>>>", ">>>>", e);
+            throw e;
         }
     }
 
