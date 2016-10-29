@@ -1,7 +1,12 @@
 package br.com.deliverytracker.dao.Firebase;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -13,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import br.com.deliverytracker.commom.data.LocationData;
 import br.com.deliverytracker.commom.data.Package;
@@ -33,12 +40,19 @@ public class DataLoaderImpl implements DataLoader {
     private static final String SENDERS_SUFFIX = "senders";
     private final String SENDERS_NODE;
 
+    private static final String EMAIL_SENDERS_SUFFIX = "email_to_senders";
+    private final String EMAIL_SENDERS_NODE;
+
+    private static final String EMAIL_SENDER_KEY = "current_key";
+
 
     private DatabaseReference mDatabase;
+    private final AtomicInteger pendingOperationsCount = new AtomicInteger();
 
     public DataLoaderImpl(String ctx) {
         PACKAGES_NODE = ctx + PACKAGES_SUFFIX;
         SENDERS_NODE = ctx + SENDERS_SUFFIX;
+        EMAIL_SENDERS_NODE = ctx + EMAIL_SENDERS_SUFFIX;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 //        //populate the database
@@ -73,6 +87,21 @@ public class DataLoaderImpl implements DataLoader {
 
     public DataLoaderImpl() {
         this("");
+    }
+
+    @Override
+    public void waitForPendingOperations(long timeout) {
+        long zero = System.currentTimeMillis();
+        while (pendingOperationsCount.get() != 0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (System.currentTimeMillis() - zero > 5000) {
+                throw new RuntimeException("Timeout");
+            }
+        }
     }
 
     public List<IncommingPackage> loadIncommingPackages(int count) {
@@ -142,21 +171,49 @@ public class DataLoaderImpl implements DataLoader {
         new DataBinderAdapter(query, Package.class, PackageToIncommingPackageDataMapper.INSTANCE, dataBinder);
     }
 
+    private void doUpdates(Map<String, Object> updates) {
+        pendingOperationsCount.incrementAndGet();
+        Task task =
+        mDatabase.updateChildren(updates);
+        task.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                pendingOperationsCount.decrementAndGet();
+            }
+        });
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("doUpdates", "onFailure: ", e);
+            }
+        });
+    }
+
+    private static String normalizeEmail(String email) {
+        return email.replace('.', '!');
+    }
+
+    private static String unNormalizeEmail(String email) {
+        return email.replace('!', '.');
+    }
+
     // Sender
     public void newSender(Sender sender) {
         String key = mDatabase.child(SENDERS_NODE).push().getKey();
-        Map<String, Object> postValues = sender.toMap();
+        Map<String, Object> senderValues = sender.toMap();
+        Map<String, Object> emailToSenderValues = new HashMap<>();
+        emailToSenderValues.put(EMAIL_SENDER_KEY, key);
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/" + SENDERS_NODE + "/" + key, postValues);
-
-        mDatabase.updateChildren(childUpdates);
+        childUpdates.put("/" + SENDERS_NODE + "/" + key, senderValues);
+        childUpdates.put("/" + EMAIL_SENDERS_NODE + "/" + normalizeEmail(sender.email), key);
+        doUpdates(childUpdates);
     }
 
     public void cleanNode(String node) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + node, new HashMap<>());
-        mDatabase.updateChildren(childUpdates);
+        doUpdates(childUpdates);
     }
 
 //    <T> public void bind(DataBinder<T> dataBinder, Class<T> clazz, int count) {

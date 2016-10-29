@@ -15,8 +15,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,68 +53,67 @@ public abstract class AbstractDataLoadTest {
         super();
     }
 
-    @Before
-    public void before() throws Exception {
+    @BeforeClass
+    public static void beforeClass() throws Exception {
         try {
-            final AtomicInteger aint = new AtomicInteger();
-            aint.set(0);
             final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            mAuth.addAuthStateListener(
-                    new FirebaseAuth.AuthStateListener() {
-                        @Override
-                        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            if (user != null) {
-                                Log.i("login", "done!");
-                                aint.set(1);
-                            } else {
-                                aint.set(-1);
-                            }
-                        }
-                    });
             mAuth.signInWithEmailAndPassword(SENDER1_USER, SENDER1_PSWD);
-
-            int val = aint.get();
-            while (val == 0) {
-                Thread.sleep(200);
-                Log.i("wait", "wait");
-                val = aint.get();
-            }
-            if (val == -1) {
-                Assert.fail("We cant login in service!");
-            }
             Log.i("initilization", "done!");
-            this.loader = buildDataLoader(InstrumentationRegistry.getContext());
         } catch (Exception e) {
             Log.d(">>>>>", ">>>>", e);
             throw e;
         }
     }
 
+    private void checkLoader() {
+        if (loader == null) {
+            try {
+                this.loader = buildDataLoader(InstrumentationRegistry.getContext());
+            } catch (Exception e) {
+                Log.d(">>>>>", ">>>>", e);
+                throw e;
+            }
+        }
+    }
+
+    @Before
+    public void before() throws Exception {
+        checkLoader();
+    }
+
+    @After
+    public void after() {
+        if (loader != null) {
+            loader.waitForPendingOperations(5000);
+            //cleanDataLoader(loader);
+        }
+    }
+
     protected abstract DataLoader buildDataLoader(Context ctx);
 
-    @Test
-    public void testAddSender() throws Exception {
+    protected abstract void cleanDataLoader(DataLoader dataLoader);
 
-        loader.bind(new DataBinder<IncommingPackage>() {
-            @Override
-            public void OnDataChange(DataBindOperation operation, IncommingPackage data) {
-                Log.d(operation.name(), data.toString());
-            }
-        }, 10);
+    @Test
+    public void testAddSender01() throws Exception {
         Sender s = new Sender();
         s.email = SENDER1_USER;
         loader.newSender(s);
         s.email = SENDER2_USER;
         loader.newSender(s);
-//        // Context of the app under test.
-//        Context ctx = InstrumentationRegistry.getTargetContext();
-        Context ctx = InstrumentationRegistry.getContext();
+    }
 
-        Log.d(this.getClass().getCanonicalName(), "blah");
+    @Ignore
+    @Test
+    public void testAddSender02() throws Exception {
+        Sender s = new Sender();
+        s.email = SENDER1_USER;
+        loader.newSender(s);
+        try {
+            loader.newSender(s);
+            fail("Não detectou email já usado");
+        } catch (Exception e)  {
 
-        Log.d(this.getClass().getCanonicalName(), String.format("%s", loader));
+        }
 
-        //assertEquals("br.com.deliverytracker.deliverytrackerlibrary.test", app.getPackageName());
     }
 }

@@ -20,11 +20,16 @@ import br.com.deliverytracker.deliverytrackerlibrary.R;
 
 public class FirebaseDataLoadTest extends AbstractDataLoadTest {
 
+    private String fb_ctx = "";
+
     protected DataLoader buildDataLoader(Context ctx) {
         FirebaseApp.initializeApp(ctx);
-        String fb_ctx = ctx.getString(R.string.fb_ctx);
-        DataLoaderImpl ret = new DataLoaderImpl(fb_ctx + "/");
-        ret.cleanNode(fb_ctx);
-        return ret;
+        fb_ctx = ctx.getString(R.string.fb_ctx);
+        return new DataLoaderImpl(fb_ctx + "/");
+    }
+
+    @Override
+    protected void cleanDataLoader(DataLoader dataLoader) {
+        ((DataLoaderImpl) dataLoader).cleanNode(fb_ctx);
     }
 }

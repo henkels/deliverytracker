@@ -13,6 +13,7 @@ import java.util.List;
 import br.com.deliverytracker.dao.DataBinder;
 import br.com.deliverytracker.dao.DataLoader;
 import br.com.deliverytracker.dao.IncommingPackage;
+import br.com.deliverytracker.dao.Sender;
 
 /**
  * Created by tarcisio on 17/07/16.
@@ -173,8 +174,17 @@ public class DataLoaderImpl extends SQLiteOpenHelper implements DataLoader {
     public void bind(DataBinder<IncommingPackage> dataBinder, int count) {
     }
 
+    @Override
+    public void waitForPendingOperations(long timeout) {
+        return;
+    }
 
-//    DataLoaderImpl(Context context)
+    @Override
+    public void newSender(Sender sender) {
+
+    }
+
+    //    DataLoaderImpl(Context context)
 //    {
 //        super(context, DATABASE_NAME , null, 1);
 //    }

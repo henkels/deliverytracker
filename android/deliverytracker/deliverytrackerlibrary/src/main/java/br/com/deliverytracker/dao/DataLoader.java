@@ -11,4 +11,6 @@ public interface DataLoader {
     void bind(DataBinder<IncommingPackage> dataBinder, int count);
 
     void newSender(Sender sender);
+
+    void waitForPendingOperations(long timeout);
 }
