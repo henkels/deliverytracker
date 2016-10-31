@@ -14,24 +14,28 @@ import br.com.deliverytracker.receivingmanager.pushnotification.MessageSender;
 
 public class DeviceManager {
 
-    private DeviceManager(){}
+    private DeviceManager() {
+    }
 
     public final static DeviceManager INSTANCE = new DeviceManager();
 
     public void linkDevice() {
-        String deviceID = FirebaseInstanceId.getInstance().getToken();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
+
         String userMail = null;
         if (user != null) {
             userMail = user.getEmail();
+            String uid = user.getUid();
         }
 
         if (deviceID != null && userMail != null) {
-            XMPPMessage msg = new XMPPMessage();
-            msg.data = new LinkUserToDevice(userMail, deviceID);
-            MessageSender.SendMessage(msg);
         }
+//            String deviceID = FirebaseInstanceId.getInstance().getToken();
+//            XMPPMessage msg = new XMPPMessage();
+//            msg.data = new LinkUserToDevice(userMail, deviceID);
+//            MessageSender.SendMessage(msg);
+//        }
     }
 
 }

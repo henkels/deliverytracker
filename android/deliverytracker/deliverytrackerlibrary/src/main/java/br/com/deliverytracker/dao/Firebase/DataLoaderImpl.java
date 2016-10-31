@@ -40,8 +40,8 @@ public class DataLoaderImpl implements DataLoader {
     private static final String SENDERS_SUFFIX = "senders";
     private final String SENDERS_NODE;
 
-    private static final String EMAIL_SENDERS_SUFFIX = "email_to_senders";
-    private final String EMAIL_SENDERS_NODE;
+    private static final String EMAIL_TO_ID_SUFFIX = "email_to_id";
+    private final String EMAIL_TO_ID_NODE;
 
     private static final String EMAIL_SENDER_KEY = "current_key";
 
@@ -52,7 +52,7 @@ public class DataLoaderImpl implements DataLoader {
     public DataLoaderImpl(String ctx) {
         PACKAGES_NODE = ctx + PACKAGES_SUFFIX;
         SENDERS_NODE = ctx + SENDERS_SUFFIX;
-        EMAIL_SENDERS_NODE = ctx + EMAIL_SENDERS_SUFFIX;
+        EMAIL_TO_ID_NODE = ctx + EMAIL_TO_ID_SUFFIX;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 //        //populate the database
@@ -206,7 +206,7 @@ public class DataLoaderImpl implements DataLoader {
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + SENDERS_NODE + "/" + key, senderValues);
-        childUpdates.put("/" + EMAIL_SENDERS_NODE + "/" + normalizeEmail(sender.email), key);
+        childUpdates.put("/" + EMAIL_TO_ID_NODE + "/" + normalizeEmail(sender.email), key);
         doUpdates(childUpdates);
     }
 
