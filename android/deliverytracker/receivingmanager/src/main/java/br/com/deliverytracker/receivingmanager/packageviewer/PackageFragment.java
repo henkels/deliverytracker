@@ -47,7 +47,7 @@ public class PackageFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new PackageRecyclerViewAdapter(context, mListener));
+            recyclerView.setAdapter(new PackageRecyclerViewAdapter(mListener));
         }
         return view;
     }

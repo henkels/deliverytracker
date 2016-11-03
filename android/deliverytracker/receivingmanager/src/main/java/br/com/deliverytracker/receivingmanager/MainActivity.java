@@ -33,6 +33,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import br.com.deliverytracker.dao.DataLoader;
+import br.com.deliverytracker.dao.DataloaderFactory;
+import br.com.deliverytracker.dao.DataloaderFactory.OnDataloaderDone;
 import br.com.deliverytracker.dao.IncommingPackage;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         });
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            setCurrentUser();
+            initDataLoaderFactory();
         } else {
             // not signed in
 
@@ -126,10 +130,6 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private void setCurrentUser() {
-        DeviceManager.INSTANCE.linkDevice();
-    }
-
     private void checkGoolePlayServicesApi() {
         GoogleApiAvailability gApiAvailability = GoogleApiAvailability.getInstance();
         int isGooglePlayServicesAvailable = gApiAvailability.isGooglePlayServicesAvailable(this);
@@ -140,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         if (isGooglePlayServicesAvailable != ConnectionResult.SUCCESS) {
             System.exit(0);
         }
+    }
+
+    private void initDataLoaderFactory() {
+        DataloaderFactory.initInstance(getApplicationContext(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     @Override
@@ -180,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             //if (resultCode == RESULT_OK) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 // user is signed in!
-                setCurrentUser();
+                initDataLoaderFactory();
             } else {
                 // user is not signed in. Maybe just wait for the user to press
                 // "sign in" again, or show a message

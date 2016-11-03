@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import br.com.deliverytracker.dao.DataLoader;
 import br.com.deliverytracker.receivingmanager.R;
 import br.com.deliverytracker.dao.DataloaderFactory;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
@@ -24,7 +25,6 @@ import java.util.List;
  */
 public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecyclerViewAdapter.ViewHolder> implements ViewAdapterDataBinder.OnDataChangeListner {
 
-    private final Context context;
     private final OnListFragmentInteractionListener listener;
     private int selected = -1;
 
@@ -35,14 +35,15 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
     private List<IncommingPackage> getValues() {
         if (values == null) {
             values = new ArrayList<>();
-            DataloaderFactory.getInstance(context).bind(new ViewAdapterDataBinder<IncommingPackage>(values, this), NUM_ITENS);
+            DataLoader dataLoader =
+                    DataloaderFactory.getInstance();
+            dataLoader.bind(new ViewAdapterDataBinder<IncommingPackage>(values, this), NUM_ITENS);
             hasMore = values.size() == NUM_ITENS;
         }
         return values;
     }
 
-    public PackageRecyclerViewAdapter(Context context, OnListFragmentInteractionListener listener) {
-        this.context = context;
+    public PackageRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
         this.listener = listener;
     }
 

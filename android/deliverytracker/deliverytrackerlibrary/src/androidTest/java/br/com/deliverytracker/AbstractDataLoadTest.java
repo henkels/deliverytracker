@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public abstract class AbstractDataLoadTest {
 
-    private static final String SENDER1_USER = "sender1test@deliverytracker.com";
+    protected static final String SENDER1_USER = "sender1test@deliverytracker.com";
     private static final String SENDER1_PSWD = "sender1test@deliverytracker.com";
     private static final String SENDER2_USER = "sender2test@deliverytracker.com";
     private static final String SENDER2_PSWD = "sender2test@deliverytracker.com";

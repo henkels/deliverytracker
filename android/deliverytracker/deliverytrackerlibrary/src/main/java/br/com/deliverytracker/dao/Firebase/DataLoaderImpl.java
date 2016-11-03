@@ -1,5 +1,6 @@
 package br.com.deliverytracker.dao.Firebase;
 
+import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,7 @@ import br.com.deliverytracker.commom.data.LocationData;
 import br.com.deliverytracker.commom.data.Package;
 import br.com.deliverytracker.dao.DataBinder;
 import br.com.deliverytracker.dao.DataLoader;
+import br.com.deliverytracker.dao.DataloaderFactory;
 import br.com.deliverytracker.dao.IncommingPackage;
 import br.com.deliverytracker.dao.Sender;
 
@@ -45,48 +48,46 @@ public class DataLoaderImpl implements DataLoader {
 
     private static final String EMAIL_SENDER_KEY = "current_key";
 
+    private String userid;
+
+
 
     private DatabaseReference mDatabase;
     private final AtomicInteger pendingOperationsCount = new AtomicInteger();
 
-    public DataLoaderImpl(String ctx) {
-        PACKAGES_NODE = ctx + PACKAGES_SUFFIX;
-        SENDERS_NODE = ctx + SENDERS_SUFFIX;
-        EMAIL_TO_ID_NODE = ctx + EMAIL_TO_ID_SUFFIX;
+    public DataLoaderImpl(Context context, String dataCtx, String currentUser, DataloaderFactory.OnDataloaderDone dataloaderDone) {
+        FirebaseApp.initializeApp(context);
+
+        PACKAGES_NODE = dataCtx + PACKAGES_SUFFIX;
+        SENDERS_NODE = dataCtx + SENDERS_SUFFIX;
+        EMAIL_TO_ID_NODE = dataCtx + EMAIL_TO_ID_SUFFIX;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-//        //populate the database
-//        //String key = mDatabase.child(PACKAGES_NODE).push().getKey();
-//        Package _package = new Package();
-//
-//        _package.description = "desc";
-//        _package.sender = "sender1";
-//        _package.transporter = "tr1";
-//        _package.senddate = 0;
-//        _package.initialEta = 1;
-//        _package.currentEta = 2;
-//        _package.location = new LocationData();
-//        _package.lastAtualizationTime = 3;
-//
-//        //Map<String, Object> postValues = post.toMap();
-//
-//        Map<String, Object> childUpdates = new HashMap<>();
-//        List<Package> packages = new ArrayList<>();
-//        packages.add(_package);
-//        //childUpdates.put("/posts/" + key, postValues);
-//        childUpdates.put(PACKAGES_NODE, packages);
-//
-//        mDatabase.updateChildren(childUpdates);
-//
-//        String key = mDatabase.child(PACKAGES_NODE).push().getKey();
-//        childUpdates.clear();
-//        childUpdates.put(PACKAGES_NODE + "/" + key, _package);
-//        mDatabase.updateChildren(childUpdates);
-//
+
+        loadUserId(normalizeEmail(currentUser), dataloaderDone);
     }
 
-    public DataLoaderImpl() {
-        this("");
+    private void loadUserId(String currentUser, final DataloaderFactory.OnDataloaderDone dataloaderDone) {
+        DatabaseReference ref =  mDatabase.child(EMAIL_TO_ID_NODE).child(currentUser);
+        ref.addCo
+        mDatabase.child(EMAIL_TO_ID_NODE).child(currentUser).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Object value = dataSnapshot.getValue();
+                if (value == null) {
+                    userid = null;
+                } else {
+                    userid = value.toString();
+                }
+                dataloaderDone.DataloaderDone(DataLoaderImpl.this);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                userid = null;
+                dataloaderDone.DataloaderDone(DataLoaderImpl.this);
+            }
+        });
     }
 
     @Override
@@ -174,7 +175,7 @@ public class DataLoaderImpl implements DataLoader {
     private void doUpdates(Map<String, Object> updates) {
         pendingOperationsCount.incrementAndGet();
         Task task =
-        mDatabase.updateChildren(updates);
+                mDatabase.updateChildren(updates);
         task.addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

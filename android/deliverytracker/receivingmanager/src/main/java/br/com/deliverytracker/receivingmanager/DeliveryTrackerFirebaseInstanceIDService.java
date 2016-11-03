@@ -33,7 +33,7 @@ public class DeliveryTrackerFirebaseInstanceIDService extends FirebaseInstanceId
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
-        DeviceManager.INSTANCE.linkDevice();
+       // DeviceManager.INSTANCE.linkDevice();
     }
     // [END refresh_token]
 
