@@ -51,7 +51,6 @@ public class DataLoaderImpl implements DataLoader {
     private String userid;
 
 
-
     private DatabaseReference mDatabase;
     private final AtomicInteger pendingOperationsCount = new AtomicInteger();
 
@@ -68,9 +67,9 @@ public class DataLoaderImpl implements DataLoader {
     }
 
     private void loadUserId(String currentUser, final DataloaderFactory.OnDataloaderDone dataloaderDone) {
-        DatabaseReference ref =  mDatabase.child(EMAIL_TO_ID_NODE).child(currentUser);
-        ref.addCo
-        mDatabase.child(EMAIL_TO_ID_NODE).child(currentUser).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference ref = mDatabase.child(EMAIL_TO_ID_NODE);
+
+        ref.child(currentUser).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Object value = dataSnapshot.getValue();
@@ -79,13 +78,13 @@ public class DataLoaderImpl implements DataLoader {
                 } else {
                     userid = value.toString();
                 }
-                dataloaderDone.DataloaderDone(DataLoaderImpl.this);
+                dataloaderDone.onDataloaderDone(DataLoaderImpl.this);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 userid = null;
-                dataloaderDone.DataloaderDone(DataLoaderImpl.this);
+                dataloaderDone.onDataloaderDone(DataLoaderImpl.this);
             }
         });
     }
@@ -103,6 +102,16 @@ public class DataLoaderImpl implements DataLoader {
                 throw new RuntimeException("Timeout");
             }
         }
+    }
+
+    @Override
+    public boolean isUserRegistred() {
+        return userid != null;
+    }
+
+    @Override
+    public boolean isUserRegistredAsReceiver() {
+        return false;
     }
 
     public List<IncommingPackage> loadIncommingPackages(int count) {

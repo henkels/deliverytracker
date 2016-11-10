@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ui.ActivityHelper;
+import com.firebase.ui.auth.ui.ChooseAccountActivity;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -40,9 +42,10 @@ import br.com.deliverytracker.dao.IncommingPackage;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
 
-public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener, DataloaderFactory.OnDataloaderDone {
 
     private static final int RC_SIGN_IN = 9001;
+    private static final int RC_REGISTER_RECEIVER = 9002;
 
     /**
      * The {@link PagerAdapter} that will provide
@@ -109,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             }
         });
 
+        DataloaderFactory.registerOnDataloaderDone(this);
+
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             initDataLoaderFactory();
         } else {
@@ -143,7 +148,23 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     }
 
     private void initDataLoaderFactory() {
-        DataloaderFactory.initInstance(getApplicationContext(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        DataloaderFactory.initInstance(
+                getApplicationContext(),
+                FirebaseAuth.getInstance().getCurrentUser().getEmail());
+    }
+
+    @Override
+    public void onDataloaderDone(DataLoader dataLoader) {
+        if (dataLoader == null) {
+            return;
+        }
+        if (!dataLoader.isUserRegistred()) {
+            Intent intent = new Intent(getApplicationContext(), RegisterReceiverActivity.class);
+            startActivityForResult(intent, RC_REGISTER_RECEIVER);
+        }
+        if (dataLoader.isUserRegistredAsReceiver()) {
+
+        }
     }
 
     @Override
@@ -180,15 +201,22 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            //if (resultCode == RESULT_OK) {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                // user is signed in!
-                initDataLoaderFactory();
-            } else {
-                // user is not signed in. Maybe just wait for the user to press
-                // "sign in" again, or show a message
-            }
+        switch (requestCode) {
+            case RC_SIGN_IN:
+                //if (resultCode == RESULT_OK) {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    // user is signed in!
+                    initDataLoaderFactory();
+                } else {
+                    // user is not signed in. Maybe just wait for the user to press
+                    // "sign in" again, or show a message
+                }
+                break;
+            case RC_REGISTER_RECEIVER:
+                if (resultCode == RESULT_OK) {
+                    initDataLoaderFactory();
+                }
+                break;
         }
     }
 
@@ -196,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
+
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("Main Page") // TODO: Define a title for the content shown.

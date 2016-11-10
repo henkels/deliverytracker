@@ -13,4 +13,8 @@ public interface DataLoader {
     void newSender(Sender sender);
 
     void waitForPendingOperations(long timeout);
+
+    boolean isUserRegistred();
+
+    boolean isUserRegistredAsReceiver();
 }

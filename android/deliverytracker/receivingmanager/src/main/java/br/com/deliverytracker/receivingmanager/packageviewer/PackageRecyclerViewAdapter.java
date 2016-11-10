@@ -23,7 +23,7 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecyclerViewAdapter.ViewHolder> implements ViewAdapterDataBinder.OnDataChangeListner {
+public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecyclerViewAdapter.ViewHolder> implements ViewAdapterDataBinder.OnDataChangeListner, DataloaderFactory.OnDataloaderDone {
 
     private final OnListFragmentInteractionListener listener;
     private int selected = -1;
@@ -32,19 +32,26 @@ public class PackageRecyclerViewAdapter extends RecyclerView.Adapter<PackageRecy
     private boolean hasMore = false;
     private static final int NUM_ITENS = 50;
 
+    private DataLoader dataLoader = null;
+
     private List<IncommingPackage> getValues() {
         if (values == null) {
             values = new ArrayList<>();
-            DataLoader dataLoader =
-                    DataloaderFactory.getInstance();
-            dataLoader.bind(new ViewAdapterDataBinder<IncommingPackage>(values, this), NUM_ITENS);
-            hasMore = values.size() == NUM_ITENS;
+//            DataLoader dataLoader =
+//                    DataloaderFactory.getInstance();
+//            dataLoader.bind(new ViewAdapterDataBinder<IncommingPackage>(values, this), NUM_ITENS);
+//            hasMore = values.size() == NUM_ITENS;
         }
         return values;
     }
 
     public PackageRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
         this.listener = listener;
+        DataloaderFactory.registerOnDataloaderDone(this);
+    }
+
+    @Override
+    public void onDataloaderDone(DataLoader dataLoader) {
     }
 
     @Override

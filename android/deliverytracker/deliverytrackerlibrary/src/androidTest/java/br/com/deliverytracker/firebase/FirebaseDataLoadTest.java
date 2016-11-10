@@ -33,7 +33,7 @@ public class FirebaseDataLoadTest extends AbstractDataLoadTest {
         toWait.set(true);
         DataLoader ret = new DataLoaderImpl(ctx, fb_ctx + "/", SENDER1_USER, new DataloaderFactory.OnDataloaderDone() {
             @Override
-            public void DataloaderDone(DataLoader dataLoader) {
+            public void onDataloaderDone(DataLoader dataLoader) {
                 toWait.set(false);
             }
         });
