@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/endName_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_column="0"
+        android:layout_margin="@dimen/label_margin"
+        android:layout_row="0"
+        android:text="Nome"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/endName_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_margin="@dimen/label_margin"
+        android:layout_row="0"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textAppearance="?attr/textAppearanceListItem"/>
+
+    <TextView
+        android:id="@+id/localization_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_column="0"
+        android:layout_margin="@dimen/label_margin"
+        android:layout_row="1"
+        android:text="localização"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/localization_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="1"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:layout_margin="@dimen/label_margin" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/setLocation_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="2"
+        android:layout_row="1"
+        android:layout_gravity="right"
+        android:src="@android:drawable/ic_menu_mylocation" />
+
+
+</GridLayout>
