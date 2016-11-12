@@ -18,7 +18,6 @@ Os atores envolvidos são:
 * transportadora: é a empresa contratada para entregar o pacote e podem haver de nenhuma, uma ou mais que uma empresas envolvidas na entrega;
 * parceiro comercial: é uma empresa parceira do enviador que tem interesse na entrega do produto, como por exemplo o mercado livre, a máquina de vendas, etc... 
 
-
 ## Diferencias para o recebedor:
 O produto tem os seguintes diferenciais do ponto de vista do recebedor:
 * Feedback em tempo real sobre a localização do pacote;
@@ -97,3 +96,50 @@ O produto é formado pelos modulos que seguem.
 * Quando o usuário for a transportadora, feedback em tempo real sobre as alterações realizadas nos roteiros de entrega, pausa nas entregas, sinalização de imprevistos, etc...
 * Quando o usuário for a transportadora, geração e edição dos roteiros de entrega;
 * Chat com o entregador e o recebedor.
+
+# Análise de Dados
+
+## Recebedor
+* Email
+* Nome/Apelido
+* Lista de endereços
+* Foto
+
+## Entregador
+* Email
+* Nome/Apelido
+* Foto
+
+## Enviador
+* Email
+* Nome Fantasia
+* Nome Comercial
+* CNPJ
+* Logo
+* Site
+
+## Transportadora
+* Email
+* Nome Fantasia
+* Nome Comercial
+* CNPJ
+* Logo
+* Site
+* Lista de Veículos
+
+## Parceiro Comercial
+//TODO
+
+## Endereço
+* Localização
+* CEP
+* Pais
+* Estado
+* Cidade
+* Rua
+* N°
+
+## Veículo
+* Tipo
+* Foto
+* Placa
