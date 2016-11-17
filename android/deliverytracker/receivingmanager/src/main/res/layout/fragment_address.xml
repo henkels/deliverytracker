@@ -9,25 +9,23 @@
         android:id="@+id/endName_TV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_alignParentTop="true"
         android:layout_column="0"
-        android:layout_margin="@dimen/label_margin"
+        android:layout_margin="@dimen/text_margin"
         android:layout_row="0"
         android:text="Nome"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <EditText
         android:id="@+id/endName_ET"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_column="1"
-        android:layout_margin="@dimen/label_margin"
+        android:layout_margin="@dimen/text_margin"
         android:layout_row="0"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        android:textAppearance="?attr/textAppearanceListItem"/>
+        android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/localization_TV"
@@ -36,7 +34,7 @@
 
         android:layout_alignParentTop="true"
         android:layout_column="0"
-        android:layout_margin="@dimen/label_margin"
+        android:layout_margin="@dimen/text_margin"
         android:layout_row="1"
         android:text="localização"
         android:textAppearance="?attr/textAppearanceListItem" />
@@ -46,20 +44,148 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
         android:layout_row="1"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:layout_margin="@dimen/label_margin" />
+        android:inputType="number"
+        android:text="localization" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/setLocation_FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="2"
-        android:layout_row="1"
         android:layout_gravity="right"
+        android:layout_row="1"
         android:src="@android:drawable/ic_menu_mylocation" />
 
+    <TextView
+        android:id="@+id/country_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="3"
+        android:text="Paiz"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/country_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="3"
+        android:ems="10"
+        android:text="Paiz" />
+
+    <TextView
+        android:id="@+id/cep_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="4"
+        android:text="CEP"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/cep_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="4"
+        android:ems="10"
+        android:text="CEP" />
+
+    <TextView
+        android:id="@+id/state_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_column="0"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="5"
+        android:text="Estado"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/state_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="5"
+        android:ems="10"
+        android:text="Estado" />
+
+    <TextView
+        android:id="@+id/city_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_column="0"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="6"
+        android:text="Cidade"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/city_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="6"
+        android:ems="10"
+        android:text="Cidade" />
+
+    <TextView
+        android:id="@+id/street_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_column="0"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="7"
+        android:text="Rua"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/street_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="7"
+        android:ems="10"
+        android:text="Rua" />
+
+
+    <TextView
+        android:id="@+id/number_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_column="0"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="8"
+        android:text="Número"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/number_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_row="8"
+        android:ems="10"
+        android:text="Número" />
 
 </GridLayout>

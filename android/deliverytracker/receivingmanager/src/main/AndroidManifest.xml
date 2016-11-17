@@ -41,7 +41,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".RegisterReceiverActivity"></activity>
+        <activity
+            android:name=".ActivityRegisterReceiver"
+            android:label="@string/title_activity_register_receiver_x"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

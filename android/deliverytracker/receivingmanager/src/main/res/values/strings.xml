@@ -8,4 +8,5 @@
         <item>profile</item>
         <item>email</item>
     </string-array>
+    <string name="title_activity_register_receiver_x">Registro de Recebedor</string>
 </resources>

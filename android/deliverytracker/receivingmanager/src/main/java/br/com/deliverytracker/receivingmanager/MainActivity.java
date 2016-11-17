@@ -39,6 +39,7 @@ import br.com.deliverytracker.dao.DataLoader;
 import br.com.deliverytracker.dao.DataloaderFactory;
 import br.com.deliverytracker.dao.DataloaderFactory.OnDataloaderDone;
 import br.com.deliverytracker.dao.IncommingPackage;
+import br.com.deliverytracker.dao.Sender;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
 
@@ -159,7 +160,10 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             return;
         }
         if (!dataLoader.isUserRegistred()) {
-            Intent intent = new Intent(getApplicationContext(), RegisterReceiverActivity.class);
+            Sender sender = new Sender();
+            sender.email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            Intent intent = new Intent(getApplicationContext(), ActivityRegisterReceiver.class);
+            intent.putExtra(Sender.PARAM_ID, sender);
             startActivityForResult(intent, RC_REGISTER_RECEIVER);
         }
         if (dataLoader.isUserRegistredAsReceiver()) {
