@@ -11,6 +11,7 @@ public class Address extends MapeableObject {
     public String postalCode;
     public String state;
     public String city;
+    public String neiburhood;
     public String street;
     public Integer number;
     public Double latitude;

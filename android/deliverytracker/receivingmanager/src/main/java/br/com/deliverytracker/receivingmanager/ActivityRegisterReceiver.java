@@ -52,7 +52,15 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
         addressList.setAdapter(adapter);
 
         Address address = new Address();
-        address.name = "A1";
+        address.name = "CASA";
+        address.street = "Bruno Ruediger";
+        address.number = 1101;
+        address.neiburhood = "Velha Grande";
+        address.city = "Blumenau";
+        address.state = "Santa Catarina";
+        address.country = "Brasil";
+        address.latitude = 1d;
+        address.longitute = 1d;
         address.postalCode = "89045-440";
 
         adapter.add(address);
@@ -70,6 +78,35 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
             this.context = context;
         }
 
+        private static final String SEP = ", ";
+        private static final String SPACE = " ";
+        //TODO translate
+        private static final String NUMERO = "número";
+        private static final String POSTAL_CODE = "CEP";
+        private static final String GPS = "GPS";
+        private static final String INFORMADO = "informado";
+        private static final String NAO_INFORMADO = "não informado";
+
+        private static void addString(StringBuilder sb, String prefix, String value) {
+            if (value == null) {
+                return;
+            }
+            value = value.trim();
+            if (value.equals("")) {
+                return;
+            }
+            if (prefix != null) {
+                sb.append(prefix);
+                sb.append(SPACE);
+            }
+            sb.append(value);
+            sb.append(SEP);
+        }
+
+        private static void addString(StringBuilder sb, String value) {
+            addString(sb, null, value);
+        }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Address address = getItem(position);
@@ -84,7 +121,19 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
             tv.setText(address.name);
 
             tv = (TextView) row.findViewById(R.id.content_TV);
-            tv.setText(address.toString());
+            // Rua tal de tal, número 1, Bairro baixo, Blumenau, Santa Catarina, Brasil, CEP cep, GPS: informado
+            StringBuilder sb = new StringBuilder();
+            addString(sb, address.street);
+            if (address.number != null) {
+                addString(sb, NUMERO, address.number.toString());
+            }
+            addString(sb, address.neiburhood);
+            addString(sb, address.city);
+            addString(sb, address.country);
+            addString(sb, POSTAL_CODE, address.postalCode);
+            addString(sb, GPS, address.latitude!=null && address.longitute!=null?INFORMADO:NAO_INFORMADO);
+            sb.setLength(sb.length()-SEP.length());
+            tv.setText(sb.toString());
             row.setTag(address);
             return row;
         }
