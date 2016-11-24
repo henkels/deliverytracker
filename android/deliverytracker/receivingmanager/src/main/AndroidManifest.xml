@@ -43,7 +43,7 @@
 
         <activity
             android:name=".ActivityRegisterReceiver"
-            android:label="@string/title_activity_register_receiver_x"
+            android:label="@string/title_activity_register_receiver"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

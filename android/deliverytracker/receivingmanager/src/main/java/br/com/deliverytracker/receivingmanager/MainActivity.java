@@ -154,11 +154,14 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
                 FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
+    private DataLoader ldataLoader;
+
     @Override
     public void onDataloaderDone(DataLoader dataLoader) {
         if (dataLoader == null) {
             return;
         }
+        ldataLoader = dataLoader;
         if (!dataLoader.isUserRegistred()) {
             Sender sender = new Sender();
             sender.email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -218,6 +221,9 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
                 break;
             case RC_REGISTER_RECEIVER:
                 if (resultCode == RESULT_OK) {
+                    Sender sender = (Sender) data.getSerializableExtra(Sender.PARAM_ID);
+                    ldataLoader.newSender(sender);
+                    ldataLoader = null;
                     initDataLoaderFactory();
                 }
                 break;

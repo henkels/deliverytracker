@@ -29,16 +29,19 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final Sender sender = (Sender) getIntent().getSerializableExtra(Sender.PARAM_ID);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.saveFB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setResult(Activity.RESULT_OK, new Intent());
+                Intent ret = new Intent();
+                ret.putExtra(Sender.PARAM_ID, sender);
+                setResult(Activity.RESULT_OK, ret);
                 finish();
             }
         });
 
-        Sender sender = (Sender) getIntent().getSerializableExtra(Sender.PARAM_ID);
 
         TextView emailTV = (TextView) findViewById(R.id.email_TVR);
 
@@ -51,19 +54,19 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
 
         addressList.setAdapter(adapter);
 
-        Address address = new Address();
-        address.name = "CASA";
-        address.street = "Bruno Ruediger";
-        address.number = 1101;
-        address.neiburhood = "Velha Grande";
-        address.city = "Blumenau";
-        address.state = "Santa Catarina";
-        address.country = "Brasil";
-        address.latitude = 1d;
-        address.longitute = 1d;
-        address.postalCode = "89045-440";
-
-        adapter.add(address);
+//        Address address = new Address();
+//        address.name = "CASA";
+//        address.street = "Bruno Ruediger";
+//        address.number = 1101;
+//        address.neiburhood = "Velha Grande";
+//        address.city = "Blumenau";
+//        address.state = "Santa Catarina";
+//        address.country = "Brasil";
+//        address.latitude = 1d;
+//        address.longitute = 1d;
+//        address.postalCode = "89045-440";
+//
+//        adapter.add(address);
     }
 
     public static class AddressListItemAdapter extends ArrayAdapter<Address> {
@@ -131,8 +134,8 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
             addString(sb, address.city);
             addString(sb, address.country);
             addString(sb, POSTAL_CODE, address.postalCode);
-            addString(sb, GPS, address.latitude!=null && address.longitute!=null?INFORMADO:NAO_INFORMADO);
-            sb.setLength(sb.length()-SEP.length());
+            addString(sb, GPS, address.latitude != null && address.longitute != null ? INFORMADO : NAO_INFORMADO);
+            sb.setLength(sb.length() - SEP.length());
             tv.setText(sb.toString());
             row.setTag(address);
             return row;

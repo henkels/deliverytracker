@@ -18,7 +18,6 @@ public class DataloaderFactory {
         void onDataloaderDone(DataLoader dataLoader);
     }
 
-
     private static final List<OnDataloaderDone> ON_DATALOADER_DONE_LIST = new ArrayList<>();
 
     private static DataLoader DATA_LOADER = null;
