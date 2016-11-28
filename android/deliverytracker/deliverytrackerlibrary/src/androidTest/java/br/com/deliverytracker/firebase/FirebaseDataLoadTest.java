@@ -1,14 +1,9 @@
 package br.com.deliverytracker.firebase;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.test.mock.MockContext;
-import android.test.mock.MockResources;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
-
-import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

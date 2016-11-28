@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,6 +47,10 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
         TextView emailTV = (TextView) findViewById(R.id.email_TVR);
 
         emailTV.setText(sender.email);
+
+        EditText nameET = (EditText) findViewById(R.id.name_ET);
+
+        nameET.setText(sender.tryToGetName());
 
         ListView addressList = (ListView) findViewById(R.id.addresses_LV);
 

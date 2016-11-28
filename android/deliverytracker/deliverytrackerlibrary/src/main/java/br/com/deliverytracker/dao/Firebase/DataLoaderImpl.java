@@ -40,8 +40,8 @@ public class DataLoaderImpl implements DataLoader {
     private static final String PACKAGES_SUFFIX = "packages";
     private final String PACKAGES_NODE;
 
-    private static final String SENDERS_SUFFIX = "senders";
-    private final String SENDERS_NODE;
+    private static final String PERSONS_SUFFIX = "persons";
+    private final String PERSONS_NODE;
 
     private static final String EMAIL_TO_ID_SUFFIX = "email_to_id";
     private final String EMAIL_TO_ID_NODE;
@@ -58,7 +58,7 @@ public class DataLoaderImpl implements DataLoader {
         FirebaseApp.initializeApp(context);
 
         PACKAGES_NODE = dataCtx + PACKAGES_SUFFIX;
-        SENDERS_NODE = dataCtx + SENDERS_SUFFIX;
+        PERSONS_NODE = dataCtx + PERSONS_SUFFIX;
         EMAIL_TO_ID_NODE = dataCtx + EMAIL_TO_ID_SUFFIX;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -209,13 +209,13 @@ public class DataLoaderImpl implements DataLoader {
 
     // Sender
     public void newSender(Sender sender) {
-        String key = mDatabase.child(SENDERS_NODE).push().getKey();
+        String key = mDatabase.child(PERSONS_NODE).push().getKey();
         Map<String, Object> senderValues = sender.toMap();
         Map<String, Object> emailToSenderValues = new HashMap<>();
         emailToSenderValues.put(EMAIL_SENDER_KEY, key);
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/" + SENDERS_NODE + "/" + key, senderValues);
+        childUpdates.put("/" + PERSONS_NODE + "/" + key, senderValues);
         childUpdates.put("/" + EMAIL_TO_ID_NODE + "/" + normalizeEmail(sender.email), key);
         doUpdates(childUpdates);
     }
