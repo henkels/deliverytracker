@@ -16,12 +16,20 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 import br.com.deliverytracker.dao.Address;
 import br.com.deliverytracker.dao.Sender;
 
 public class ActivityRegisterReceiver extends AppCompatActivity {
+
+    private static final int RC_EDIT_ADDRESS = 9003;
+
+    private Sender current = null;
+
+    private ArrayAdapter<Address> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,32 +38,42 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Sender sender = (Sender) getIntent().getSerializableExtra(Sender.PARAM_ID);
+        current = (Sender) getIntent().getSerializableExtra(Sender.PARAM_ID);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.saveFB);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.save_FAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent ret = new Intent();
-                ret.putExtra(Sender.PARAM_ID, sender);
+                ret.putExtra(Sender.PARAM_ID, current);
                 setResult(Activity.RESULT_OK, ret);
                 finish();
+            }
+        });
+
+        fab = (FloatingActionButton) findViewById(R.id.add_FAB);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ActivityEditAddress.class);
+                intent.putExtra(Address.PARAM_ID, new Address());
+                startActivityForResult(intent, RC_EDIT_ADDRESS);
             }
         });
 
 
         TextView emailTV = (TextView) findViewById(R.id.email_TVR);
 
-        emailTV.setText(sender.email);
+        emailTV.setText(current.email);
 
         EditText nameET = (EditText) findViewById(R.id.name_ET);
 
-        nameET.setText(sender.tryToGetName());
+        nameET.setText(current.tryToGetName());
 
         ListView addressList = (ListView) findViewById(R.id.addresses_LV);
 
-        ArrayAdapter<Address> adapter = new AddressListItemAdapter(this,
-                R.layout.fragment_address_list, sender.addresses);
+        adapter = new AddressListItemAdapter(this,
+                R.layout.fragment_address_list, current.addresses);
 
         addressList.setAdapter(adapter);
 
@@ -126,7 +144,8 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
             }
 
             TextView tv = (TextView) row.findViewById(R.id.title_TV);
-            tv.setText(address.name);
+            String name = address.name==null?"":address.name;
+            tv.setText(name);
 
             tv = (TextView) row.findViewById(R.id.content_TV);
             // Rua tal de tal, número 1, Bairro baixo, Blumenau, Santa Catarina, Brasil, CEP cep, GPS: informado
@@ -148,4 +167,16 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
 
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case RC_EDIT_ADDRESS:
+                if (resultCode == RESULT_OK) {
+                    Address address = (Address) data.getSerializableExtra(Address.PARAM_ID);
+                    current.addresses.add(address);
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+        }
+    }
 }

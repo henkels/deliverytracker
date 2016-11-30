@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -31,6 +30,6 @@
         android:layout_margin="@dimen/appbar_padding_top"
         android:layout_marginBottom="@dimen/appbar_padding_top" />
 
-    <include layout="@layout/content_activity_register_receiver" />
+    <include layout="@layout/content_activity_edit_address" />
 
 </android.support.design.widget.CoordinatorLayout>
