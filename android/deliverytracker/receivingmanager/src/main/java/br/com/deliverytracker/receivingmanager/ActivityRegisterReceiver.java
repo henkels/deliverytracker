@@ -31,6 +31,8 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
 
     private ArrayAdapter<Address> adapter;
 
+    private ListView addresses;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,8 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         current = (Sender) getIntent().getSerializableExtra(Sender.PARAM_ID);
+
+        addresses = (ListView) findViewById(R.id.addresses_LV);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.save_FAB);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,9 +59,20 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ActivityEditAddress.class);
-                intent.putExtra(Address.PARAM_ID, new Address());
-                startActivityForResult(intent, RC_EDIT_ADDRESS);
+                startEditAddress(new Address(), true);
+            }
+        });
+
+        fab = (FloatingActionButton) findViewById(R.id.remove_FAB);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Object o =
+                addresses.getSelectedItem();
+                if (o==null){
+                    return;
+                }
+
             }
         });
 
@@ -90,6 +105,13 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
 //        address.postalCode = "89045-440";
 //
 //        adapter.add(address);
+    }
+
+    private void startEditAddress(Address address, boolean isNew) {
+        Intent intent = new Intent(getApplicationContext(), ActivityEditAddress.class);
+        intent.putExtra(Address.PARAM_ID, address);
+        intent.putExtra(ActivityEditAddress.IS_NEW_FLAG_ID, isNew);
+        startActivityForResult(intent, RC_EDIT_ADDRESS);
     }
 
     public static class AddressListItemAdapter extends ArrayAdapter<Address> {
@@ -144,7 +166,7 @@ public class ActivityRegisterReceiver extends AppCompatActivity {
             }
 
             TextView tv = (TextView) row.findViewById(R.id.title_TV);
-            String name = address.name==null?"":address.name;
+            String name = address.name == null ? "" : address.name;
             tv.setText(name);
 
             tv = (TextView) row.findViewById(R.id.content_TV);
