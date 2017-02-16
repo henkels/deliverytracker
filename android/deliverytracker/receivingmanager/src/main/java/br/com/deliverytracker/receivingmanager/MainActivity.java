@@ -102,13 +102,13 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             }
         });
 
-//        FirebaseAuth.getInstance().signOut();
+        FirebaseAuth.getInstance().signOut();
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null) {
-                    Toast.makeText(getApplicationContext(), currentUser.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), currentUser.getEmail(), Toast.LENGTH_LONG).show();
                 }
             }
         });
