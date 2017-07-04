@@ -3,8 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DeliveryTracker.iml" filepath="$PROJECT_DIR$/DeliveryTracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DeliveryTracker.iml" filepath="$PROJECT_DIR$/DeliveryTracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DeliveryTrackerLib/DeliveryTrackerLib.iml" filepath="$PROJECT_DIR$/DeliveryTrackerLib/DeliveryTrackerLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/DeliveryTrackerLib/DeliveryTrackerLib.iml" filepath="$PROJECT_DIR$/DeliveryTrackerLib/DeliveryTrackerLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/ReceivingManager/ReceivingManager.iml" filepath="$PROJECT_DIR$/ReceivingManager/ReceivingManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ReceivingManager/ReceivingManager.iml" filepath="$PROJECT_DIR$/ReceivingManager/ReceivingManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SendingManager/SendingManager.iml" filepath="$PROJECT_DIR$/SendingManager/SendingManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/SendingManager/SendingManager.iml" filepath="$PROJECT_DIR$/SendingManager/SendingManager.iml" />
     </modules>
   </component>
