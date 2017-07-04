@@ -24,7 +24,7 @@ import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 public class PackageFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
-    //private DataLoader loader;
+    //private DataLoader loader; TODO
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
