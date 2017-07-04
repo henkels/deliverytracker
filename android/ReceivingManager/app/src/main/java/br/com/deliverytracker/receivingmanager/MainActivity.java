@@ -33,6 +33,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Arrays;
+
 import br.com.deliverytracker.receivingmanager.dao.IncommingPackage;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment;
 import br.com.deliverytracker.receivingmanager.packageviewer.PackageFragment.OnListFragmentInteractionListener;
@@ -113,9 +115,14 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             // Get an instance of AuthUI based on the default app
             Intent intent = AuthUI.getInstance() //
                     .createSignInIntentBuilder() //
-                    .setProviders(
-                            AuthUI.EMAIL_PROVIDER,
-                            AuthUI.GOOGLE_PROVIDER//,AuthUI.FACEBOOK_PROVIDER
+                    .setAvailableProviders(
+                            Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                    //new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()//,
+                                    //new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                    //new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build())
+                            )
+
                     )//
                     .setIsSmartLockEnabled(!BuildConfig.DEBUG)//
                     .build();
